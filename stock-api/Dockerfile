@@ -1,5 +1,6 @@
 FROM node:14
 WORKDIR /stock-api
+RUN git clone https://github.com/rreichel3/US-Stock-Symbols.git
 COPY ./package.json .
 COPY . .
 RUN npm install
