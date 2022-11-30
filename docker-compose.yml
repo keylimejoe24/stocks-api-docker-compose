@@ -1,0 +1,168 @@
+version: "3.8"
+
+services:
+# while :; do curl -sx mattesproxy:5566 ifconfig.me; echo ""; sleep .001; done
+# while :; do curl -sx zhaowdeproxy:3128 ifconfig.me; echo ""; sleep .001; done
+# while :; do curl -sx localhost:5566 ifconfig.me; echo ""; sleep .001; done
+# while :; do curl -sx 23.224.33.106:20351 ifconfig.me; echo ""; sleep .001; done
+# ds
+# https://github.com/ultrafunkamsterdam/toraio
+# https://github.com/bluet/proxybroker2 
+
+# while :; do curl -sx localhost:3128 https://https://finance.yahoo.com/quote/BBY/history\?p\=BBY; echo ""; sleep .001; done
+# while :; do curl -sx localhost:5566 https://https://finance.yahoo.com/quote/BBY/history\?p\=BBY; echo ""; sleep .001; done
+# httperf --server localhost --port 5566
+# httperf --server localhost --port 3128
+
+# curl http://localhost:3001/api/scrape/run
+# curl http://localhost:3000/api/scrape/deleteAll
+# curl http://localhost:3000/api/scrape/runAlgorithms/:id
+# curl http://localhost:3000/api
+# ab -X proxy:port
+
+# hey  https://finance.yahoo.com/quote/BBY -x localhost:5566 -c 1 -n 1 -z 30s
+# hey  https://finance.yahoo.com/quote/BBY -x localhost:3128 -c 1 -n 1 -z 30s
+
+# hey  -c 1 -n 1 -x 127.0.0.1:5566 https://finance.yahoo.com/quote/BBY
+  # proxy:
+  #   image: zhaowde/rotating-tor-http-proxy:latest
+  #   ports:
+  #     # http proxy
+  #     - 3128:3128
+  #   environment:
+  #     - TOR_INSTANCES=15
+  #     - TOR_REBUILD_INTERVAL=600
+
+  # mattesproxy:
+  #   image: mattes/rotating-proxy:latest
+  #   ports:
+  #       - "5566:5566"
+  #       - '4444:4444'
+  #   environment:
+  #       - TOR_INSTANCE=5
+  #       - TOR_REBUILD_INTERVAL=2400
+    
+
+  # zhaowdeproxy:
+  #   image: zhaowde/rotating-tor-http-proxy:latest
+  #   ports:
+  #     - '3128:3128'
+  #   environment:
+  #     - TOR_INSTANCES=5 
+  #     - TOR_REBUILD_INTERVAL=2400
+    
+  # test:
+  #   build: ./test
+  #   entrypoint: /bin/bash
+  #   tty: true
+  #   links:
+  #     - mongodb
+  #     - zhaowdeproxy
+  #     - mattesproxy
+  #   depends_on:
+  #     - mongodb
+  #     - zhaowdeproxy
+  #     - mattesproxy
+    
+ # docker exec -it 9d08a8acf728 /bin/bash
+  prometheus:
+    image: prom/prometheus:v2.20.1
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    ports:
+      - 9090:9090
+    expose:
+      - 9090
+
+
+  grafana:
+    image: grafana/grafana:7.1.5
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    ports:
+      - 3002:3000
+    expose:
+      - 3002
+
+
+  mongodb:
+    image: mongo:latest
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+    ports:
+      - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
+    volumes:
+      - db:/data/db
+  # app:
+  #   depends_on:
+  #     - mongodb
+  #   build: ./bezkoder-app
+  #   restart: unless-stopped
+  #   env_file: ./.env
+  #   ports:
+  #     - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+  #   environment:
+  #     - DB_HOST=mongodb
+  #     - DB_USER=$MONGODB_USER
+  #     - DB_PASSWORD=$MONGODB_PASSWORD
+  #     - DB_NAME=$MONGODB_DATABASE
+  #     - DB_PORT=$MONGODB_DOCKER_PORT
+  #   stdin_open: true
+  #   tty: true
+  
+  # mongodb://root:123456@mongodb:27017/bezkoder_db?authSource=admin
+  scraping-server:
+    ports:
+      - 3000:3000
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+    build: ./stock-api
+    restart: unless-stopped
+    env_file: ./.env
+    command: npm run scraping-server
+    environment:
+      - DB_HOST=mongodb
+      - DB_USER=$MONGODB_USER
+      - DB_PASSWORD=$MONGODB_PASSWORD
+      - DB_NAME=$MONGODB_DATABASE
+      - DB_PORT=$MONGODB_DOCKER_PORT
+    stdin_open: true
+    tty: true
+
+  algorithms-server:
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+    build: ./stock-api
+    restart: unless-stopped
+    env_file: ./.env
+    command: npm run algorithms-server
+    ports:
+      - 3001:3001
+    environment:
+      - DB_HOST=mongodb
+      - DB_USER=$MONGODB_USER
+      - DB_PASSWORD=$MONGODB_PASSWORD
+      - DB_NAME=$MONGODB_DATABASE
+      - DB_PORT=$MONGODB_DOCKER_PORT
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:
+  prometheus_data: {}
+  grafana_data: {}
