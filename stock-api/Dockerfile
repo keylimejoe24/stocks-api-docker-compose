@@ -1,6 +1,12 @@
 FROM node:14
-
 WORKDIR /stock-api
 COPY ./package.json .
-RUN npm install
 COPY . .
+RUN npm install
+WORKDIR /stock-api/node-yahoo-finance2
+RUN npm run build
+WORKDIR /stock-api/http-client-with-prom-metrics-tracking
+RUN npm run build
+WORKDIR /stock-api
+
+
