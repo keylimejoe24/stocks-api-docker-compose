@@ -1,3 +1,3 @@
 [submodule "path_to_submodule"] 
   path = stock-api/US-Stock-Symbols
-  url = git@github.com:rreichel3/US-Stock-Symbols.git
+  url = https://github.com/rreichel3/US-Stock-Symbols.git
