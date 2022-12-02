@@ -1,4 +1,3 @@
-version: "3.8"
 
 services:
 # while :; do curl -sx mattesproxy:5566 ifconfig.me; echo ""; sleep .001; done
