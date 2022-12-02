@@ -122,6 +122,7 @@ services:
   #   tty: true
   
   # mongodb://root:123456@mongodb:27017/bezkoder_db?authSource=admin
+  
   scraping-server:
     ports:
       - 3000:3000

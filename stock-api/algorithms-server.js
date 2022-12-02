@@ -13,6 +13,9 @@ app.use(bodyParser.json());
 app.get('/api/scrape/runAlgorithms/:id', (req, res) => {
     scrapeController.runAlgorithms(req.params.id).then(data => res.json(data));
 });
+app.get('/', (req, res) => {
+    res.status(200).send('Ok');
+  });
 
 
 

@@ -56,3 +56,6 @@ app.get("/metrics", async (req, res) => {
 
     return res.send(await client.register.metrics());
 });
+app.get('/', (req, res) => {
+    res.status(200).send('Ok');
+});
