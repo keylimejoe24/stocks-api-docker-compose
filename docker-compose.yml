@@ -125,8 +125,6 @@ services:
   scraping-server:
     ports:
       - 3000:3000
-    links:
-      - mongodb
     depends_on:
       - mongodb
     build: ./stock-api
@@ -143,8 +141,6 @@ services:
     tty: true
 
   algorithms-server:
-    links:
-      - mongodb
     depends_on:
       - mongodb
     build: ./stock-api
