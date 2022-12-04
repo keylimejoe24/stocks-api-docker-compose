@@ -57,7 +57,7 @@ router.post('/api/scrape/run', (req, res, next) => {
     tickersToScrape = []
     req.body.tickers.forEach(ticker => {
         requestedTicker = _.find(tickersWithoutUpSymbol, {symbol:ticker})
-        tickersToScrape.append(requestedTicker)
+        tickersToScrape.push(requestedTicker)
     })
     console.log(JSON.stringify(tickersToScrape))
     return scrapeController.run(req.body.tickers).then(data => res.json(data)); 
