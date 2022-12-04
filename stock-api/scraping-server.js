@@ -71,7 +71,8 @@ router.get("/metrics", async (req, res, next) => {
 
     return res.send(await client.register.metrics());
 });
-router.get('/', (req, res, next) => {
+
+router.get('/api/health', (req, res) => {
     res.status(200).send('Ok');
 });
 app.use(router);
