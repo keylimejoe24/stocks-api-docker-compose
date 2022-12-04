@@ -42,11 +42,10 @@ services:
     volumes:
       - db:/data/db
 
-
   scraping-server:
+    image: joja5627/scraping-server:latest
     ports:
       - 3000:3000
-    image: joja5627/scraping-server
     # build: ./stock-api
     restart: unless-stopped
     env_file: ./.env
@@ -60,7 +59,8 @@ services:
 
 
   algorithms-server:
-    build: ./stock-api
+    image: joja5627/algorithms-server:latest
+    # build: ./stock-api
     restart: unless-stopped
     env_file: ./.env
     command: npm run algorithms-server
