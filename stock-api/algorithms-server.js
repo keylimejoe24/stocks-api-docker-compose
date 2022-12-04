@@ -5,19 +5,27 @@ const fs = require('fs');
 
 const scrapeController = require('./controller/scrape.controller')
 
-const app = express();
 const port = process.env.PORT || 3001;
+const router = express.Router();
+const app = express();
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.get('/api/scrape/runAlgorithms/:id', (req, res) => {
+router.get('/', (req, res, next) => {
+    res.status(200).send('Ok');
+});
+
+router.get('/api/scrape/runAlgorithms/:id', (req, res) => {
     scrapeController.runAlgorithms(req.params.id).then(data => res.json(data));
 });
-app.get('/', (req, res) => {
+
+router.get('/', (req, res) => {
     res.status(200).send('Ok');
-  });
+});
 
-
+app.use(router);
 
 app.listen(port, () => {
     console.log(`Server listening on the port  ${port}`);

@@ -4,6 +4,7 @@ require('dotenv').config()
 const fs = require('fs');
 const scrapeController = require('./controller/scrape.controller')
 const client = require('prom-client');
+const _ = require('lodash');
 
 let amexFullTickersRaw = fs.readFileSync('US-Stock-Symbols/amex/amex_full_tickers.json');
 let nasdaqFullTickersRaw = fs.readFileSync('US-Stock-Symbols/nasdaq/nasdaq_full_tickers.json');
@@ -55,9 +56,7 @@ app.use(express.json());
 router.post('/api/scrape/run', (req, res, next) => {
     tickersToScrape = []
     req.body.tickers.forEach(ticker => {
-        requestedTicker = _.pluck(tickersWithoutUpSymbol, (t) => {
-            t.symbol = ticker
-        });
+        requestedTicker = _.find(tickersWithoutUpSymbol, {symbol:ticker})
         tickersToScrape.append(requestedTicker)
     })
     console.log(JSON.stringify(tickersToScrape))
