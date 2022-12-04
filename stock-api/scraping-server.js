@@ -12,19 +12,23 @@ let nyseFullTickersRaw = fs.readFileSync('US-Stock-Symbols/nyse/nyse_full_ticker
 let amexFullTickersJSON = JSON.parse(amexFullTickersRaw)
 let nasdaqFullTickersJSON = JSON.parse(nasdaqFullTickersRaw)
 let nyseFullTickersJSON = JSON.parse(nyseFullTickersRaw)
-const {collectDefaultMetrics} = require('./http-client-with-prom-metrics-tracking');
+
+
+
+const { collectDefaultMetrics } = require('./http-client-with-prom-metrics-tracking');
+
 const register = new client.Registry()
 
 register.setDefaultLabels({
     app: 'stock-api'
-  })
+})
 collectDefaultMetrics(client);
 
 const tickers = [
     ...amexFullTickersJSON,
     ...nasdaqFullTickersJSON,
     ...nyseFullTickersJSON
-  ]
+]
 
 let tickersWithoutUpSymbol = tickers.filter((t) => {
     return !t.symbol.includes("^")
@@ -33,29 +37,46 @@ let tickersWithoutUpSymbol = tickers.filter((t) => {
 let tickersByMarketCap = tickersWithoutUpSymbol.sort((a, b) => parseFloat(b.marketCap) - parseFloat(a.marketCap));
 
 
-const app = express();
 const port = process.env.PORT || 3000;
 
+const router = express.Router();
+const app = express();
+
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.get('/api/scrape/run', (req, res) => {
-    console.log(req.body);
-    scrapeController.run(tickersByMarketCap).then(data => res.json(data));
-});
+// router.use(bodyParser.json());
+// router.use(bodyParser.urlencoded({ extended: true }));
+// router.use(express.json());
 
-app.get('/api/scrape/deleteAll', (req, res) => {
+
+
+router.post('/api/scrape/run', (req, res, next) => {
+    tickersToScrape = []
+    req.body.tickers.forEach(ticker => {
+        requestedTicker = _.pluck(tickersWithoutUpSymbol, (t) => {
+            t.symbol = ticker
+        });
+        tickersToScrape.append(requestedTicker)
+    })
+    console.log(JSON.stringify(tickersToScrape))
+    return scrapeController.run(req.body.tickers).then(data => res.json(data)); 
+})
+router.get('/api/scrape/deleteAll', (req, res, next) => {
     console.log(req.body);
     scrapeController.deleteAll().then(data => res.json(data));
 });
-
-app.listen(port, () => {
-    console.log(`Server listening on the port  ${port}`);
-})
-app.get("/metrics", async (req, res) => {
+router.get("/metrics", async (req, res, next) => {
     // res.set("Content-Type", client.register.contentType);
 
     return res.send(await client.register.metrics());
 });
-app.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
     res.status(200).send('Ok');
 });
+app.use(router);
+
+app.listen(port, () => {
+    console.log(`Server listening on the port  ${port}`);
+})

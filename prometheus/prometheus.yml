@@ -4,3 +4,4 @@ scrape_configs:
   - job_name: "scraping-server"
     static_configs:
       - targets: ["scraping-server:3000"]
+    
