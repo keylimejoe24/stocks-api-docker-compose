@@ -19,7 +19,7 @@ router.get('/api/scrape/runAlgorithms/:id', (req, res) => {
 });
 
 router.get('/api/health', (req, res) => {
-    res.status(200).send('Ok');
+    return res.status(200).send('Ok');
 });
 
 app.use(router);

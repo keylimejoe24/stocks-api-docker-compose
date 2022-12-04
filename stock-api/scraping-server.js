@@ -56,11 +56,11 @@ app.use(express.json());
 router.post('/api/scrape/run', (req, res, next) => {
     tickersToScrape = []
     req.body.tickers.forEach(ticker => {
-        requestedTicker = _.find(tickersWithoutUpSymbol, {symbol:ticker})
+        requestedTicker = _.find(tickersWithoutUpSymbol, {"symbol":ticker})
+        console.log(JSON.stringify(requestedTicker))
         tickersToScrape.push(requestedTicker)
     })
-    console.log(JSON.stringify(tickersToScrape))
-    return scrapeController.run(req.body.tickers).then(data => res.json(data)); 
+    return scrapeController.run(tickersToScrape).then(data => res.json(data)); 
 })
 router.get('/api/scrape/deleteAll', (req, res, next) => {
     console.log(req.body);
@@ -73,7 +73,7 @@ router.get("/metrics", async (req, res, next) => {
 });
 
 router.get('/api/health', (req, res) => {
-    res.status(200).send('Ok');
+    return res.status(200).send('Ok');
 });
 app.use(router);
 

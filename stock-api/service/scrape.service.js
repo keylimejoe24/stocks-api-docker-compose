@@ -409,6 +409,7 @@ async function getData(ticker) {
 }
 
 const storeKeyStats = async (ticker, uuid, treasuryStatsRes) => {
+    logger.info(ticker.symbol)
     let keyStatsRes = await getData(ticker.symbol);
     let closingHistories = await getClosingHistories(ticker.symbol);
     let balanceSheetStatements = await getBalanceSheetHistory(ticker.symbol);
