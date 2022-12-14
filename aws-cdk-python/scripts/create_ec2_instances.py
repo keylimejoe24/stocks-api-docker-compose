@@ -79,16 +79,17 @@ def start_master_servers(instances,scrape_instances):
         "unzip main.zip",
         "cd stocks-api-docker-compose-main",
         create_prometheus_config,
-        "docker-compose up mongodb prometheus grafana algorithms-server -d"
+        "docker-compose down",
+        "docker-compose up mongodb prometheus grafana algorithms-server --build -d"
         ]
 
-
+# ::mongodb://root:123456@35.93.132.93:27017/bezkoder_db?authSource=admin
    
     print(instances[0].id)
     run_services_start_command([instances[0].id], commands)
     
     print("wait_for_services_to_start....")
-    wait_for_services_to_start([instances[0]], ["http://{}:3002/api/health","http://{}:9090/graph", "http://{}:3001/api/health"])
+    wait_for_services_to_start([instances[0]], ["http://{}:3002/api/health","http://{}:9090/graph", "http://{}:3001/api/health","http://{}:27017"])
     return 
 
 def start_scrape_servers(instances,scrape_instances,scrape_instances_ids):
@@ -102,7 +103,7 @@ def start_scrape_servers(instances,scrape_instances,scrape_instances_ids):
     "unzip main.zip",
     'git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git',
     "cd stocks-api-docker-compose-main",
-    "DB_HOST={} docker-compose up scraping-server -d".format(instances[0].public_ip_address)
+    "DB_HOST={} docker-compose up scraping-server --build -d".format(instances[0].public_ip_address)
     ]
     print(commands)
     run_services_start_command(scrape_instances_ids, commands)
