@@ -4,7 +4,7 @@ services:
 
   prometheus:
     image: prom/prometheus:v2.20.1
-    container_name: prometheus
+    # container_name: prometheus
     volumes:
       - ./prometheus:/etc/prometheus
       - prometheus_data:/prometheus
@@ -15,7 +15,7 @@ services:
 
   scraping-server:
     image: joja5627/scraping-server:latest
-    container_name: scraping-server
+    # container_name: scraping-server
     ports:
       - 3000:3000
     build: ./stock-api
@@ -32,7 +32,7 @@ services:
 
   grafana:
     image: grafana/grafana:7.1.5
-    container_name: grafana
+    # container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
@@ -49,7 +49,7 @@ services:
   mongodb:
     image: mongo:latest
     restart: unless-stopped
-    container_name: mongodb
+    # container_name: mongodb
     env_file: ./.env
     environment:
       - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
@@ -63,7 +63,7 @@ services:
 
   algorithms-server:
     image: joja5627/algorithms-server:latest
-    container_name: algorithms-server
+    # container_name: algorithms-server
     build: ./stock-api
     restart: unless-stopped
     env_file: ./.env
