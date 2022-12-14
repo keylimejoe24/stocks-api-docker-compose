@@ -29,7 +29,7 @@ services:
       - DB_NAME=$MONGODB_DATABASE
       - DB_PORT=$MONGODB_DOCKER_PORT
 
-
+# docker-compose logs -f -t
   grafana:
     image: grafana/grafana:7.1.5
     # container_name: grafana

@@ -78,10 +78,8 @@ def start_master_servers(instances,scrape_instances):
         "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
         "cd stocks-api-docker-compose",
         create_prometheus_config,
-        "docker-compose up mongodb prometheus grafana algorithms-server --build -d"
+        "docker-compose up mongodb prometheus grafana algorithms-server -d"
         ]
-
-# ::mongodb://root:123456@35.93.132.93:27017/bezkoder_db?authSource=admin
    
     print(instances[0].id)
     run_services_start_command([instances[0].id], commands)
@@ -99,7 +97,7 @@ def start_scrape_servers(instances,scrape_instances,scrape_instances_ids):
     "sudo su",
     "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
-    "DB_HOST={} docker-compose up scraping-server --build -d".format(instances[0].public_ip_address)
+    "DB_HOST={} docker-compose up scraping-server -d".format(instances[0].public_ip_address)
     ]
     print(commands)
     run_services_start_command(scrape_instances_ids, commands)
@@ -146,16 +144,18 @@ def divide_chunks(l, n):
 
 def start_scrape(urls):
     tickers = []
-    with open('US-Stock-Symbols/all/all_tickers.txt') as f:
+    with open('/Users/favoritechild/dev/stocks-api-docker-compose/aws-cdk-python/scripts/US-Stock-Symbols/all/all_tickers.txt') as f:
         lines = f.readlines()
         for line in lines:
             tickers.append(line.strip())
         f.close()
 
-    ticker_chunks = list(divide_chunks(tickers, 8))
+    ticker_chunks = list(divide_chunks(tickers, 1000))
 
     for index, url in enumerate(urls):
         print(url)
+        print(ticker_chunks[index])
+        print(len(ticker_chunks[index]))
         myobj = {'tickers': ticker_chunks[index]} 
         response = requests.post(url, json = myobj)
         print(response)
@@ -163,7 +163,7 @@ def start_scrape(urls):
 
 def main():
     instances = ec2.create_instances(
-        ImageId="ami-0818c1b316a29f4e5",
+        ImageId="ami-01425ace5debe9cee",
         MinCount=1,
         MaxCount=1,
         InstanceType="t2.micro",
@@ -173,7 +173,7 @@ def main():
             'Arn': 'arn:aws:iam::313155636620:instance-profile/MyEC2SSMRole'}
     )
     scrape_instances = ec2.create_instances(
-        ImageId="ami-0818c1b316a29f4e5",
+        ImageId="ami-01425ace5debe9cee",
         MinCount=8,
         MaxCount=8,
         InstanceType="t2.micro",
@@ -218,11 +218,16 @@ def main():
     
     start_master_servers(instances,scrape_instances)
     start_scrape_servers(instances,scrape_instances,scrape_instance_ids)
-    urls = []
+    urls = [
+       
+    ]
     for instance in scrape_instances: 
         urls.append("http://{}:3000/api/scrape/run".format(instance.public_ip_address))
     print("start_scrape...")
     start_scrape(urls)
+   
+    print("GRAFANA CONNECTION STRING: http://{}:3002".format(instances[0].public_ip_address))
+    print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(instances[0].public_ip_address))
    
    
 
