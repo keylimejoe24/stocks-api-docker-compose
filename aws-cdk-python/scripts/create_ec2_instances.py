@@ -144,7 +144,25 @@ def run_services_start_command(instance_ids, commands):
 
     print(response)
 
+def divide_chunks(l, n):
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
 
+def start_scrape(urls):
+    tickers = []
+    with open('US-Stock-Symbols/all/all_tickers.txt') as f:
+        lines = f.readlines()
+        for line in lines:
+            tickers.append(line.strip())
+        f.close()
+
+    ticker_chunks = list(divide_chunks(tickers, 8))
+
+    for index, url in enumerate(urls):
+        print(url)
+        myobj = {'tickers': ticker_chunks[index]} 
+        response = requests.post(url, json = myobj)
+        print(response)
 
 
 def main():
@@ -204,6 +222,12 @@ def main():
     
     start_master_servers(instances,scrape_instances)
     start_scrape_servers(instances,scrape_instances,scrape_instance_ids)
+    urls = []
+    for instance in scrape_instances: 
+        urls.append("http://{}:3000/api/scrape/run".format(instance.public_ip_address))
+    print("start_scrape...")
+    start_scrape(urls)
+   
    
 
 if __name__=='__main__':
