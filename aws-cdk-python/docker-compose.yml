@@ -1,0 +1,32 @@
+version: "3"
+services:
+    boto3-python:
+        container_name: ${CONTAINER_NAME}
+        command: /bin/sh
+        build: .
+        volumes:
+            - ./scripts:/scripts
+        environment: 
+            - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+            - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+        # stdin_open: true 
+        tty: true
+
+    boto3-python2:
+       container_name: ${CONTAINER_NAME}
+       command: /bin/sh
+       build: .
+       volumes:
+           - ./scripts:/scripts
+       environment: 
+           - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+           - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+           - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+       # stdin_open: true 
+       tty: true
+
+# CONTAINER_NAME="boto3-python" docker-compose up --remove-orphans --build -d boto3-python && docker exec -it boto3-python bin/sh
+# CONTAINER_NAME="boto3-python2" docker-compose up --remove-orphans --build -d boto3-python2 && docker exec -it boto3-python2 bin/sh
+
+# curl -X POST -H "Content-Type: application/json" -d @./ticker_body.json http://localhost:3000/api/scrape/run
