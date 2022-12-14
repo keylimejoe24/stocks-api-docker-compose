@@ -75,11 +75,9 @@ def start_master_servers(instances,scrape_instances):
     
     commands = [
         "sudo su",
-        "wget https://github.com/keylimejoe24/stocks-api-docker-compose/archive/refs/heads/main.zip",
-        "unzip main.zip",
-        "cd stocks-api-docker-compose-main",
+        "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
+        "cd stocks-api-docker-compose",
         create_prometheus_config,
-        "docker-compose down",
         "docker-compose up mongodb prometheus grafana algorithms-server --build -d"
         ]
 
@@ -98,11 +96,9 @@ def start_scrape_servers(instances,scrape_instances,scrape_instances_ids):
     print(scrape_instances_ids)
    
     commands = [
-   "sudo su",
-    "wget https://github.com/keylimejoe24/stocks-api-docker-compose/archive/refs/heads/main.zip",
-    "unzip main.zip",
-    'git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git',
-    "cd stocks-api-docker-compose-main",
+    "sudo su",
+    "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
+    "cd stocks-api-docker-compose",
     "DB_HOST={} docker-compose up scraping-server --build -d".format(instances[0].public_ip_address)
     ]
     print(commands)
