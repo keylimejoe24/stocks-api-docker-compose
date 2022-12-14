@@ -5,6 +5,8 @@ from jinja2 import Template
 from multiprocessing import Process
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
+session = boto3.Session()
+credentials = session.get_credentials()
 
 ec2 = boto3.resource('ec2')
 ec2_client = boto3.client('ec2')
@@ -103,8 +105,8 @@ def start_scrape_servers(instances,scrape_instances,scrape_instances_ids):
     "DB_HOST={} docker-compose up scraping-server -d".format(instances[0].public_ip_address)
     ]
     print(commands)
-    run_services_start_command([scrape_instances_ids], commands)
-    wait_for_services_to_start([scrape_instances], ["http://{}:3000/metrics"])
+    run_services_start_command(scrape_instances_ids, commands)
+    wait_for_services_to_start(scrape_instances, ["http://{}:3000/metrics"])
 
 def requests_retry_session(
     retries=10000,
@@ -140,27 +142,6 @@ def run_services_start_command(instance_ids, commands):
         Parameters={'commands': commands})
 
     print(response)
-    # for id in instance_ids:
-    #     get_command_invocation_params = {
-    #         'CommandId': command_id,
-    #         'InstanceId': id
-    #     }
-    #     for i in range(MAX_RETRY):
-    #         try:
-    #            command_executed_waiter.wait(**get_command_invocation_params)
-    #            break
-    #         except WaiterError as err:
-    #             print(err)
-    #             last_resp = err.last_response
-    #             if 'Error' in last_resp:
-    #                 if last_resp['Error']['Code'] != 'InvocationDoesNotExist' or i + 1 == MAX_RETRY:
-    #                     raise err
-    #             else:
-    #                 if last_resp['Status'] == 'Failed':
-    #                     print(last_resp['StandardErrorContent'],
-    #                           file=sys.stderr)
-    #                     exit(last_resp['ResponseCode'])
-    #             continue
 
 
 
@@ -219,9 +200,7 @@ def main():
             if each["InstanceStatus"]["Status"] == 'ok' and each["SystemStatus"]["Details"][0]["Status"] == 'passed' and each["SystemStatus"]["Status"]:
                 instances_starting = False
    
-    # instances = [ec2.Instance(id='i-0bc9a3c701522f22c')]
-    # scrape_instances = [ec2.Instance(id='i-03f3c7b9c6ea086b5'), ec2.Instance(id='i-0f22ca1bd74366468'), ec2.Instance(id='i-0f47db9ef2053b187'), ec2.Instance(id='i-07cf88ac94a9634aa'), ec2.Instance(id='i-0e911d8fce9cfbf2b'), ec2.Instance(id='i-0193d8247fb677eab'), ec2.Instance(id='i-0ec385bd59b7d4726'), ec2.Instance(id='i-06081f3cabf622235')]
-    # scrape_instance_ids = ['i-03f3c7b9c6ea086b5', 'i-0f22ca1bd74366468', 'i-0f47db9ef2053b187', 'i-07cf88ac94a9634aa', 'i-0e911d8fce9cfbf2b', 'i-0193d8247fb677eab', 'i-0ec385bd59b7d4726', 'i-06081f3cabf622235']
+    
     start_master_servers(instances,scrape_instances)
     start_scrape_servers(instances,scrape_instances,scrape_instance_ids)
    

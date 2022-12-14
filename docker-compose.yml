@@ -55,6 +55,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
     ports:
       - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
+    expose:
+      - $MONGODB_LOCAL_PORT
     volumes:
       - db:/data/db
 
