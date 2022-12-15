@@ -4,9 +4,10 @@ const scrapeRepository = require('../repository/scrape.repository');
 
 class ScrapeController {
 
-    async run(tickers) {
+    async run(tickers,id) {
         logger.info('Controller: run')
-        return await scrapeService.run(tickers);
+        logger.info(id)
+        return await scrapeService.run(tickers,id);
     }
     async runAlgorithms(id) {
         logger.info(`Running Algorithms on scrape id ${id}`)

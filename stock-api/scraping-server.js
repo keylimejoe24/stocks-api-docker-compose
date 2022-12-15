@@ -5,6 +5,7 @@ const fs = require('fs');
 const scrapeController = require('./controller/scrape.controller')
 const client = require('prom-client');
 const _ = require('lodash');
+const logger = require('./logger/api.logger');
 
 let amexFullTickersRaw = fs.readFileSync('US-Stock-Symbols/amex/amex_full_tickers.json');
 let nasdaqFullTickersRaw = fs.readFileSync('US-Stock-Symbols/nasdaq/nasdaq_full_tickers.json');
@@ -62,6 +63,7 @@ router.post('/api/scrape/run', (req, res, next) => {
     })
     logger.info(req.body.scrapeID)
     scrapeID = req.body.scrapeID
+    logger.info(scrapeID)
     return scrapeController.run(tickersToScrape,scrapeID).then(data => res.json(data)); 
 })
 router.get('/api/scrape/deleteAll', (req, res, next) => {

@@ -557,7 +557,9 @@ class ScrapeService {
         }
     }
     async run(tickers,scrapeID) {
+
         // await scrapeRepository.deleteAll()
+        logger.info(scrapeID)
         let treasuryStatsRes
         try {
             treasuryStatsRes = await treasuryStats.getData();
@@ -566,7 +568,7 @@ class ScrapeService {
         }
         // let scrapeID = randomUUID()
         batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 10)
-        return { scrapeID: scrapeID }
+        return { ok:"ok" }
 
     }
 
