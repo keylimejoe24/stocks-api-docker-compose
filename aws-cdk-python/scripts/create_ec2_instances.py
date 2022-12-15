@@ -99,7 +99,7 @@ def start_scrape_servers(instances,scrape_instances,scrape_instances_ids):
     "sudo su",
     "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
-    "DB_HOST={} docker-compose up scraping-server -d".format(instances[0].public_ip_address)
+    "DB_HOST={} docker-compose up scraping-server --build -d".format(instances[0].public_ip_address)
     ]
     print(commands)
     run_services_start_command(scrape_instances_ids, commands)
@@ -231,7 +231,7 @@ def main():
     print("SCRAPE ID: " + scrape_id)
     print("GRAFANA CONNECTION STRING: http://{}:3002".format(instances[0].public_ip_address))
     print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(instances[0].public_ip_address))
-    print("ALGORITHMS ENDPOINT: http://{}:3001/".format(instances[0].public_ip_address))
+    print("ALGORITHMS ENDPOINT: http://{}:3001/api/scrape/runAlgorithms/{}".format(instances[0].public_ip_address,scrape_id))
    
    
 
