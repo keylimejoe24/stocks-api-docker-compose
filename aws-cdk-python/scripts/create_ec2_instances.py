@@ -5,6 +5,8 @@ from jinja2 import Template
 from multiprocessing import Process
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
+import uuid
+
 session = boto3.Session()
 credentials = session.get_credentials()
 
@@ -142,7 +144,7 @@ def divide_chunks(l, n):
     for i in range(0, len(l), n):
         yield l[i:i + n]
 
-def start_scrape(urls):
+def start_scrape(urls,scrape_id):
     tickers = []
     with open('/Users/favoritechild/dev/stocks-api-docker-compose/aws-cdk-python/scripts/US-Stock-Symbols/all/all_tickers.txt') as f:
         lines = f.readlines()
@@ -150,13 +152,13 @@ def start_scrape(urls):
             tickers.append(line.strip())
         f.close()
 
-    ticker_chunks = list(divide_chunks(tickers, 1000))
+    ticker_chunks = list(divide_chunks(tickers, 400))
 
     for index, url in enumerate(urls):
         print(url)
         print(ticker_chunks[index])
         print(len(ticker_chunks[index]))
-        myobj = {'tickers': ticker_chunks[index]} 
+        myobj = {'tickers': ticker_chunks[index],'scrapeID':scrape_id} 
         response = requests.post(url, json = myobj)
         print(response)
 
@@ -174,8 +176,8 @@ def main():
     )
     scrape_instances = ec2.create_instances(
         ImageId="ami-01425ace5debe9cee",
-        MinCount=8,
-        MaxCount=8,
+        MinCount=20,
+        MaxCount=20,
         InstanceType="t2.micro",
         KeyName="stock-api",
         SecurityGroupIds=["launch-wizard-1", "default"],
@@ -223,11 +225,13 @@ def main():
     ]
     for instance in scrape_instances: 
         urls.append("http://{}:3000/api/scrape/run".format(instance.public_ip_address))
+    scrape_id = str(uuid.uuid4())
     print("start_scrape...")
-    start_scrape(urls)
-   
+    start_scrape(urls,scrape_id)
+    print("SCRAPE ID: " + scrape_id)
     print("GRAFANA CONNECTION STRING: http://{}:3002".format(instances[0].public_ip_address))
     print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(instances[0].public_ip_address))
+    print("ALGORITHMS ENDPOINT: http://{}:3001/".format(instances[0].public_ip_address))
    
    
 

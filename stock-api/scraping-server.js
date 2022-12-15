@@ -60,7 +60,8 @@ router.post('/api/scrape/run', (req, res, next) => {
         console.log(JSON.stringify(requestedTicker))
         tickersToScrape.push(requestedTicker)
     })
-    return scrapeController.run(tickersToScrape).then(data => res.json(data)); 
+    scrapeID = req.body.scrapeID
+    return scrapeController.run(tickersToScrape,scrapeID).then(data => res.json(data)); 
 })
 router.get('/api/scrape/deleteAll', (req, res, next) => {
     console.log(req.body);
