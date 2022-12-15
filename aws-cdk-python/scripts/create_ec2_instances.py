@@ -235,7 +235,6 @@ def main():
     print("FRONT END: http://{}:3003".format(instances[0].public_ip_address))
     print("GRAFANA CONNECTION STRING: http://{}:3002".format(instances[0].public_ip_address))
     print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(instances[0].public_ip_address))
-    print("ALGORITHMS ENDPOINT: http://{}:3001/api/scrape/runAlgorithms/{}".format(instances[0].public_ip_address,scrape_id))
    
    
 

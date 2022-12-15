@@ -42,6 +42,8 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 export default function App() {
   const [inputValue, setInputValue] = React.useState("");
+  const [scrapeIds, setScrapeIds] = React.useState("");
+
 
   const onChangeHandler = event => {
     console.log(event)
@@ -56,18 +58,10 @@ export default function App() {
   const [algorithmsResponse, setAlgorithmsResponse] = useState([]);
 
   useEffect(() => {
-    fetch(`http://algorithms-server:3001/api/scrape/runAlgorithms/b39659d6-2a74-429d-a985-a9ad59a6bc62`,
-      {
-        method: "GET",
-        headers: new Headers({
-          Accept: "application/vnd.github.cloak-preview"
-        })
-      }
-    )
+    fetch(`http://algorithms-server:3001/api/algorithms/ids`,{method: "GET"})
       .then(res => res.json())
       .then(response => {
-        // setCommitHistory(response.items);
-        // setIsLoading(false);
+        console.log(response)
       })
       .catch(error => console.log(error));
   }, []);

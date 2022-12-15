@@ -14,8 +14,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 
-router.get('/api/scrape/runAlgorithms/:id', (req, res) => {
+router.get('/api/algorithms/run/:id', (req, res) => {
     scrapeController.runAlgorithms(req.params.id).then(data => res.json(data));
+});
+
+router.get('/api/algorithms/ids', (req, res) => {
+    scrapeController.getScrapeIds().then(data => res.json(data));
 });
 
 router.get('/api/health', (req, res) => {

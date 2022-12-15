@@ -13,8 +13,11 @@ class ScrapeController {
         logger.info(`Running Algorithms on scrape id ${id}`)
         return await scrapeService.runAlgorithms(id);
     }
+    async getScrapeIds() {
+        logger.info(`Returning Scrape ID's`)
+        return await scrapeRepository.listDistinctId(id,symbol);
+    }
     async getTickerStats(id,symbol) {
-        
         return await scrapeRepository.listByIDandSymbol(id,symbol);
     }
     async deleteAll() {
