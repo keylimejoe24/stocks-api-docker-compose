@@ -15,7 +15,7 @@ class ScrapeController {
     }
     async getScrapeIds() {
         logger.info(`Returning Scrape ID's`)
-        return await scrapeRepository.listDistinctId(id,symbol);
+        return await scrapeRepository.listDistinctId();
     }
     async getTickerStats(id,symbol) {
         return await scrapeRepository.listByIDandSymbol(id,symbol);

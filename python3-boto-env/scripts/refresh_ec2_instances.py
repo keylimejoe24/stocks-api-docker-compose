@@ -6,6 +6,7 @@ from multiprocessing import Process
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 import uuid
+import time
 
 ec2_resource = boto3.resource('ec2')
 ec2_client = boto3.client('ec2')
@@ -92,9 +93,10 @@ refresh_master_commands = [
        "docker-compose up mongodb prometheus grafana algorithms-server frontend --build -d"
        ]
    
-print(master_instances[0]["id"])
+
 run_services_start_command([master_instances[0]["id"]], refresh_master_commands)
-    
+time.sleep(10)
+
 print("wait_for_services_to_start....")
 wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health","http://{}:9090/graph", "http://{}:3001/api/health","http://{}:27017","http://{}:3003"])
      
@@ -107,4 +109,12 @@ commands = [
     ]
 print(commands)
 run_services_start_command(scrape_instance_ids, commands)
+time.sleep(10)
+
 wait_for_services_to_start(scrape_instances, ["http://{}:3000/metrics"])
+
+print("MASTER INSTANCE ID: " + master_instances[0]["id"])
+print("FRONT END: http://{}:3003".format(master_instances[0]["public_ip_address"]))
+print("GRAFANA CONNECTION STRING: http://{}:3002".format(master_instances[0]["public_ip_address"]))
+print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(master_instances[0]["public_ip_address"]))
+print("DEPLOYMENT VERSION: " + version)

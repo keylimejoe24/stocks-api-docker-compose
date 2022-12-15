@@ -23,20 +23,11 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const StyledInput = styled(TextField)(({ theme }) => ({
-  // backgroundColor: '#fafafa',
-  // ...theme.typography.body2,
-  // padding: theme.spacing(1),
   margin: theme.spacing(1),
-  // textAlign: 'center',
-  // color: theme.palette.text.secondary,
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
-  // backgroundColor: '#fafafa',
-  // ...theme.typography.body2,
   margin: theme.spacing(1),
-  // textAlign: 'center',
-  // color: theme.palette.text.secondary,
 }));
 
 

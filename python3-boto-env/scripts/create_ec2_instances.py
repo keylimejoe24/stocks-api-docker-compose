@@ -243,18 +243,7 @@ def main():
     print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(instances[0].public_ip_address))
     print("DEPLOYMENT VERSION: " + instance_version)
 
-    dictionary = {
-    "master_instance": {"id":instances[0].id,"public_ip":instances[0].public_ip_address},
-    "scrape_instances": scrape_instances_to_save,
-    }
  
-    # Serializing json
-    json_object = json.dumps(dictionary, indent=4)
-    
-    # Writing to sample.json
-    with open("ec2_instances.json", "w") as outfile:
-        outfile.write(json_object)
-   
    
 
 if __name__=='__main__':
