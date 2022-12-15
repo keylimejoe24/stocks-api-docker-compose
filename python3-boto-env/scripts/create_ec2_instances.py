@@ -80,7 +80,7 @@ def start_master_servers(instances,scrape_instances):
         "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
         "cd stocks-api-docker-compose",
         create_prometheus_config,
-        "docker-compose up mongodb prometheus grafana algorithms-server -d"
+        "docker-compose up mongodb prometheus grafana algorithms-server frontend -d"
         ]
    
     print(instances[0].id)
@@ -166,7 +166,7 @@ def start_scrape(urls,scrape_id):
 
 def main():
     instances = ec2.create_instances(
-        ImageId="ami-01425ace5debe9cee",
+        ImageId="ami-000a610b7f69a6112",
         MinCount=1,
         MaxCount=1,
         InstanceType="t2.micro",
@@ -176,7 +176,7 @@ def main():
             'Arn': 'arn:aws:iam::313155636620:instance-profile/MyEC2SSMRole'}
     )
     scrape_instances = ec2.create_instances(
-        ImageId="ami-01425ace5debe9cee",
+        ImageId="ami-000a610b7f69a6112",
         MinCount=20,
         MaxCount=20,
         InstanceType="t2.micro",
@@ -192,15 +192,21 @@ def main():
     scrape_instances_starting = True
     scrape_instance_ids = [o.id for o in scrape_instances]
 
+
     for instance in instances:
         instance.wait_until_running()
-        # instance.add_tag('Type', 'Master')
         instance.reload()
 
+    scrape_instances_to_save = []
     for instance in scrape_instances:
         instance.wait_until_running()
-        # instance.add_tag('Type', 'Scrape')
         instance.reload()
+        scrape_instances_to_save.append({"id":instance.id,"public_ip":instance.public_ip_address})
+
+    instance_version = str(uuid.uuid4())
+
+    ec2.create_tags(Resources=instance_ids, Tags=[{'Key':'master', 'Value':instance_version}])
+    ec2.create_tags(Resources=scrape_instance_ids, Tags=[{'Key':'scrape', 'Value':instance_version}])
 
     while scrape_instances_starting:
         time.sleep(.50)
@@ -235,6 +241,19 @@ def main():
     print("FRONT END: http://{}:3003".format(instances[0].public_ip_address))
     print("GRAFANA CONNECTION STRING: http://{}:3002".format(instances[0].public_ip_address))
     print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(instances[0].public_ip_address))
+    print("DEPLOYMENT VERSION: " + instance_version)
+
+    dictionary = {
+    "master_instance": {"id":instances[0].id,"public_ip":instances[0].public_ip_address},
+    "scrape_instances": scrape_instances_to_save,
+    }
+ 
+    # Serializing json
+    json_object = json.dumps(dictionary, indent=4)
+    
+    # Writing to sample.json
+    with open("ec2_instances.json", "w") as outfile:
+        outfile.write(json_object)
    
    
 

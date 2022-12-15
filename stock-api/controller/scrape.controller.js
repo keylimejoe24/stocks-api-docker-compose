@@ -6,7 +6,7 @@ class ScrapeController {
 
     async run(tickers,id) {
         logger.info('Controller: run')
-        logger.info(id)
+      
         return await scrapeService.run(tickers,id);
     }
     async runAlgorithms(id) {

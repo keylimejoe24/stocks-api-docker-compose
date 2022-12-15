@@ -559,7 +559,7 @@ class ScrapeService {
     async run(tickers,scrapeID) {
 
         // await scrapeRepository.deleteAll()
-        logger.info(scrapeID)
+       
         let treasuryStatsRes
         try {
             treasuryStatsRes = await treasuryStats.getData();
