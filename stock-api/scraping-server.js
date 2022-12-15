@@ -60,6 +60,7 @@ router.post('/api/scrape/run', (req, res, next) => {
         console.log(JSON.stringify(requestedTicker))
         tickersToScrape.push(requestedTicker)
     })
+    logger.info(req.body.scrapeID)
     scrapeID = req.body.scrapeID
     return scrapeController.run(tickersToScrape,scrapeID).then(data => res.json(data)); 
 })
