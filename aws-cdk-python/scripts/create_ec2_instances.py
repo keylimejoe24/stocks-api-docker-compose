@@ -87,7 +87,7 @@ def start_master_servers(instances,scrape_instances):
     run_services_start_command([instances[0].id], commands)
     
     print("wait_for_services_to_start....")
-    wait_for_services_to_start([instances[0]], ["http://{}:3002/api/health","http://{}:9090/graph", "http://{}:3001/api/health","http://{}:27017"])
+    wait_for_services_to_start([instances[0]], ["http://{}:3002/api/health","http://{}:9090/graph", "http://{}:3001/api/health","http://{}:27017","http://{}:3003"])
     return 
 
 def start_scrape_servers(instances,scrape_instances,scrape_instances_ids):
@@ -194,10 +194,12 @@ def main():
 
     for instance in instances:
         instance.wait_until_running()
+        # instance.add_tag('Type', 'Master')
         instance.reload()
 
     for instance in scrape_instances:
         instance.wait_until_running()
+        # instance.add_tag('Type', 'Scrape')
         instance.reload()
 
     while scrape_instances_starting:
@@ -230,6 +232,7 @@ def main():
     print("start_scrape...")
     start_scrape(urls,scrape_id)
     print("SCRAPE ID: " + scrape_id)
+    print("FRONT END: http://{}:3003".format(instances[0].public_ip_address))
     print("GRAFANA CONNECTION STRING: http://{}:3002".format(instances[0].public_ip_address))
     print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(instances[0].public_ip_address))
     print("ALGORITHMS ENDPOINT: http://{}:3001/api/scrape/runAlgorithms/{}".format(instances[0].public_ip_address,scrape_id))

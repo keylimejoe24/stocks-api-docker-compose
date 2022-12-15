@@ -13,6 +13,17 @@ services:
     expose:
       - 9090
 
+  frontend:
+    ports:
+      - 3003:3003
+    build: ./stock-api/frontend
+    restart: unless-stopped
+    env_file: ./.env
+    command: npm run start
+    expose:
+     - 3003
+    
+
   scraping-server:
     image: joja5627/scraping-server:latest
     # container_name: scraping-server
@@ -83,6 +94,6 @@ volumes:
   db:
   prometheus_data: 
   grafana_data: 
-  
+
 # docker-compose logs -f -t
 
