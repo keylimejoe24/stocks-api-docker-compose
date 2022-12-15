@@ -434,7 +434,7 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize) => {
             if (windowEnd > tickers.length) {
                 windowEnd = tickers.length
             }
-            logger.info(`storing batch:: windowStart: ${windowStart}, windowEnd: ${windowEnd}`)
+            logger.info(`storing batch:: windowStart: ${windowStart}, windowEnd: ${windowEnd} uuid: ${uuid} `)
             for (const ticker of tickers.slice(windowStart, windowEnd)) {
 
                 storeKeyStats(ticker, uuid, treasuryStatsRes)

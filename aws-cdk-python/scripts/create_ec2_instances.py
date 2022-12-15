@@ -99,6 +99,7 @@ def start_scrape_servers(instances,scrape_instances,scrape_instances_ids):
     "sudo su",
     "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
+    "git pull",
     "DB_HOST={} docker-compose up scraping-server --build -d".format(instances[0].public_ip_address)
     ]
     print(commands)
