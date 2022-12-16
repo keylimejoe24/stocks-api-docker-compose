@@ -50,14 +50,14 @@ export default function App() {
   console.log(process.env.REACT_APP_NOT_SECRET_CODE)
   console.log(process.env.REACT_APP_FOO)
   console.log(process.env.REACT_APP_BAR)
-  useEffect(() => {
-    fetch(`http://${}:3001/api/algorithms/ids`,{method: "GET"})
-      .then(res => res.json())
-      .then(response => {
-        console.log(response)
-      })
-      .catch(error => console.log(error));
-  }, []);
+  // useEffect(() => {
+  //   fetch(`http://${}:3001/api/algorithms/ids`,{method: "GET"})
+  //     .then(res => res.json())
+  //     .then(response => {
+  //       console.log(response)
+  //     })
+  //     .catch(error => console.log(error));
+  // }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
