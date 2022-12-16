@@ -52,7 +52,11 @@ app.use(express.json());
 // router.use(bodyParser.urlencoded({ extended: true }));
 // router.use(express.json());
 
-
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
 
 router.post('/api/scrape/run', (req, res, next) => {
     tickersToScrape = []

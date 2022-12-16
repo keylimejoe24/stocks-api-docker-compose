@@ -27,4 +27,9 @@ for r in scrape_response['Reservations']:
         instance_ids.append(inst['InstanceId'])
         
 start_response = ec2_resource.instances.filter(InstanceIds = instance_ids).start()
-print(start_response)
+
+# print("MASTER INSTANCE ID: " + master_instances[0]["id"])
+# print("FRONT END: http://{}:3003".format(master_instances[0]["public_ip_address"]))
+# print("GRAFANA CONNECTION STRING: http://{}:3002".format(master_instances[0]["public_ip_address"]))
+# print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(master_instances[0]["public_ip_address"]))
+# print("DEPLOYMENT VERSION: " + version)

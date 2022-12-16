@@ -13,7 +13,7 @@ ec2_client = boto3.client('ec2')
 ssm_client = boto3.client('ssm')
 
 
-version = "7b3b7196-0a34-4805-9d07-9ce0295a3289"
+version = "923aba20-f9f8-4eab-9078-b5489b360bbc"
 def requests_retry_session(
     retries=10000,
     backoff_factor=0.3,
@@ -84,7 +84,7 @@ for r in scrape_response['Reservations']:
             "id":inst['InstanceId'],
             "public_ip_address":inst["PublicIpAddress"],
         })
-
+print(master_instances)
 docker_compose_build = 'docker-compose build frontend --build-arg MASTER_IP="{}"'.format(master_instances[0]['public_ip_address'])
 refresh_master_commands = [
        "sudo su",
