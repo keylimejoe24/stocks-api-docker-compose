@@ -21,8 +21,13 @@ class ScrapeRepository {
         return tasks;
     }
     async listDistinctId() {
-        const ids = await Scrape.find().distinct("id")
-        return ids
+        return await Scrape.find().distinct('id', function(error, ids) {
+            if(error){
+                logger.error('Error::' + error);
+            }
+            return ids
+        });
+       
     }
    
     async listByIDandSymbol(id,symbol) {
