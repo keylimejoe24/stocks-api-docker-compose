@@ -21,7 +21,7 @@ class ScrapeRepository {
         return tasks;
     }
     async listDistinctId() {
-        const ids = await Person.find().distinct("id")
+        const ids = await Scrape.find().distinct("id")
         return ids
     }
    
