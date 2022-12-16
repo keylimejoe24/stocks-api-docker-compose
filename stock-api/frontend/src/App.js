@@ -47,17 +47,15 @@ export default function App() {
 
   const PrettyPrintJson = ({ data }) => (<div><pre>{JSON.stringify(data, null, 2)}</pre></div>);
   const [algorithmsResponse, setAlgorithmsResponse] = useState([]);
-  console.log(process.env.REACT_APP_NOT_SECRET_CODE)
-  console.log(process.env.REACT_APP_FOO)
-  console.log(process.env.REACT_APP_BAR)
-  // useEffect(() => {
-  //   fetch(`http://${}:3001/api/algorithms/ids`,{method: "GET"})
-  //     .then(res => res.json())
-  //     .then(response => {
-  //       console.log(response)
-  //     })
-  //     .catch(error => console.log(error));
-  // }, []);
+ 
+  useEffect(() => {
+    fetch(`http://${process.env.REACT_APP_MASTER_IP}:3001/api/algorithms/ids`,{method: "GET"})
+      .then(res => res.json())
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => console.log(error));
+  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>

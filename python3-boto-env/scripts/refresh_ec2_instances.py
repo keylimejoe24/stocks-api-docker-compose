@@ -84,12 +84,14 @@ for r in scrape_response['Reservations']:
             "id":inst['InstanceId'],
             "public_ip_address":inst["PublicIpAddress"],
         })
-        
+
+docker_compose_build = 'docker-compose build frontend --build-arg MASTER_IP="{}"'.format(master_instances[0]['public_ip_address'])
 refresh_master_commands = [
        "sudo su",
        "cd stocks-api-docker-compose",
        "git pull",
        "docker-compose down",
+        docker_compose_build,
        "docker-compose up mongodb prometheus grafana algorithms-server frontend --build -d"
        ]
    
@@ -112,6 +114,7 @@ run_services_start_command(scrape_instance_ids, commands)
 time.sleep(10)
 
 wait_for_services_to_start(scrape_instances, ["http://{}:3000/metrics"])
+
 
 print("MASTER INSTANCE ID: " + master_instances[0]["id"])
 print("FRONT END: http://{}:3003".format(master_instances[0]["public_ip_address"]))

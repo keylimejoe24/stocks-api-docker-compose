@@ -75,12 +75,14 @@ def start_master_servers(instances,scrape_instances):
     print("run_master_server_start_command....")
     
     create_prometheus_config = 'echo "{}" > prometheus/prometheus.yml'.format(prometheus_config)
+    docker_compose_build = 'docker-compose build frontend --build-arg MASTER_IP="{}"'.format(instances[0].public_ip_address)
     
     commands = [
         "sudo su",
         "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
         "cd stocks-api-docker-compose",
         create_prometheus_config,
+        docker_compose_build,
         "docker-compose up mongodb prometheus grafana algorithms-server frontend -d"
         ]
    
@@ -233,12 +235,7 @@ def main():
     urls = [
        
     ]
-    for instance in scrape_instances: 
-        urls.append("http://{}:3000/api/scrape/run".format(instance.public_ip_address))
-    scrape_id = str(uuid.uuid4())
-    print("start_scrape...")
-    start_scrape(urls,scrape_id)
-    print("SCRAPE ID: " + scrape_id)
+   
     print("FRONT END: http://{}:3003".format(instances[0].public_ip_address))
     print("GRAFANA CONNECTION STRING: http://{}:3002".format(instances[0].public_ip_address))
     print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(instances[0].public_ip_address))
