@@ -84,15 +84,16 @@ for r in scrape_response['Reservations']:
             "id":inst['InstanceId'],
             "public_ip_address":inst["PublicIpAddress"],
         })
+
 print(master_instances)
-docker_compose_build = 'docker-compose build frontend --build-arg MASTER_IP="{}"'.format(master_instances[0]['public_ip_address'])
+docker_compose_build = 'COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build mongodb prometheus grafana algorithms-server frontend --build-arg MASTER_IP="{}"'.format(master_instances[0]['public_ip_address'])
 refresh_master_commands = [
        "sudo su",
        "cd stocks-api-docker-compose",
        "git pull",
        "docker-compose down",
         docker_compose_build,
-       "docker-compose up mongodb prometheus grafana algorithms-server frontend --build -d"
+       "docker-compose up mongodb prometheus grafana algorithms-server frontend -d"
        ]
    
 
@@ -107,7 +108,8 @@ commands = [
     "cd stocks-api-docker-compose",
     "git pull",
     "docker-compose down",
-    "DB_HOST={} docker-compose up scraping-server --build -d".format(master_instances[0]["public_ip_address"])
+    "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build scraping-server",
+    "DB_HOST={} docker-compose up scraping-server -d".format(master_instances[0]["public_ip_address"])
     ]
 print(commands)
 run_services_start_command(scrape_instance_ids, commands)

@@ -21,12 +21,20 @@ class ScrapeRepository {
         return tasks;
     }
     async listDistinctId() {
-        return await Scrape.find().distinct('id', function(error, ids) {
+        const ids = await Scrape.find().distinct('id', function(error, ids) {
             if(error){
                 logger.error('Error::' + error);
             }
             return ids
         });
+
+        return ids.map(id => {
+            const scrapes = Scrape.find({ id: id })
+            return {
+                "id":id,
+                "createdAt": scrapes[0].createdAt
+            }
+        })
        
     }
    

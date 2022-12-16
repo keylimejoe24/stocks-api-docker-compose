@@ -2,8 +2,8 @@ FROM node:14
 WORKDIR /stock-api
 RUN git clone https://github.com/rreichel3/US-Stock-Symbols.git
 COPY ./package.json .
-COPY . .
 RUN npm install
+COPY . .
 WORKDIR /stock-api/node-yahoo-finance2
 RUN npm install
 RUN npm run build
