@@ -47,9 +47,9 @@ export default function App() {
 
   const PrettyPrintJson = ({ data }) => (<div><pre>{JSON.stringify(data, null, 2)}</pre></div>);
   const [algorithmsResponse, setAlgorithmsResponse] = useState([]);
-
+  console.log(process.env.REACT_APP_NOT_SECRET_CODE)
   useEffect(() => {
-    fetch(`http://algorithms-server:3001/api/algorithms/ids`,{method: "GET"})
+    fetch(`http://${}:3001/api/algorithms/ids`,{method: "GET"})
       .then(res => res.json())
       .then(response => {
         console.log(response)

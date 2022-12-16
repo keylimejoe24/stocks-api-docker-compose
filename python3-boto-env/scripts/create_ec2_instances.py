@@ -73,6 +73,7 @@ def generate_prometheus_config(instances):
 def start_master_servers(instances,scrape_instances):
     prometheus_config = generate_prometheus_config(scrape_instances)
     print("run_master_server_start_command....")
+    
     create_prometheus_config = 'echo "{}" > prometheus/prometheus.yml'.format(prometheus_config)
     
     commands = [
