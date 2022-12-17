@@ -1,15 +1,16 @@
 FROM node:14
 WORKDIR /stock-api
 RUN git clone https://github.com/rreichel3/US-Stock-Symbols.git
-COPY ./package.json .
-RUN npm install
-COPY . .
 WORKDIR /stock-api/node-yahoo-finance2
-RUN npm install
+RUN COPY ./node_modules .
 RUN npm run build
 WORKDIR /stock-api/http-client-with-prom-metrics-tracking
-RUN npm install
+RUN RUN COPY ./node_modules .
 RUN npm run build
 WORKDIR /stock-api
+RUN RUN COPY ./node_modules .
+COPY . .
+RUN npm run build
+
 
 

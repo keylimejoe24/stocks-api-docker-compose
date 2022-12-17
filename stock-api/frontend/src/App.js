@@ -12,6 +12,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import ScrapeList from './ScrapeList';
+import Stack from '@mui/material/Stack';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -47,7 +48,7 @@ export default function App() {
   };
 
   const PrettyPrintJson = ({ data }) => (<div><pre>{JSON.stringify(data, null, 2)}</pre></div>);
- 
+
 
   useEffect(() => {
     fetch(`http://${process.env.REACT_APP_MASTER_IP}:3001/api/algorithms/ids`, { method: "GET" })
@@ -65,16 +66,19 @@ export default function App() {
 
         <Grid container spacing={2}>
 
-          <Grid xs={4}>
+          <Grid xs={6}>
             <Item>
+              <Stack direction="row">
               <StyledInput size={'small'} onChange={onChangeHandler} id="outlined-basic" label="Scrape ID" variant="outlined" />
               <StyledButton size={'small'} onClick={onClickHandler} variant="outlined">Run Algorithms</StyledButton>
+              </Stack>
+              <StyledButton size={'small'} color="success" onClick={onClickHandler} variant="outlined">Start Scrape</StyledButton>
             </Item>
             <Item>
-            <ScrapeList ids={scrapeIds} />
+              <ScrapeList ids={scrapeIds} />
             </Item>
           </Grid>
-          <Grid xs={8}>
+          <Grid xs={6}>
             <Item>
               <PrettyPrintJson data={`{ algorithm : results }`} />
             </Item>
@@ -83,7 +87,7 @@ export default function App() {
         </Grid>
 
       </Box>
-    
+
     </div>
 
 
