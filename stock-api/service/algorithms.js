@@ -12,6 +12,10 @@ let defaultResponseObject = {
     estimatedStockPrice: "N/A",
     weight: 0,
 }
+
+
+
+
 const checkForNullOrUndefinedFields = (obj, keys) => {
     let currentResObj = _.clone(defaultResponseObject);
     let description = "Missing "

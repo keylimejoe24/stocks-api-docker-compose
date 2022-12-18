@@ -77,9 +77,6 @@ export default function App() {
             <Item>
               <ScrapeList ids={scrapeIds} />
             </Item>
-            <Item>
-              <ScrapeList ids={scrapeIds} />
-            </Item>
           </Grid>
           <Grid xs={6}>
             <Item>
