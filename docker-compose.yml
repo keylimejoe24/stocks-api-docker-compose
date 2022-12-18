@@ -3,7 +3,7 @@ version: "3.3"
 services:
 
   prometheus:
-    image: prom/prometheus:v2.20.1
+    image: joja5627/prometheus:latest
     # container_name: prometheus
     volumes:
       - ./prometheus:/etc/prometheus
@@ -14,6 +14,7 @@ services:
       - 9090
 
   frontend:
+    image: joja5627/frontend:latest
     ports:
       - 3003:3003
     build: ./stock-api/frontend
@@ -41,7 +42,7 @@ services:
       - DB_PORT=$MONGODB_DOCKER_PORT
 
   grafana:
-    image: grafana/grafana:7.1.5
+    image: joja5627/grafana:latest
     # container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
@@ -57,7 +58,7 @@ services:
 
 
   mongodb:
-    image: mongo:latest
+    image: joja5627/mongo:latest
     restart: unless-stopped
     # container_name: mongodb
     env_file: ./.env

@@ -168,6 +168,8 @@ def start_scrape(urls,scrape_id):
 
 
 def main():
+    # ami-076efb79fbf5c945d
+    # Name	build-instance
     instances = ec2.create_instances(
         ImageId="ami-000a610b7f69a6112",
         MinCount=1,
