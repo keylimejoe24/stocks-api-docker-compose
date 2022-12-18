@@ -11,6 +11,10 @@ var _ = require('lodash');
 function convertToNum(text) {
   text = text.replace(/,/g, "");
   let last = text[text.length - 1];
+
+
+
+  
   switch (last) {
     case "T":
       text = Number(text.slice(0, -1)) * 1000000000000;
