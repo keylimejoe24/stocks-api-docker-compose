@@ -1,4 +1,5 @@
-FROM node:14
+FROM node:latest
+
 ARG MASTER_IP
 WORKDIR /frontend
 COPY package.json ./package.json

@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:latest
 WORKDIR /stock-api
 RUN git clone https://github.com/rreichel3/US-Stock-Symbols.git
 COPY package.json ./package.json
