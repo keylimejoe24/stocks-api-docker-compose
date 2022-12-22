@@ -1,4 +1,4 @@
-FROM python:3.9-alpine as base
+FROM python:3.9-alpine
 
 VOLUME /scripts
 
@@ -19,11 +19,6 @@ COPY requirements.txt .
 RUN /opt/venv/bin/python3 -m pip install --upgrade pip
 RUN pip3 install -r requirements.txt
 
-FROM base as release
-WORKDIR /
-ENV VIRTUAL_ENV=/opt/venv
-RUN python3 -m venv $VIRTUAL_ENV/bin/activate
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY /app /app
 ENV AWS_ACCESS_KEY_ID=${ACCESS_KEY}
 ENV AWS_SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
