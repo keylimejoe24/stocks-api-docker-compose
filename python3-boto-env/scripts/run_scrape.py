@@ -5,8 +5,6 @@ import requests
 ec2_resource = boto3.resource('ec2')
 ec2_client = boto3.client('ec2')
 
-
-
 def divide_chunks(l, n):
     for i in range(0, len(l), n):
         yield l[i:i + n]

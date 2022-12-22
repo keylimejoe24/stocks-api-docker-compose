@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config()
 const fs = require('fs');
-
+const cors = require('cors');
 const scrapeController = require('./controller/scrape.controller')
 
 const port = process.env.PORT || 3001;

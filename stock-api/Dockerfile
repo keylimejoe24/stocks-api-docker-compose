@@ -1,11 +1,14 @@
 FROM node:14 as base
 
-WORKDIR /stock-api/node-yahoo-finance2
-COPY /stock-api/node-yahoo-finance2/ .
+WORKDIR /node-yahoo-finance2
+COPY node-yahoo-finance2 .
+
 RUN npm install
 RUN npm run build
-WORKDIR /stock-api/http-client-with-prom-metrics-tracking
-COPY /stock-api/http-client-with-prom-metrics-tracking/ .
+
+WORKDIR /http-client-with-prom-metrics-tracking
+COPY http-client-with-prom-metrics-tracking .
+
 RUN npm install
 RUN npm run build
 WORKDIR /stock-api

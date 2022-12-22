@@ -6,6 +6,7 @@ const scrapeController = require('./controller/scrape.controller')
 const client = require('prom-client');
 const _ = require('lodash');
 const logger = require('./logger/api.logger');
+const cors = require('cors');
 
 let amexFullTickersRaw = fs.readFileSync('US-Stock-Symbols/amex/amex_full_tickers.json');
 let nasdaqFullTickersRaw = fs.readFileSync('US-Stock-Symbols/nasdaq/nasdaq_full_tickers.json');
@@ -47,10 +48,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors({origin:true,credentials: true}));
 
-// router.use(bodyParser.json());
-// router.use(bodyParser.urlencoded({ extended: true }));
-// router.use(express.json());
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");

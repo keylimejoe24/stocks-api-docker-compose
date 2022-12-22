@@ -1,0 +1,8 @@
+{
+    "db": {
+            "url" : "mongodb://mongodb:27017/",
+            "name" :"bezkoder_db?authSource=admin",
+            "user" :"root",
+            "password" :"123456"
+    }
+}

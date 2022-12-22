@@ -13,7 +13,7 @@ ec2_client = boto3.client('ec2')
 ssm_client = boto3.client('ssm')
 
 
-version = "923aba20-f9f8-4eab-9078-b5489b360bbc"
+version = "d831bc3e-046b-44e0-ad90-905b3d4d07ff"
 def requests_retry_session(
     retries=10000,
     backoff_factor=0.3,
@@ -86,14 +86,19 @@ for r in scrape_response['Reservations']:
         })
 
 print(master_instances)
-docker_compose_build = 'COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build mongodb prometheus grafana algorithms-server frontend --build-arg MASTER_IP="{}"'.format(master_instances[0]['public_ip_address'])
 refresh_master_commands = [
        "sudo su",
+       "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
        "cd stocks-api-docker-compose",
        "git pull",
        "docker-compose down",
-        docker_compose_build,
-       "docker-compose up mongodb prometheus grafana algorithms-server frontend -d"
+       "docker login --username joja5627 --password-stdin < my_password.txt",
+       "docker pull joja5627/prometheus:latest" ,
+       "docker pull joja5627/node-server:latest" ,
+       "docker pull joja5627/mongo:latest" ,
+       "docker pull joja5627/grafana:latest" ,
+       "docker pull joja5627/boto3-flask:latest",
+       "docker-compose up mongodb prometheus grafana algorithms-server frontend boto3-flask -d"
        ]
    
 
@@ -104,12 +109,14 @@ print("wait_for_services_to_start....")
 wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health","http://{}:9090/graph", "http://{}:3001/api/health","http://{}:27017","http://{}:3003"])
      
 commands = [
-    "sudo su",
-    "cd stocks-api-docker-compose",
-    "git pull",
-    "docker-compose down",
-    "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build scraping-server",
-    "DB_HOST={} docker-compose up scraping-server -d".format(master_instances[0]["public_ip_address"])
+     "sudo su",
+     "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
+       "cd stocks-api-docker-compose",
+       "git pull",
+       "docker-compose down",
+       "docker login --username joja5627 --password-stdin < my_password.txt",
+       "docker pull joja5627/node-server:latest" ,
+       "docker-compose up scraping-server"
     ]
 print(commands)
 run_services_start_command(scrape_instance_ids, commands)

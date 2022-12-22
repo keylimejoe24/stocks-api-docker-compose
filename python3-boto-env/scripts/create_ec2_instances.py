@@ -169,35 +169,26 @@ def start_scrape(urls,scrape_id):
 
 
 def main():
-    builder_instances = ec2.create_instances(
-        ImageId="ami-0ecc74eca1d66d8a6",
-        MinCount=1,
-        MaxCount=1,
-        InstanceType="t2.large",
-        KeyName="stock-api",
-        SecurityGroupIds=["launch-wizard-1", "default"],
-        IamInstanceProfile={
-            'Arn': 'arn:aws:iam::313155636620:instance-profile/MyEC2SSMRole'}
-    )
+   
     instances = ec2.create_instances(
-        ImageId="ami-000a610b7f69a6112",
+        ImageId="ami-067f655faf9730f16",
         MinCount=1,
         MaxCount=1,
         InstanceType="t2.micro",
-        KeyName="stock-api",
-        SecurityGroupIds=["launch-wizard-1", "default"],
+        KeyName="stocks-api-key-pair",
+        SecurityGroupIds=["all tcp", "default"],
         IamInstanceProfile={
-            'Arn': 'arn:aws:iam::313155636620:instance-profile/MyEC2SSMRole'}
+            'Arn': 'arn:aws:iam::013184812270:instance-profile/MyEC2SSMRole'}
     )
     scrape_instances = ec2.create_instances(
-        ImageId="ami-000a610b7f69a6112",
+        ImageId="ami-067f655faf9730f16",
         MinCount=18,
         MaxCount=18,
         InstanceType="t2.micro",
-        KeyName="stock-api",
-        SecurityGroupIds=["launch-wizard-1", "default"],
+        KeyName="stocks-api-key-pair",
+        SecurityGroupIds=["all tcp", "default"],
         IamInstanceProfile={
-            'Arn': 'arn:aws:iam::313155636620:instance-profile/MyEC2SSMRole'}
+            'Arn': 'arn:aws:iam::013184812270:instance-profile/MyEC2SSMRole'}
     )
 
     instances_starting = True
@@ -206,12 +197,6 @@ def main():
     scrape_instances_starting = True
     scrape_instance_ids = [o.id for o in scrape_instances]
 
-    builder_instances_starting = True
-    builder_instance_ids = [o.id for o in scrape_instances]
-
-    for instance in builder_instances:
-        instance.wait_until_running()
-        instance.reload()
 
     for instance in instances:
         instance.wait_until_running()
@@ -225,7 +210,6 @@ def main():
 
     instance_version = str(uuid.uuid4())
 
-    ec2.create_tags(Resources=builder_instances, Tags=[{'Key':'builder', 'Value':instance_version}])
     ec2.create_tags(Resources=instance_ids, Tags=[{'Key':'master', 'Value':instance_version}])
     ec2.create_tags(Resources=scrape_instance_ids, Tags=[{'Key':'scrape', 'Value':instance_version}])
 
@@ -247,24 +231,15 @@ def main():
             if each["InstanceStatus"]["Status"] == 'ok' and each["SystemStatus"]["Details"][0]["Status"] == 'passed' and each["SystemStatus"]["Status"]:
                 instances_starting = False
 
-    while builder_instances_starting:
-        time.sleep(.50)
-        print("instances starting....")
-        starting_instances = boto3.client(
-            "ec2").describe_instance_status(InstanceIds=instance_ids)
-        for each in starting_instances["InstanceStatuses"]:
-            if each["InstanceStatus"]["Status"] == 'ok' and each["SystemStatus"]["Details"][0]["Status"] == 'passed' and each["SystemStatus"]["Status"]:
-                builder_instances_starting = False
-   
-    start_builder_servers(instances,scrape_instances)
-    start_master_servers(instances,scrape_instances)
-    start_scrape_servers(instances,scrape_instances,scrape_instance_ids)
-    
-   
-    print("FRONT END: http://{}:3003".format(instances[0].public_ip_address))
-    print("GRAFANA CONNECTION STRING: http://{}:3002".format(instances[0].public_ip_address))
-    print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(instances[0].public_ip_address))
+    print("MASTER IP: {}".format(instances[0].public_ip_address))
     print("DEPLOYMENT VERSION: " + instance_version)
+
+    # start_master_servers(instances,scrape_instances)
+    # start_scrape_servers(instances,scrape_instances,scrape_instance_ids)
+    
+    # print("FRONT END: http://{}:3003".format(instances[0].public_ip_address))
+    # print("GRAFANA CONNECTION STRING: http://{}:3002".format(instances[0].public_ip_address))
+    # print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(instances[0].public_ip_address))
 
  
    
