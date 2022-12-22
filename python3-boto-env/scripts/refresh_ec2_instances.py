@@ -98,7 +98,7 @@ refresh_master_commands = [
        "docker pull joja5627/mongo:latest" ,
        "docker pull joja5627/grafana:latest" ,
        "docker pull joja5627/boto3-flask:latest",
-       "docker-compose up mongodb prometheus grafana algorithms-server frontend boto3-flask -d"
+       "docker-compose up -d mongodb prometheus grafana algorithms-server frontend boto3-flask"
        ]
    
 
@@ -106,7 +106,7 @@ run_services_start_command([master_instances[0]["id"]], refresh_master_commands)
 time.sleep(10)
 
 print("wait_for_services_to_start....")
-wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health","http://{}:9090/graph", "http://{}:3001/api/health","http://{}:27017","http://{}:3003"])
+wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health","http://{}:9090/graph", "http://{}:3001/api/health","http://{}:27017","http://{}:3003","http://{}:5000/api/v1/health"])
      
 commands = [
      "sudo su",
@@ -116,7 +116,7 @@ commands = [
        "docker-compose down",
        "docker login --username joja5627 --password-stdin < my_password.txt",
        "docker pull joja5627/node-server:latest" ,
-       "docker-compose up scraping-server"
+       "docker-compose up -d scraping-server"
     ]
 print(commands)
 run_services_start_command(scrape_instance_ids, commands)

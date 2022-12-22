@@ -87,7 +87,7 @@ services:
       env_file: ./.env
       command: npm run scraping-server
       environment:
-        - DB_HOST=mongodb
+        - DB_HOST=$DB_HOST
         - DB_USER=$MONGODB_USER
         - DB_PASSWORD=$MONGODB_PASSWORD
         - DB_NAME=$MONGODB_DATABASE
@@ -99,4 +99,4 @@ volumes:
   grafana_data: 
 
 # docker-compose logs -f -t
-# DB_HOST=54.202.122.11 docker-compose build --build-arg MASTER_IP=54.202.122.11 --build-arg ACCESS_KEY="AKIAQGEPAITXJUSPMHOC" --build-arg SECRET_ACCESS_KEY="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" 
+# DB_HOST=54.202.122.11 docker build -t joja5627/node-server:latest  --build-arg MASTER_IP=54.202.122.11 

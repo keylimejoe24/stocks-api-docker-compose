@@ -91,7 +91,7 @@ def start_master_servers(instances,scrape_instances):
     run_services_start_command([instances[0].id], commands)
     
     print("wait_for_services_to_start....")
-    wait_for_services_to_start([instances[0]], ["http://{}:3002/api/health","http://{}:9090/graph", "http://{}:3001/api/health","http://{}:27017","http://{}:3003"])
+    wait_for_services_to_start([instances[0]], ["http://{}:3002/api/health","http://{}:9090/graph", "http://{}:3001/api/health","http://{}:27017","http://{}:3003","http://{}:5000"])
     return 
 
 def start_scrape_servers(instances,scrape_instances,scrape_instances_ids):
@@ -104,7 +104,7 @@ def start_scrape_servers(instances,scrape_instances,scrape_instances_ids):
     "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
     "git pull",
-    "DB_HOST={} docker-compose up scraping-server --build -d".format(instances[0].public_ip_address)
+    "DB_HOST={} docker-compose up scraping-server -d".format(instances[0].public_ip_address)
     ]
     print(commands)
     run_services_start_command(scrape_instances_ids, commands)

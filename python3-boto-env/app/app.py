@@ -24,9 +24,9 @@ def start_scrape():
     scrape_id = data['scrapeID']
     return service.start_scrape(scrape_id)
 
-@app.route('/api/v1/health', methods = ['GET'])
-def start_scrape():
-    return json.dumps({'ok':True}), 200, {'ContentType':'application/json'}  
+# @app.route('/api/v1/health', methods = ['GET'])
+# def start_scrape():
+#     return json.dumps({'ok':True}), 200, {'ContentType':'application/json'}  
     
      
 
