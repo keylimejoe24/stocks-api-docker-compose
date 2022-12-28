@@ -19,7 +19,7 @@ services:
       - 3003:3003
     build: ./stock-api/frontend
     restart: unless-stopped
-    environment:
+    args:
      - MASTER_IP=$MASTER_IP
 
     command: npm run start
@@ -46,7 +46,7 @@ services:
     build: './python3-boto-env'
     ports:
         - '5000:5000'
-    environment:
+    args:
      - SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
      - ACCESS_KEY=$ACCESS_KEY 
      - MASTER_IP=$MASTER_IP
