@@ -174,7 +174,7 @@ def main():
         ImageId="ami-03d2b7a23faa4f6a7",
         MinCount=1,
         MaxCount=1,
-        InstanceType="t2.micro",
+        InstanceType="t3.xlarge",
         KeyName="ubuntu-micro",
         SecurityGroupIds=["launch-wizard-1", "default"],
         IamInstanceProfile={
@@ -182,8 +182,8 @@ def main():
     )
     scrape_instances = ec2.create_instances(
         ImageId="ami-03d2b7a23faa4f6a7",
-        MinCount=18,
-        MaxCount=18,
+        MinCount=16,
+        MaxCount=16,
         InstanceType="t2.micro",
         KeyName="ubuntu-micro",
         SecurityGroupIds=["launch-wizard-1", "default"],

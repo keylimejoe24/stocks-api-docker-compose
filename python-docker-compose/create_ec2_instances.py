@@ -167,17 +167,17 @@ def run_services_start_command(instance_ids, commands):
 
 def main():
     instances = ec2.create_instances(
-        ImageId="ami-0818c1b316a29f4e5",
+        ImageId="ami-07a5697be048d9f83",
         MinCount=1,
         MaxCount=1,
-        InstanceType="t2.micro",
+        InstanceType="t3.micro",
         KeyName="stock-api",
         SecurityGroupIds=["launch-wizard-1", "default"],
         IamInstanceProfile={
             'Arn': 'arn:aws:iam::313155636620:instance-profile/MyEC2SSMRole'}
     )
     scrape_instances = ec2.create_instances(
-        ImageId="ami-0818c1b316a29f4e5",
+        ImageId="ami-07a5697be048d9f83",
         MinCount=8,
         MaxCount=8,
         InstanceType="t2.micro",
