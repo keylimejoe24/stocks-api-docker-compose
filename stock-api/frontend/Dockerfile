@@ -1,5 +1,6 @@
-FROM --platform=linux/amd64  node:14 as base
 ARG MASTER_IP
+
+FROM --platform=linux/amd64  node:14 as base
 WORKDIR /frontend
 COPY package.json ./package.json
 COPY package-lock.json ./package-lock.json

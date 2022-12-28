@@ -17,10 +17,9 @@ services:
     image: joja5627/frontend:latest
     ports:
       - 3003:3003
-    build: ./stock-api/frontend
+    build: 
+     context: ./stock-api/frontend
     restart: unless-stopped
-    args:
-     - MASTER_IP=$MASTER_IP
 
     command: npm run start
     expose:
@@ -43,14 +42,11 @@ services:
       
   boto3-flask:
     image: joja5627/boto3-flask:latest
-    build: './python3-boto-env'
+    build: 
+      context: ./python3-boto-env
     ports:
         - '5000:5000'
-    args:
-     - SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
-     - ACCESS_KEY=$ACCESS_KEY 
-     - MASTER_IP=$MASTER_IP
-
+    
   mongodb:
     # image: mongo:4.4.6
     image: joja5627/mongo:latest
