@@ -3,7 +3,7 @@ import boto3
 ec2_resource = boto3.resource('ec2')
 ec2_client = boto3.client('ec2')
 
-version = "7b3b7196-0a34-4805-9d07-9ce0295a3289"
+version = "c3214c7b-a638-4fb5-a705-1a9173736b97"
 
 
 scrape_instance_filter = [{
@@ -21,6 +21,7 @@ instance_ids = []
 for r in master_response['Reservations']:
     for inst in r['Instances']:
         instance_ids.append(inst['InstanceId'])
+        print(inst)
 
 for r in scrape_response['Reservations']:
     for inst in r['Instances']:

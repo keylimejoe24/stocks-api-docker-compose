@@ -171,24 +171,24 @@ def start_scrape(urls,scrape_id):
 def main():
    
     instances = ec2.create_instances(
-        ImageId="ami-067f655faf9730f16",
+        ImageId="ami-03d2b7a23faa4f6a7",
         MinCount=1,
         MaxCount=1,
         InstanceType="t2.micro",
-        KeyName="stocks-api-key-pair",
-        SecurityGroupIds=["all tcp", "default"],
+        KeyName="ubuntu-micro",
+        SecurityGroupIds=["launch-wizard-1", "default"],
         IamInstanceProfile={
-            'Arn': 'arn:aws:iam::013184812270:instance-profile/MyEC2SSMRole'}
+            'Arn': 'arn:aws:iam::612228415522:instance-profile/ssmaccess'}
     )
     scrape_instances = ec2.create_instances(
-        ImageId="ami-067f655faf9730f16",
+        ImageId="ami-03d2b7a23faa4f6a7",
         MinCount=18,
         MaxCount=18,
         InstanceType="t2.micro",
-        KeyName="stocks-api-key-pair",
-        SecurityGroupIds=["all tcp", "default"],
+        KeyName="ubuntu-micro",
+        SecurityGroupIds=["launch-wizard-1", "default"],
         IamInstanceProfile={
-            'Arn': 'arn:aws:iam::013184812270:instance-profile/MyEC2SSMRole'}
+            'Arn': 'arn:aws:iam::612228415522:instance-profile/ssmaccess'}
     )
 
     instances_starting = True

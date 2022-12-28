@@ -1,4 +1,4 @@
-FROM python:3.9-alpine
+FROM --platform=linux/amd64 python:3.9-alpine
 
 VOLUME /scripts
 
@@ -22,6 +22,6 @@ RUN pip3 install -r requirements.txt
 COPY /app /app
 ENV AWS_ACCESS_KEY_ID=${ACCESS_KEY}
 ENV AWS_SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
-ENV AWS_DEFAULT_REGION=us-west-2
+ENV AWS_DEFAULT_REGION=us-east-1
 
 CMD ["python","app/app.py"]

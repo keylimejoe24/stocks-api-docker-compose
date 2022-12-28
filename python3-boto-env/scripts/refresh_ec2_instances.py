@@ -13,7 +13,7 @@ ec2_client = boto3.client('ec2')
 ssm_client = boto3.client('ssm')
 
 
-version = "d831bc3e-046b-44e0-ad90-905b3d4d07ff"
+version = "c3214c7b-a638-4fb5-a705-1a9173736b97"
 def requests_retry_session(
     retries=10000,
     backoff_factor=0.3,
