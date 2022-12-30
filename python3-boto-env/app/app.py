@@ -32,6 +32,7 @@ app.logger.setLevel(logging.DEBUG)
 def start_scrape():
     data = json.loads(request.data)
     scrape_id = data['scrapeID']
+    app.logger.debug("TESTING!")
     return service.start_scrape(scrape_id)
 
 @app.route('/api/v1/health', methods = ['GET'])
