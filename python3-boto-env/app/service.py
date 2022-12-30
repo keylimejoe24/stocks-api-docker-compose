@@ -5,7 +5,7 @@ import uuid
 import requests,json
 import os
 
-log = logging.getLogger('tester.sub')
+log = logging.getLogger('stocks.sub')
 
 ec2_resource = boto3.resource('ec2')
 ec2_client = boto3.client('ec2')
@@ -26,8 +26,8 @@ class Service(object):
         f.close()
 
     version = os.getenv('DEPLOYMENT_VERSION')
-    log.warn(version)
-    
+    log.debug(version)
+
     scrape_instance_filter = [{
         'Name':'tag:scrape', 
         'Values': [version]}]
@@ -50,12 +50,12 @@ class Service(object):
     ticker_chunks = list(divide_chunks(tickers, 500))
     
     for index, url in enumerate(urls):
-        log.warn('started scrape' + scrape_id)
-        log.warn(url)
-        log.warn(ticker_chunks[index])
-        log.warn(len(ticker_chunks[index]))
+        log.debug('started scrape' + scrape_id)
+        log.debug(url)
+        log.debug(ticker_chunks[index])
+        log.debug(len(ticker_chunks[index]))
         myobj = {'tickers': ticker_chunks[index],'scrapeID':scrape_id} 
-        log.warn(myobj)
+        log.debug(myobj)
         # response = requests.post(url, json = myobj)
         # log.warn(response)
         

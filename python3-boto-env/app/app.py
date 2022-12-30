@@ -11,7 +11,7 @@ import sys
 
 
 
-app = Flask(__name__)
+app = Flask("stocks")
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 api = Api(app, prefix="/api/v1")
