@@ -80,6 +80,7 @@ def start_master_servers(instances,scrape_instances):
     
     commands = [
         "sudo su",
+        "cd /home/ssm-user",
         "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
         "cd stocks-api-docker-compose",
         create_prometheus_config,
@@ -101,6 +102,7 @@ def start_scrape_servers(instances,scrape_instances,scrape_instances_ids):
    
     commands = [
     "sudo su",
+    "cd /home/ssm-user",
     "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
     "git pull",

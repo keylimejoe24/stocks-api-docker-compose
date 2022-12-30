@@ -17,8 +17,7 @@ services:
     image: joja5627/frontend:latest
     ports:
       - 3003:3003
-    build: 
-     context: ./stock-api/frontend
+    build: ./stock-api/frontend
     restart: unless-stopped
     command: npm run start
     expose:
@@ -41,14 +40,15 @@ services:
       
   boto3-flask:
     image: joja5627/boto3-flask:latest
-    build: 
-      context: ./python3-boto-env
+    build: ./python3-boto-env
+    volumes:
+      - ./python3-boto-env/app/:/app
     ports:
-        - '5000:5000'
+      - '5000:5000'
     
   mongodb:
-    # image: mongo:4.4.6
-    image: joja5627/mongo:latest
+    image: mongo:4.4.6
+    # image: joja5627/mongo:latest
     restart: unless-stopped
     # container_name: mongodb
     env_file: ./.env
@@ -88,7 +88,6 @@ services:
       env_file: ./.env
       command: npm run scraping-server
       environment:
-        - DB_HOST=$DB_HOST
         - DB_USER=$MONGODB_USER
         - DB_PASSWORD=$MONGODB_PASSWORD
         - DB_NAME=$MONGODB_DATABASE

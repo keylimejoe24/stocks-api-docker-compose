@@ -13,6 +13,9 @@ RUN npm run build
 WORKDIR /stock-api
 
 FROM base as release
+ARG MASTER_IP
+ENV DB_HOST=${MASTER_IP}
+
 WORKDIR /stock-api
 RUN git clone https://github.com/rreichel3/US-Stock-Symbols.git
 COPY package.json ./package.json
