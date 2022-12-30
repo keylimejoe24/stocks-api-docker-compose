@@ -2,6 +2,8 @@ FROM --platform=linux/amd64 python:3.9-alpine
 ARG MASTER_IP
 ARG ACCESS_KEY
 ARG SECRET_ACCESS_KEY
+ARG DEPLOYMENT_VERSION
+
 VOLUME /scripts
 ENV MONGO_CONNECTION_STRING='mongodb://root:123456@mongodb:27017/bezkoder_db?authSource=admin'
 
