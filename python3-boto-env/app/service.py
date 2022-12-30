@@ -56,8 +56,8 @@ class Service(object):
         log.debug(len(ticker_chunks[index]))
         myobj = {'tickers': ticker_chunks[index],'scrapeID':scrape_id} 
         log.debug(myobj)
-        # response = requests.post(url, json = myobj)
-        # log.warn(response)
+        response = requests.post(url, json = myobj)
+        log.warn(response)
         
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}  
 
