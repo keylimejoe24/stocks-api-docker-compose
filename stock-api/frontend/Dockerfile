@@ -1,12 +1,7 @@
 
-FROM --platform=linux/amd64  node:14 as base
+FROM --platform=linux/amd64 node:14
 
-
-COPY package.json ./package.json
-COPY package-lock.json ./package-lock.json
-RUN npm install
-
-FROM base AS release
 VOLUME  /frontend
 WORKDIR /frontend
-RUN npm run build
+RUN npm install
+
