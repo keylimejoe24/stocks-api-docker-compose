@@ -21,7 +21,35 @@ ssm_client = boto3.client('ssm')
 
 version = sys.argv[1]
 
+def generate_prometheus_config(instances):
+    print(instances)
+    prometheus_template = {
+        "global": {
+            "scrape_interval": "5s"
+        },
+        "scrape_configs": [
 
+        ]
+    }
+
+    for instance in instances:
+       
+        prometheus_template["scrape_configs"].append({
+            "job_name": "{}".format(instance['id']),
+            "static_configs": [
+                {
+                    "targets": ["{}:{}".format(instance["public_ip_address"], 3000)]
+                }
+            ]
+        })
+
+    yaml = ruamel.yaml.YAML(typ=['rt', 'string'])
+    yaml.indent(sequence=4, offset=2)
+    prometheus_config = yaml.dump_to_string(prometheus_template)
+    print("Generated Prometheus Config: ")
+    print(prometheus_config)
+    return prometheus_config
+    
 def requests_retry_session(
     retries=10000,
     backoff_factor=0.3,
@@ -101,9 +129,9 @@ print(master_instances)
 refresh_master_commands = [
     "sudo su",
     "cd /home/ssm-user",
-    "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
-    "cd stocks-api-docker-compose",
-    "git pull",
+    # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
+    # "cd stocks-api-docker-compose",
+    # "git pull",
     "docker-compose down",
     "docker login --username joja5627 --password-stdin < my_password.txt",
     "docker pull joja5627/frontend:latest",
@@ -127,19 +155,19 @@ refresh_master_commands = [
 commands = [
     "sudo su",
     "cd /home/ssm-user",
-    "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
-    "cd stocks-api-docker-compose",
-    "git pull",
+    # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
+    # "cd stocks-api-docker-compose",
+    # "git pull",
     "docker-compose down",
     "docker login --username joja5627 --password-stdin < my_password.txt",
     "docker pull joja5627/node-server:latest",
     "docker-compose up -d scraping-server"
 ]
-print(commands)
-run_services_start_command(scrape_instance_ids, commands)
-time.sleep(10)
+# print(commands)
+# run_services_start_command(scrape_instance_ids, commands)
+# time.sleep(10)
 
-wait_for_services_to_start(scrape_instances, ["http://{}:3000/metrics"])
+# wait_for_services_to_start(scrape_instances, ["http://{}:3000/metrics"])
 
 
 print("MASTER INSTANCE ID: " + master_instances[0]["id"])
@@ -150,3 +178,6 @@ print("GRAFANA CONNECTION STRING: http://{}:3002".format(
 print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(
     master_instances[0]["public_ip_address"]))
 print("DEPLOYMENT VERSION: " + version)
+
+prometheus_config = generate_prometheus_config(scrape_instances)  
+

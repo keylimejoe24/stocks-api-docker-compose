@@ -1,0 +1,12 @@
+version: "3.3"
+services:
+  frontend:
+    image: joja5627/frontend:latest
+    ports:
+      - 3003:3003
+    build: .
+    restart: unless-stopped
+    command: npm run start
+    expose:
+     - 3003
+   

@@ -9,33 +9,38 @@ import { format } from 'date-fns'
 
   const Row = props => {
     const { data, index, style } = props;
-    const item = data.ids[index].id;
-    const date =  data.ids[index].created;
+    const item = data.results[index];
+    
     return (
       <ListItem style={style} key={index} component="div" disablePadding>
-        <ListItemButton onClick={() => data.onClickHandler(item)}>
+        <ListItemButton onClick={() => data.testResultsClickHandler(item.ticker)}>
           <ListItemText>
-            <div style={{ fontSize: 10, fontWeight:"bold" }}>{"Scrape Date: " + date}</div>
-            <div style={{ fontSize: 10 }}>{item} </div>
+            <div style={{ fontSize: 12, fontWeight:"bold" }}>{item.ticker}</div>
+            <div style={{ fontSize: 10, fontWeight:"italic" }}>weight: {parseFloat(item.weight).toFixed(3)}</div>
           </ListItemText>
         </ListItemButton>
       </ListItem>
     );
   };
-  
-  export default function ScrapeList({ ids,onClickHandler }) {
+
+
+  export default function AlgorithmsList({ title,results,testResultsClickHandler,maxWidth  }) {
+    
+   console.log(results)
     return (
       <Box
-        sx={{ width: '100%', height: 400, maxWidth: 360, bgcolor: 'background.paper' }}
+        sx={{ height: 600, maxWidth: maxWidth, bgcolor: 'background.paper' }}
       >
+        <div style={{ fontSize: 12, fontWeight:"bold" }}>{title}</div>
+
         <FixedSizeList
-          height={400}
-          itemData={{ids,onClickHandler}}
+          height={600}
+          itemData={{results,testResultsClickHandler}}
           // onClickHandler={onClickHandler}
         //   ids={ids}
         //   width={360}
           itemSize={60}
-          itemCount={ids.length}
+          itemCount={results.length}
           overscanCount={5}
         >
           {Row}
