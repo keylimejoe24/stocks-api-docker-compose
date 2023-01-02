@@ -49,8 +49,8 @@ services:
       - '5000:5000'
     
   mongodb:
-    image: mongo:4.4.6
-    # image: joja5627/mongo:latest
+    # image: mongo:4.4.6
+    image: joja5627/mongo:latest
     restart: unless-stopped
     # container_name: mongodb
     env_file: ./.env
