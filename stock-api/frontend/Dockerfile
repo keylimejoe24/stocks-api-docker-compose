@@ -1,5 +1,7 @@
 
 FROM --platform=linux/amd64  node:14 as base
+
+VOLUME /frontend
 WORKDIR /frontend
 COPY package.json ./package.json
 COPY package-lock.json ./package-lock.json

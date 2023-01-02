@@ -72,7 +72,7 @@ export default function App() {
 
   }
   const runAlgorithmsClickHandler = event => {
-    fetch(`http://${process.env.REACT_APP_MASTER_IP}:3001/api/algorithms/run/${scrapeIdSelected}`, { method: 'GET' })
+    fetch(`http://54.224.38.99:3001/api/algorithms/run/${scrapeIdSelected}`, { method: 'GET' })
       .then(res => res.json())
       .then(response => {
         let formattedRes = formatAlgorithmsResponse(response)
@@ -138,9 +138,6 @@ export default function App() {
 
               <Stack direction="row">
                 <StyledButton size={'small'} color="success" onClick={scrapeStartClickHandler} variant="outlined">Start Scrape</StyledButton>
-                <StyledButton size={'small'}  onClick={scrapeStartClickHandler} variant="outlined">Export JSON</StyledButton>
-                <StyledButton size={'small'}  onClick={scrapeStartClickHandler} variant="outlined">Export CSV</StyledButton>
-
               </Stack>
 
             </Item>
