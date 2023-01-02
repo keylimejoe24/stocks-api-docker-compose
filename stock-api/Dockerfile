@@ -1,19 +1,5 @@
-FROM --platform=linux/amd64 node:14 as base
-
+FROM --platform=linux/amd64 node:14
 VOLUME /stock-api
-WORKDIR /stock-api/node-yahoo-finance2
-COPY node-yahoo-finance2 .
-RUN npm install
-RUN npm run build
-
-WORKDIR /stock-api/http-client-with-prom-metrics-tracking
-COPY http-client-with-prom-metrics-tracking .
-RUN npm install
-RUN npm run build
-
 WORKDIR /stock-api
-
-FROM base as release
-RUN git clone https://github.com/rreichel3/US-Stock-Symbols.git
 RUN npm install
 
