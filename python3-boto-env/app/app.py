@@ -12,8 +12,10 @@ import sys
 
 
 app = Flask("stocks")
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app)
+
+# cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+# app.config['CORS_HEADERS'] = 'Content-Type'
 api = Api(app, prefix="/api/v1")
 
 api.add_resource(TodoCollection, '/scrape_starts')
