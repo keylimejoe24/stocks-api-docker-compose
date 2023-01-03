@@ -15,8 +15,8 @@ services:
 
   frontend:
     image: joja5627/frontend:latest
-    volumes:
-      - ./stock-api/frontend/:/frontend
+    volumes: 
+      - ./stock-api/frontend/src:/src
     ports:
       - 3003:3003
     build: ./stock-api/frontend
