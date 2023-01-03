@@ -13,6 +13,7 @@ import Stack from '@mui/material/Stack';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 
+const MASTER_IP = "54.175.72.83"
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fafafa',
   ...theme.typography.body2,
@@ -72,7 +73,7 @@ export default function App() {
 
   }
   const runAlgorithmsClickHandler = event => {
-    fetch(`http://54.175.72.83:3001/api/algorithms/run/${scrapeIdSelected}`, { method: 'GET' })
+    fetch(`http://${MASTER_IP}:3001/api/algorithms/run/${scrapeIdSelected}`, { method: 'GET' })
       .then(res => res.json())
       .then(response => {
         let formattedRes = formatAlgorithmsResponse(response)
@@ -95,14 +96,14 @@ export default function App() {
       body: JSON.stringify({ scrapeID: newScrapeId })
     };
 
-    fetch(`http://${process.env.REACT_APP_MASTER_IP}:5000/api/v1/scrape_starts`, scrapeStartrequestOptions)
+    fetch(`http://${MASTER_IP}:5000/api/v1/scrape_starts`, scrapeStartrequestOptions)
       .then(res => res.json())
       .then(response => {
         setScrapeIds([...scrapeIds, ...[newScrapeId]])
       })
       .catch(error => console.log(error));
 
-    fetch(`http://${process.env.REACT_APP_MASTER_IP}:5000/api/v1/run_scrape`, scrapeRequestOptions)
+    fetch(`http://${MASTER_IP}:5000/api/v1/run_scrape`, scrapeRequestOptions)
       .then(res => res.json())
       .then(response => {
         console.log(response)
@@ -112,7 +113,7 @@ export default function App() {
 
 
   useEffect(() => {
-    fetch(`http://${process.env.REACT_APP_MASTER_IP}:5000/api/v1/scrape_starts`, { method: "GET" })
+    fetch(`http://${MASTER_IP}:5000/api/v1/scrape_starts`, { method: "GET" })
       .then(res => res.json())
       .then(response => {
         console.log(response)

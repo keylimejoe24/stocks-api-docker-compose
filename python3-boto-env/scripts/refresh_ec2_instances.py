@@ -187,5 +187,3 @@ print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authS
     master_instances[0]["public_ip_address"]))
 print("DEPLOYMENT VERSION: " + version)
 
-prometheus_config = generate_prometheus_config(scrape_instances)  
-
