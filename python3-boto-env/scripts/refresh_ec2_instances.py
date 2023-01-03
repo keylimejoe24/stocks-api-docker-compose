@@ -13,6 +13,8 @@ from requests.packages.urllib3.util.retry import Retry
 import uuid
 import time
 import sys
+import git
+
 
 ec2_resource = boto3.resource('ec2')
 ec2_client = boto3.client('ec2')
@@ -125,52 +127,62 @@ for r in scrape_response['Reservations']:
             "public_ip_address": inst["PublicIpAddress"],
         })
 
-print(master_instances)
-refresh_master_commands = [
-    "sudo su",
-    "cd /home/ssm-user",
-    "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
-    "cd stocks-api-docker-compose",
-    "git pull",
-    "docker-compose down",
-    "docker-compose up -d mongodb prometheus grafana algorithms-server frontend boto3-flask"
-]
+print("generate prometheus config....")
+prometheus_config = generate_prometheus_config(scrape_instances)
+create_prometheus_config = 'echo "{}" > prometheus/prometheus.yml'.format(prometheus_config)
+repo = git.Repo('.', search_parent_directories=True)
+repo.git.add(update=True)
+repo.index.commit("generated prometheus config")
+origin = repo.remote(name='main')
+origin.push()
 
 
-run_services_start_command(
-    [master_instances[0]["id"]], refresh_master_commands)
-time.sleep(10)
-
-print("wait_for_services_to_start....")
-wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health", "http://{}:9090/graph",
-                           "http://{}:3001/api/health", "http://{}:27017", "http://{}:3003", "http://{}:5000/api/v1/health"])
-
-commands = [
-    "sudo su",
-    "cd /home/ssm-user",
-    "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
-    "cd stocks-api-docker-compose",
-    "git pull",
-    "docker-compose down",
-    "docker login --username joja5627 --password-stdin < my_password.txt",
-    # "docker pull joja5627/node-server:latest",
-    "docker-compose up -d scraping-server"
-]
-print(commands)
-run_services_start_command(scrape_instance_ids, commands)
-time.sleep(10)
-
-wait_for_services_to_start(scrape_instances, ["http://{}:3000/metrics"])
+# print(master_instances)
+# refresh_master_commands = [
+#     "sudo su",
+#     "cd /home/ssm-user",
+#     # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
+#     "cd stocks-api-docker-compose",
+#     "git pull",
+#     "docker-compose down",
+#     "docker-compose up -d --build mongodb prometheus grafana algorithms-server frontend boto3-flask"
+# ]
 
 
-print("MASTER INSTANCE ID: " + master_instances[0]["id"])
-print(
-    "FRONT END: http://{}:3003".format(master_instances[0]["public_ip_address"]))
-print("GRAFANA CONNECTION STRING: http://{}:3002".format(
-    master_instances[0]["public_ip_address"]))
-print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(
-    master_instances[0]["public_ip_address"]))
-print("DEPLOYMENT VERSION: " + version)
+# run_services_start_command(
+#     [master_instances[0]["id"]], refresh_master_commands)
+# time.sleep(10)
+
+# print("wait_for_services_to_start....")
+# wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health", "http://{}:9090/graph",
+#                            "http://{}:3001/api/health", "http://{}:27017", "http://{}:3003", "http://{}:5000/api/v1/health"])
+
+# commands = [
+#     "sudo su",
+#     "cd /home/ssm-user",
+#     # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
+#     "cd stocks-api-docker-compose",
+#     "git pull",
+#     "docker-compose down",
+#     "docker login --username joja5627 --password-stdin < my_password.txt",
+#     # "docker pull joja5627/node-server:latest",
+#     "docker-compose up --build -d scraping-server"
+# ]
+# print(commands)
+# run_services_start_command(scrape_instance_ids, commands)
+# time.sleep(10)
+
+# wait_for_services_to_start(scrape_instances, ["http://{}:3000/metrics"])
+
+
+# print("MASTER INSTANCE ID: " + master_instances[0]["id"])
+# print(
+#     "FRONT END: http://{}:3003".format(master_instances[0]["public_ip_address"]))
+# print("GRAFANA CONNECTION STRING: http://{}:3002".format(
+#     master_instances[0]["public_ip_address"]))
+# print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(
+#     master_instances[0]["public_ip_address"]))
+# print("DEPLOYMENT VERSION: " + version)
 
 # prometheus_config = generate_prometheus_config(scrape_instances)  
 
