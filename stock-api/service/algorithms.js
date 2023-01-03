@@ -729,7 +729,7 @@ const abilityToPayCurrentLiabilities = (ticker) => {
 
 const stockBuyBacks = (ticker) => {
 
-    logger.info(JSON.stringify(ticker))
+    // logger.info(JSON.stringify(ticker))
     let missingFieldsResObj = checkForNullOrUndefinedFields(ticker, ["currentlyIssuedShares","previouslyIssuedShares","previousClose"])
     if (_.has(missingFieldsResObj, "description")) {
         return missingFieldsResObj

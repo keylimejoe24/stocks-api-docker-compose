@@ -8,6 +8,7 @@ import { format } from 'date-fns'
 import { v4 as uuidv4 } from 'uuid';
 
 
+
 const Row = props => {
     const { data, index, style } = props;
     const item = data.results[index];

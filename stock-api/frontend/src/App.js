@@ -43,12 +43,12 @@ export default function App() {
 
     let testRes = _.find(algorithmsResponse.totalResults, ['ticker', ticker]);
     let formattedTestRes = []
-    
+
     for (const [key, value] of Object.entries(testRes.value)) {
       console.log(key)
       formattedTestRes.push({ [`${key}`]: value })
     }
-    
+
     setTestResults(formattedTestRes)
 
   };
@@ -64,12 +64,34 @@ export default function App() {
     console.log(response)
     let totalResults = []
     for (const [key, value] of Object.entries(response.totalResults)) {
-      totalResults.push({ ticker: key,weight:value["Total Weight"], value: value })
+      totalResults.push({ ticker: key, weight: value["Total Weight"], value: value })
     }
     totalResults.sort((a, b) => a.ticker.localeCompare(b.ticker))
     return {
       ...response, totalResults: totalResults
     }
+
+  }
+  
+  const deleteOnClickHandler = id => {
+   
+    const deleteScrapeRequestOptions = {
+      method: 'DELETE'
+    };
+
+      fetch(`http://${MASTER_IP}:5000/api/v1/scrape_starts/${id}`, deleteScrapeRequestOptions)
+      .then(res => res.json())
+      .then(response => {
+        console.log(response)
+        fetch(`http://${MASTER_IP}:5000/api/v1/scrape_starts`, { method: "GET" })
+          .then(res => res.json())
+          .then(response => {
+            console.log(response)
+            setScrapeIds(response)
+          })
+          .catch(error => console.log(error));
+      })
+      .catch(error => console.log(error));
 
   }
   const runAlgorithmsClickHandler = event => {
@@ -99,7 +121,13 @@ export default function App() {
     fetch(`http://${MASTER_IP}:5000/api/v1/scrape_starts`, scrapeStartrequestOptions)
       .then(res => res.json())
       .then(response => {
-        setScrapeIds([...scrapeIds, ...[newScrapeId]])
+        fetch(`http://${MASTER_IP}:5000/api/v1/scrape_starts`, { method: "GET" })
+          .then(res => res.json())
+          .then(response => {
+            console.log(response)
+            setScrapeIds(response)
+          })
+          .catch(error => console.log(error));
       })
       .catch(error => console.log(error));
 
@@ -134,7 +162,7 @@ export default function App() {
 
         <Grid container spacing={2}>
 
-          <Grid xs={3}>
+          <Grid xs={4}>
             <Item>
 
               <Stack direction="row">
@@ -155,17 +183,17 @@ export default function App() {
                 <StyledButton sx={{ fontSize: 10 }} disabled={scrapeIdSelected === ""} size={'small'} onClick={runAlgorithmsClickHandler} variant="outlined">Run Algorithms</StyledButton>
               </Stack>
 
-              <ScrapeList onClickHandler={onScrapIdClickedHandler} ids={scrapeIds} />
+              <ScrapeList onClickHandler={onScrapIdClickedHandler} deleteOnClickHandler={deleteOnClickHandler} ids={scrapeIds} />
             </Item>
           </Grid>
-          <Grid xs={9}>
-            <Item align={"left"} style={{ display: "flex", gap: "1rem", alignItems: "center",maxHeight: 700 }}>
-            <span style={{ minWidth:100 }}>{algorithmsResponse && <AlgorithmsList maxWidth={100} testResultsClickHandler={testResultsClickHandler} title={"Top Ten"}results={algorithmsResponse.topTen} />}</span>
-            <span style={{ minWidth:100 }}>{algorithmsResponse && <AlgorithmsList maxWidth={100} testResultsClickHandler={testResultsClickHandler} title={"Bottom Ten"}results={algorithmsResponse.bottomTen} />}</span>
-            <span style={{ minWidth:100 }}>{algorithmsResponse && <AlgorithmsList maxWidth={100} testResultsClickHandler={testResultsClickHandler} title={"Total Results"}results={algorithmsResponse.totalResults} />}</span>
-            <span style={{ minWidth:500 }}>{testResults && <TestResultsList  maxWidth={450} testResultsClickHandler={testResultsClickHandler} title={"Test Results"} results={testResults} />}</span>
+          <Grid xs={8}>
+            <Item align={"left"} style={{ display: "flex", gap: "1rem", alignItems: "center", maxHeight: 700 }}>
+              <span style={{ minWidth: 100 }}>{algorithmsResponse && <AlgorithmsList maxWidth={100} testResultsClickHandler={testResultsClickHandler} title={"Top Ten"} results={algorithmsResponse.topTen} />}</span>
+              <span style={{ minWidth: 100 }}>{algorithmsResponse && <AlgorithmsList maxWidth={100} testResultsClickHandler={testResultsClickHandler} title={"Bottom Ten"} results={algorithmsResponse.bottomTen} />}</span>
+              <span style={{ minWidth: 100 }}>{algorithmsResponse && <AlgorithmsList maxWidth={100} testResultsClickHandler={testResultsClickHandler} title={"Total Results"} results={algorithmsResponse.totalResults} />}</span>
+              <span style={{ minWidth: 500 }}>{testResults && <TestResultsList maxWidth={450} testResultsClickHandler={testResultsClickHandler} title={"Test Results"} results={testResults} />}</span>
 
-           
+
             </Item>
 
 
