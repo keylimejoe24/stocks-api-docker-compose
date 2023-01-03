@@ -38,6 +38,8 @@ class Todo(Resource):
         return response, 201
 
     def delete(self, todo_id):
+        log.debug("HERE!")
+        log.debug(jsonify(todo_remove))
         todo_remove = todo.find({"id":todo_id})
         log.debug(jsonify(todo_remove))
         log.debug(todo_remove)
