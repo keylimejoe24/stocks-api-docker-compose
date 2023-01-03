@@ -12,12 +12,11 @@ import sys
 
 
 app = Flask("stocks")
-app.config['CORS_HEADERS'] = 'Content-Type'
-api = Api(app, prefix="/api/v1")
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+api = Api(app)
+cors = CORS(app)
 
-api.add_resource(TodoCollection, '/scrape_starts')
-api.add_resource(Todo, '/scrape_start/<todo_id>')
+api.add_resource(TodoCollection, '/api/v1/scrape_starts')
+api.add_resource(Todo, '/api/v1/scrape_start/<todo_id>')
 
 service = Service()
 
@@ -41,12 +40,12 @@ def health_check():
     
      
 
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-    return response
+# @app.after_request
+# def after_request(response):
+#     response.headers.add('Access-Control-Allow-Origin', '*')
+#     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+#     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+#     return response
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
