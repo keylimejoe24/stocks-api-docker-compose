@@ -2,6 +2,9 @@ from flask import request, jsonify
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
 import json
+import logging
+
+log = logging.getLogger('stocks.sub')
 
 from models import todo
 
@@ -36,6 +39,6 @@ class Todo(Resource):
 
     def delete(self, todo_id):
         todo_remove = todo.find_by_id(todo_id)
-        print(todo_remove)
+        log.debug(todo_remove)
         todo.delete(todo_remove._id)
         return "Record Deleted", 204
