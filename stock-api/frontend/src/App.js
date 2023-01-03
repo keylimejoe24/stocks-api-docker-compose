@@ -72,7 +72,7 @@ export default function App() {
 
   }
   const runAlgorithmsClickHandler = event => {
-    fetch(`http://54.224.38.99:3001/api/algorithms/run/${scrapeIdSelected}`, { method: 'GET' })
+    fetch(`http://54.175.72.83:3001/api/algorithms/run/${scrapeIdSelected}`, { method: 'GET' })
       .then(res => res.json())
       .then(response => {
         let formattedRes = formatAlgorithmsResponse(response)
