@@ -1,6 +1,5 @@
 FROM --platform=linux/amd64 node:14 as base
 
-VOLUME /stock-api
 WORKDIR /stock-api/node-yahoo-finance2
 COPY node-yahoo-finance2 .
 RUN npm install

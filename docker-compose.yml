@@ -70,8 +70,6 @@ services:
     restart: unless-stopped
     env_file: ./.env
     command: npm run algorithms-server
-    volumes:
-      - ./stock-api:/stock-api
     depends_on:
       - mongodb
     ports:
@@ -91,8 +89,6 @@ services:
       restart: unless-stopped
       env_file: ./.env
       command: npm run scraping-server
-      volumes:
-        - ./stock-api:/stock-api
       environment:
         - DB_USER=$MONGODB_USER
         - DB_PASSWORD=$MONGODB_PASSWORD
