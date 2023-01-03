@@ -20,7 +20,6 @@ RUN /opt/venv/bin/python3 -m pip install --upgrade pip
 RUN pip3 install -r requirements.txt
 
 VOLUME /app
-ENV DB_HOST=${MASTER_IP}
 ENV AWS_ACCESS_KEY_ID=${ACCESS_KEY}
 ENV AWS_SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
 ENV AWS_DEFAULT_REGION=us-east-1

@@ -133,13 +133,6 @@ refresh_master_commands = [
     "cd stocks-api-docker-compose",
     "git pull",
     "docker-compose down",
-    # "docker login --username joja5627 --password-stdin < my_password.txt",
-    # "docker pull joja5627/frontend:latest",
-    # "docker pull joja5627/prometheus:latest",
-    # "docker pull joja5627/node-server:latest",
-    # "docker pull joja5627/mongo:latest",
-    # "docker pull joja5627/grafana:latest",
-    # "docker pull joja5627/boto3-flask:latest",
     "docker-compose up -d mongodb prometheus grafana algorithms-server frontend boto3-flask"
 ]
 
