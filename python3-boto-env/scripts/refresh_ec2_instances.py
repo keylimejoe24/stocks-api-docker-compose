@@ -130,8 +130,9 @@ for r in scrape_response['Reservations']:
 
 print("generate prometheus config....")
 prometheus_config = generate_prometheus_config(scrape_instances)
-result = subprocess.run([sys.executable, 'echo "{}" > prometheus/prometheus.yml'.format(prometheus_config)])
-print(result)
+text_file = open("prometheus/prometheus.yml", "w")
+n = text_file.write(prometheus_config)
+text_file.close()
 repo = git.Repo('.', search_parent_directories=True)
 repo.git.add(update=True)
 repo.index.commit("generated prometheus config")
