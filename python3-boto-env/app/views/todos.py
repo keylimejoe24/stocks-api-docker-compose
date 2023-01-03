@@ -38,7 +38,8 @@ class Todo(Resource):
         return response, 201
 
     def delete(self, todo_id):
-        todo_remove = todo.find_by_id(todo_id)
+        todo_remove = todo.find({"id":todo_id})
+        log.debug(jsonify(todo_remove))
         log.debug(todo_remove)
         todo.delete(todo_remove._id)
         return "Record Deleted", 204
