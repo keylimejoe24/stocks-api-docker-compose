@@ -133,7 +133,7 @@ create_prometheus_config = 'echo "{}" > prometheus/prometheus.yml'.format(promet
 repo = git.Repo('.', search_parent_directories=True)
 repo.git.add(update=True)
 repo.index.commit("generated prometheus config")
-origin = repo.remote(name='main')
+origin = repo.remote(name='origin')
 origin.push()
 
 
