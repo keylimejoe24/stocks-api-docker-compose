@@ -35,5 +35,7 @@ class Todo(Resource):
         return response, 201
 
     def delete(self, todo_id):
-        todo.delete(todo_id)
+        todo_remove = todo.find_by_id(todo_id)
+        print(todo_remove)
+        todo.delete(todo_remove._id)
         return "Record Deleted", 204
