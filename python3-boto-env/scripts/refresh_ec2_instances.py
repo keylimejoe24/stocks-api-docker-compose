@@ -14,6 +14,7 @@ import uuid
 import time
 import sys
 import git
+import subprocess
 
 
 ec2_resource = boto3.resource('ec2')
@@ -129,7 +130,8 @@ for r in scrape_response['Reservations']:
 
 print("generate prometheus config....")
 prometheus_config = generate_prometheus_config(scrape_instances)
-create_prometheus_config = 'echo "{}" > prometheus/prometheus.yml'.format(prometheus_config)
+result = subprocess.run([sys.executable, 'echo "{}" > prometheus/prometheus.yml'.format(prometheus_config)])
+print(result)
 repo = git.Repo('.', search_parent_directories=True)
 repo.git.add(update=True)
 repo.index.commit("generated prometheus config")
