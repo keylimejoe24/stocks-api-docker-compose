@@ -140,52 +140,52 @@ origin = repo.remote(name='origin')
 origin.push()
 
 
-# print(master_instances)
-# refresh_master_commands = [
-#     "sudo su",
-#     "cd /home/ssm-user",
-#     # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
-#     "cd stocks-api-docker-compose",
-#     "git pull",
-#     "docker-compose down",
-#     "docker-compose up -d --build mongodb prometheus grafana algorithms-server frontend boto3-flask"
-# ]
+print(master_instances)
+refresh_master_commands = [
+    "sudo su",
+    "cd /home/ssm-user",
+    # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
+    "cd stocks-api-docker-compose",
+    "git pull",
+    "docker-compose down",
+    "docker-compose up -d --build mongodb prometheus grafana algorithms-server frontend boto3-flask"
+]
 
 
-# run_services_start_command(
-#     [master_instances[0]["id"]], refresh_master_commands)
-# time.sleep(10)
+run_services_start_command(
+    [master_instances[0]["id"]], refresh_master_commands)
+time.sleep(10)
 
-# print("wait_for_services_to_start....")
-# wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health", "http://{}:9090/graph",
-#                            "http://{}:3001/api/health", "http://{}:27017", "http://{}:3003", "http://{}:5000/api/v1/health"])
+print("wait_for_services_to_start....")
+wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health", "http://{}:9090/graph",
+                           "http://{}:3001/api/health", "http://{}:27017", "http://{}:3003", "http://{}:5000/api/v1/health"])
 
-# commands = [
-#     "sudo su",
-#     "cd /home/ssm-user",
-#     # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
-#     "cd stocks-api-docker-compose",
-#     "git pull",
-#     "docker-compose down",
-#     "docker login --username joja5627 --password-stdin < my_password.txt",
-#     # "docker pull joja5627/node-server:latest",
-#     "docker-compose up --build -d scraping-server"
-# ]
-# print(commands)
-# run_services_start_command(scrape_instance_ids, commands)
-# time.sleep(10)
+commands = [
+    "sudo su",
+    "cd /home/ssm-user",
+    # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
+    "cd stocks-api-docker-compose",
+    "git pull",
+    "docker-compose down",
+    "docker login --username joja5627 --password-stdin < my_password.txt",
+    # "docker pull joja5627/node-server:latest",
+    "docker-compose up --build -d scraping-server"
+]
+print(commands)
+run_services_start_command(scrape_instance_ids, commands)
+time.sleep(10)
 
-# wait_for_services_to_start(scrape_instances, ["http://{}:3000/metrics"])
+wait_for_services_to_start(scrape_instances, ["http://{}:3000/metrics"])
 
 
-# print("MASTER INSTANCE ID: " + master_instances[0]["id"])
-# print(
-#     "FRONT END: http://{}:3003".format(master_instances[0]["public_ip_address"]))
-# print("GRAFANA CONNECTION STRING: http://{}:3002".format(
-#     master_instances[0]["public_ip_address"]))
-# print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(
-#     master_instances[0]["public_ip_address"]))
-# print("DEPLOYMENT VERSION: " + version)
+print("MASTER INSTANCE ID: " + master_instances[0]["id"])
+print(
+    "FRONT END: http://{}:3003".format(master_instances[0]["public_ip_address"]))
+print("GRAFANA CONNECTION STRING: http://{}:3002".format(
+    master_instances[0]["public_ip_address"]))
+print("MONGO CONNECTION STRING: mongodb://root:123456@{}:27017/bezkoder_db?authSource=admin".format(
+    master_instances[0]["public_ip_address"]))
+print("DEPLOYMENT VERSION: " + version)
 
-# prometheus_config = generate_prometheus_config(scrape_instances)  
+prometheus_config = generate_prometheus_config(scrape_instances)  
 
