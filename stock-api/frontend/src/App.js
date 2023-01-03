@@ -79,7 +79,7 @@ export default function App() {
       method: 'DELETE'
     };
 
-      fetch(`http://${MASTER_IP}:5000/api/v1/scrape_starts/${id}`, deleteScrapeRequestOptions)
+      fetch(`http://${MASTER_IP}:5000/api/v1/scrape_start/${id}`, deleteScrapeRequestOptions)
       .then(res => res.json())
       .then(response => {
         console.log(response)
