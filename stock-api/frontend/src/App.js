@@ -13,7 +13,7 @@ import Stack from '@mui/material/Stack';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 
-const MASTER_IP = "54.175.72.83"
+const MASTER_IP = "54.146.237.10"
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fafafa',
   ...theme.typography.body2,
