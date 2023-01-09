@@ -12,11 +12,12 @@ import sys
 
 
 app = Flask("stocks")
-api = Api(app)
-cors = CORS(app)
 
-api.add_resource(TodoCollection, '/api/v1/scrape_starts')
-api.add_resource(Todo, '/api/v1/scrape_start/<todo_id>')
+api = Api(app, prefix="/api/v1")
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+api.add_resource(TodoCollection, '/scrape_starts')
+api.add_resource(Todo, '/scrape_start/<todo_id>')
 
 service = Service()
 
