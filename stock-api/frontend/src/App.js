@@ -13,6 +13,7 @@ import TickerList from './TickerList';
 import Stack from '@mui/material/Stack';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
+import CurrencyInput from './CurrencyInput';
 
 const MASTER_IP = "54.146.237.10"
 const Item = styled(Paper)(({ theme }) => ({
@@ -38,7 +39,7 @@ export default function App() {
   const [scrapeIdSelected, setScrapeIdSelected] = React.useState("");
   const [scrapeIds, setScrapeIds] = React.useState([]);
   const [algorithmsResponse, setAlgorithmsResponse] = useState(null);
-  const [tickersResponse, setTickersResponse] = useState([]);
+  const [tickersResponse, setTickersResponse] = useState(null);
   const [testResults, setTestResults] = useState(null);
 
   const testResultsClickHandler = ticker => {
@@ -174,14 +175,9 @@ export default function App() {
 
           <Grid xs={4}>
             <Item>
+            <span style={{ minWidth: 300 }}>{tickersResponse && <TickerList maxWidth={500} scrapeStartClickHandler={scrapeStartClickHandler} testResultsClickHandler={testResultsClickHandler} title={"Tickers to Scrape"} results={tickersResponse} />}</span>
 
-              <Stack direction="row">
-                <StyledButton size={'small'} color="success" onClick={scrapeStartClickHandler} variant="outlined">Start Scrape</StyledButton>
-              </Stack>
-              <Stack direction="row">
-
-                <span style={{ minWidth: 300 }}>{tickersResponse && <TickerList maxWidth={300} testResultsClickHandler={testResultsClickHandler} title={"Tickers to Scrape"} results={tickersResponse} />}</span>
-              </Stack>
+             
               {/* <span style={{ minWidth: 500 }}>{testResults && <TestResultsList maxWidth={450} testResultsClickHandler={testResultsClickHandler} title={"Test Results"} results={testResults} />}</span> */}
 
 
@@ -199,7 +195,7 @@ export default function App() {
                 <StyledButton sx={{ fontSize: 10 }} disabled={scrapeIdSelected === ""} size={'small'} onClick={runAlgorithmsClickHandler} variant="outlined">Run Algorithms</StyledButton>
               </Stack>
 
-              <ScrapeList onClickHandler={onScrapIdClickedHandler} deleteOnClickHandler={deleteOnClickHandler} ids={scrapeIds} />
+              <ScrapeList maxWidth={500} onClickHandler={onScrapIdClickedHandler} deleteOnClickHandler={deleteOnClickHandler} ids={scrapeIds} />
             </Item>
           </Grid>
           <Grid xs={8}>

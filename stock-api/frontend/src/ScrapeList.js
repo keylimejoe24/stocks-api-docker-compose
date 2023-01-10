@@ -31,10 +31,10 @@ const Row = props => {
   );
 };
 
-export default function ScrapeList({ ids, onClickHandler,deleteOnClickHandler }) {
+export default function ScrapeList({ ids, maxWidth,onClickHandler,deleteOnClickHandler }) {
   return (
     <Box
-      sx={{ width: '100%', height: 400, maxWidth: 360, bgcolor: 'background.paper' }}
+      sx={{ width: '100%', height: 400, maxWidth: maxWidth, bgcolor: 'background.paper' }}
     >
       <FixedSizeList
         height={400}
