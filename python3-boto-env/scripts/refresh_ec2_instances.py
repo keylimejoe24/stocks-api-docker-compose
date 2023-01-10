@@ -164,7 +164,7 @@ refresh_master_commands = [
     "cd /home/ssm-user",
     # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
-    "git pull",
+    "git pull --no-edit origin main",
     "docker-compose down",
     "docker-compose up -d --build mongodb prometheus grafana algorithms-server frontend boto3-flask"
 ]
@@ -183,7 +183,7 @@ commands = [
     "cd /home/ssm-user",
     # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
-    "git pull",
+    "git pull --no-edit origin main",
     "docker-compose down",
     "docker login --username joja5627 --password-stdin < my_password.txt",
     # "docker pull joja5627/node-server:latest",
