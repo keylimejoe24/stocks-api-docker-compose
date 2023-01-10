@@ -40,10 +40,10 @@ class Todo(Resource):
         return response, 201
 
     def delete(self, todo_id):
-        current_app.info("HERE!")
-        current_app.info(jsonify(todo_remove))
+        current_app.logger.info("HERE!")
+        current_app.logger.info(jsonify(todo_remove))
         todo_remove = todo.find({"id":todo_id})
-        current_app.info(jsonify(todo_remove))
-        current_app.info(todo_remove)
+        current_app.logger.info(jsonify(todo_remove))
+        current_app.logger.info(todo_remove)
         todo.delete(todo_remove._id)
         return "Record Deleted", 204
