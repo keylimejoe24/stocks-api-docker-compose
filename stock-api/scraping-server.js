@@ -50,6 +50,48 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({origin:true,credentials: true}));
 
+const socketIO = require("socket.io")(http, {
+	cors: {
+		origin: "http://localhost:3000",
+	},
+});
+
+socketIO.on("connection", (socket) => {
+	console.log(`⚡: ${socket.id} user just connected!`);
+
+	// socket.on("runScrape", (tickers) => {
+		
+	// 	socket.emit("runnning", todoList);
+	// });
+
+	// socket.on("viewComments", (id) => {
+	// 	for (let i = 0; i < todoList.length; i++) {
+	// 		if (id === todoList[i].id) {
+	// 			socket.emit("commentsReceived", todoList[i]);
+	// 		}
+	// 	}
+	// });
+	// socket.on("updateComment", (data) => {
+	// 	const { user, todoID, comment } = data;
+	// 	for (let i = 0; i < todoList.length; i++) {
+	// 		if (todoID === todoList[i].id) {
+	// 			todoList[i].comments.push({ name: user, text: comment });
+	// 			socket.emit("commentsReceived", todoList[i]);
+	// 		}
+	// 	}
+	// });
+
+	// socket.on("deleteTodo", (id) => {
+	// 	todoList = todoList.filter((todo) => todo.id !== id);
+	// 	socket.emit("todos", todoList);
+	// 	// sendNotification("<TEMPLATE_ID>");
+	// });
+
+	socket.on("disconnect", () => {
+		socket.disconnect();
+		console.log("🔥: A user disconnected");
+	});
+});
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -58,16 +100,7 @@ app.use(function(req, res, next) {
   });
 
 router.post('/api/scrape/run', (req, res, next) => {
-    tickersToScrape = []
-    req.body.tickers.forEach(ticker => {
-        requestedTicker = _.find(tickersWithoutUpSymbol, {"symbol":ticker})
-        console.log(JSON.stringify(requestedTicker))
-        tickersToScrape.push(requestedTicker)
-    })
-   
-    scrapeID = req.body.scrapeID
-   
-    return scrapeController.run(tickersToScrape,scrapeID).then(data => res.json(data)); 
+    return scrapeController.run(req.body.tickersToScrape,req.body.scrapeID,socketIO).then(data => res.json(data)); 
 })
 
 

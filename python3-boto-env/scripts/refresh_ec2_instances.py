@@ -24,6 +24,15 @@ ssm_client = boto3.client('ssm')
 
 version = sys.argv[1]
 
+def generate_socket_io_config(instances):
+    socket_io_urls = []
+    for instance in instances:
+        socket_io_urls.append("{}:{}".format(instance["public_ip_address"], 3000))
+    
+    json_object = json.dumps(socket_io_urls, indent=4)
+    print(socket_io_urls)
+    return json_object
+
 def generate_prometheus_config(instances):
     print(instances)
     prometheus_template = {
@@ -130,9 +139,18 @@ for r in scrape_response['Reservations']:
 
 print("generate prometheus config....")
 prometheus_config = generate_prometheus_config(scrape_instances)
+socket_io_config = generate_socket_io_config(scrape_instances)
+
+
 text_file = open("prometheus/prometheus.yml", "w")
 n = text_file.write(prometheus_config)
 text_file.close()
+
+text_file = open("stock-api/frontend/socket_io_config.json", "w")
+n = text_file.write(socket_io_config)
+text_file.close()
+
+
 repo = git.Repo('.', search_parent_directories=True)
 repo.git.add(update=True)
 repo.index.commit("generated prometheus config")

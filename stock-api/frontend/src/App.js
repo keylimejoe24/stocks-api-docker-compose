@@ -15,6 +15,8 @@ import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 import CurrencyInput from './CurrencyInput';
 
+const socket = socketIO.connect("http://localhost:4000");
+
 const MASTER_IP = "54.146.237.10"
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fafafa',
