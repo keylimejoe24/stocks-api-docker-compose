@@ -5,6 +5,28 @@ const fs = require('fs');
 const cors = require('cors');
 const scrapeController = require('./controller/scrape.controller')
 
+let amexFullTickersRaw = fs.readFileSync('US-Stock-Symbols/amex/amex_full_tickers.json');
+let nasdaqFullTickersRaw = fs.readFileSync('US-Stock-Symbols/nasdaq/nasdaq_full_tickers.json');
+let nyseFullTickersRaw = fs.readFileSync('US-Stock-Symbols/nyse/nyse_full_tickers.json');
+
+let amexFullTickersJSON = JSON.parse(amexFullTickersRaw)
+let nasdaqFullTickersJSON = JSON.parse(nasdaqFullTickersRaw)
+let nyseFullTickersJSON = JSON.parse(nyseFullTickersRaw)
+
+const tickers = [
+    ...amexFullTickersJSON,
+    ...nasdaqFullTickersJSON,
+    ...nyseFullTickersJSON
+]
+
+let tickersWithoutUpSymbol = tickers.filter((t) => {
+    return !t.symbol.includes("^")
+})
+
+// let tickersByMarketCap = tickersWithoutUpSymbol.sort((a, b) => parseFloat(b.marketCap) - parseFloat(a.marketCap));
+
+
+
 const port = process.env.PORT || 3001;
 const router = express.Router();
 const app = express();

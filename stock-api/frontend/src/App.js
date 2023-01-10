@@ -151,7 +151,7 @@ export default function App() {
       })
       .catch(error => console.log(error));
 
-    fetch(`http://${MASTER_IP}:3000/api/scrape/tickers`, { method: "GET" })
+    fetch(`http://${MASTER_IP}:3001/api/scrape/tickers`, { method: "GET" })
       .then(res => res.json())
       .then(response => {
         console.log(response)
