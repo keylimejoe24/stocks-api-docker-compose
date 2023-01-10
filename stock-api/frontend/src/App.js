@@ -38,6 +38,7 @@ export default function App() {
   const [scrapeIdSelected, setScrapeIdSelected] = React.useState("");
   const [scrapeIds, setScrapeIds] = React.useState([]);
   const [algorithmsResponse, setAlgorithmsResponse] = useState(null);
+  const [tickersResponse, setTickersResponse] = useState([]);
   const [testResults, setTestResults] = useState(null);
 
   const testResultsClickHandler = ticker => {
@@ -149,6 +150,14 @@ export default function App() {
         setScrapeIds(response)
       })
       .catch(error => console.log(error));
+
+    fetch(`http://${MASTER_IP}:3000/api/scrape/tickers`, { method: "GET" })
+      .then(res => res.json())
+      .then(response => {
+        console.log(response)
+        setTickersResponse(response)
+      })
+      .catch(error => console.log(error));
   }, []);
 
   useEffect(() => {
@@ -168,10 +177,13 @@ export default function App() {
 
               <Stack direction="row">
                 <StyledButton size={'small'} color="success" onClick={scrapeStartClickHandler} variant="outlined">Start Scrape</StyledButton>
-                <span style={{ minWidth: 100 }}>{algorithmsResponse && <TickerList maxWidth={100} testResultsClickHandler={testResultsClickHandler} title={"Total Results"} results={algorithmsResponse.totalResults} />}</span>
-                {/* <span style={{ minWidth: 500 }}>{testResults && <TestResultsList maxWidth={450} testResultsClickHandler={testResultsClickHandler} title={"Test Results"} results={testResults} />}</span> */}
-
               </Stack>
+              <Stack direction="row">
+
+                <span style={{ minWidth: 300 }}>{tickersResponse && <TickerList maxWidth={300} testResultsClickHandler={testResultsClickHandler} title={"Tickers to Scrape"} results={tickersResponse} />}</span>
+              </Stack>
+              {/* <span style={{ minWidth: 500 }}>{testResults && <TestResultsList maxWidth={450} testResultsClickHandler={testResultsClickHandler} title={"Test Results"} results={testResults} />}</span> */}
+
 
             </Item>
             <Item>

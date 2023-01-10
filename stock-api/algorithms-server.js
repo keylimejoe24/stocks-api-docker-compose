@@ -27,9 +27,14 @@ router.get('/api/algorithms/ids', (req, res) => {
     scrapeController.getScrapeIds().then(data => res.json(data));
 });
 
+router.get('/api/scrape/tickers', (req, res, next) => {
+    return JSON.stringify(tickersWithoutUpSymbol)  
+})
+
 router.get('/api/health', (req, res) => {
     return res.status(200).send('Ok');
 });
+
 
 app.use(router);
 
