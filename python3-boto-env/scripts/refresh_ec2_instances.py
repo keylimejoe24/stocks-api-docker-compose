@@ -146,7 +146,7 @@ text_file = open("prometheus/prometheus.yml", "w")
 n = text_file.write(prometheus_config)
 text_file.close()
 
-text_file = open("stock-api/frontend/socket_io_config.json", "w")
+text_file = open("stock-api/frontend/src/socket_io_config.json", "w")
 n = text_file.write(socket_io_config)
 text_file.close()
 
