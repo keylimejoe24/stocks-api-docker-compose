@@ -13,7 +13,6 @@ import TickerList from './TickerList';
 import Stack from '@mui/material/Stack';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
-import CurrencyInput from './CurrencyInput';
 import socketIOConfig from './socket_io_config.json';
 import socketIO from "socket.io-client";
 
