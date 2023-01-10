@@ -50,7 +50,7 @@ router.get('/api/algorithms/ids', (req, res) => {
 });
 
 router.get('/api/scrape/tickers', (req, res, next) => {
-    return JSON.stringify(tickersWithoutUpSymbol)  
+    return res.status(200).send(JSON.stringify(tickersWithoutUpSymbol));  
 })
 
 router.get('/api/health', (req, res) => {
