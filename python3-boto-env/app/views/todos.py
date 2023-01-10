@@ -44,5 +44,5 @@ class Todo(Resource):
         todo_remove = todo.find({"id":todo_id})
         current_app.logger.info(jsonify(todo_remove))
         current_app.logger.info(todo_remove)
-        todo.delete(todo_remove["_id"])
+        todo.delete(todo_remove[0]["_id"])
         return "Record Deleted", 204
