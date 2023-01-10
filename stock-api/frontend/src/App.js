@@ -72,17 +72,17 @@ export default function App() {
     }
 
   }
-  
+
   const deleteOnClickHandler = id => {
-   
+
     const deleteScrapeRequestOptions = {
       method: 'DELETE'
     };
 
-      fetch(`http://${MASTER_IP}:5000/api/v1/scrape_start/${id}`, deleteScrapeRequestOptions)
-      .then(res => res.json())
+    fetch(`http://${MASTER_IP}:5000/api/v1/scrape_start/${id}`, deleteScrapeRequestOptions)
+
       .then(response => {
-        console.log(response)
+
         fetch(`http://${MASTER_IP}:5000/api/v1/scrape_starts`, { method: "GET" })
           .then(res => res.json())
           .then(response => {
