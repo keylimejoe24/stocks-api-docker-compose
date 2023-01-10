@@ -41,7 +41,6 @@ class Todo(Resource):
 
     def delete(self, todo_id):
         current_app.logger.info("HERE!")
-        current_app.logger.info(jsonify(todo_remove))
         todo_remove = todo.find({"id":todo_id})
         current_app.logger.info(jsonify(todo_remove))
         current_app.logger.info(todo_remove)
