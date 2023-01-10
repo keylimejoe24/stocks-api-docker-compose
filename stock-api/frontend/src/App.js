@@ -14,8 +14,14 @@ import Stack from '@mui/material/Stack';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 import CurrencyInput from './CurrencyInput';
+import socketIOConfig from '../socket_io_config.json';
 
-const socket = socketIO.connect("http://localhost:4000");
+
+const sockets = []
+socketIOConfig.map(url => {
+  const newSocket = socketIO.connect(url);
+  sockets.push(newSocket)
+})
 
 const MASTER_IP = "54.146.237.10"
 const Item = styled(Paper)(({ theme }) => ({
