@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import ScrapeList from './ScrapeList';
 import AlgorithmsList from './AlgorithmsList';
 import TestResultsList from './TestResultsList';
+import TickerList from './TickerList';
 import Stack from '@mui/material/Stack';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
@@ -167,6 +168,9 @@ export default function App() {
 
               <Stack direction="row">
                 <StyledButton size={'small'} color="success" onClick={scrapeStartClickHandler} variant="outlined">Start Scrape</StyledButton>
+                <span style={{ minWidth: 100 }}>{algorithmsResponse && <TickerList maxWidth={100} testResultsClickHandler={testResultsClickHandler} title={"Total Results"} results={algorithmsResponse.totalResults} />}</span>
+                {/* <span style={{ minWidth: 500 }}>{testResults && <TestResultsList maxWidth={450} testResultsClickHandler={testResultsClickHandler} title={"Test Results"} results={testResults} />}</span> */}
+
               </Stack>
 
             </Item>

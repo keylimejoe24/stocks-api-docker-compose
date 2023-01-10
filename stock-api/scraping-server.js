@@ -69,6 +69,11 @@ router.post('/api/scrape/run', (req, res, next) => {
    
     return scrapeController.run(tickersToScrape,scrapeID).then(data => res.json(data)); 
 })
+
+router.get('/api/scrape/tickers', (req, res, next) => {
+    return JSON.stringify(tickersWithoutUpSymbol)  
+})
+
 router.get('/api/scrape/deleteAll', (req, res, next) => {
     console.log(req.body);
     scrapeController.deleteAll().then(data => res.json(data));
