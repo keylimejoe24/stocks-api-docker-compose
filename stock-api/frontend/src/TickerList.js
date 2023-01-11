@@ -45,11 +45,9 @@ const Row = props => {
 };
 
 
-export default function TickerList({ title, results, testResultsClickHandler, maxWidth, scrapeStartClickHandler }) {
+export default function TickerList({ title, results, testResultsClickHandler, maxWidth, scrapeStartClickHandler,  tickerFilter, setTickerFilter,marketCapFilter, setMarketCapFilter,filteredTickers, setFilteredTickers }) {
 
-    const [tickerFilter, setTickerFilter] = React.useState("");
-    const [marketCapFilter, setMarketCapFilter] = React.useState("5000000");
-    const [filteredTickers, setFilteredTickers] = React.useState([]);
+    
     useEffect(() => {
         let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) <= parseFloat(marketCapFilter)).map(filteredTicker => {
             return filteredTicker

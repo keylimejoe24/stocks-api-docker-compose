@@ -54,6 +54,7 @@ class Service(object):
         log.debug(url)
         log.debug(ticker_chunks[index])
         log.debug(len(ticker_chunks[index]))
+        
         myobj = {'tickers': ticker_chunks[index],'scrapeID':scrape_id} 
         log.debug(myobj)
         response = requests.post(url, json = myobj)

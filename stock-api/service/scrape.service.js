@@ -435,20 +435,21 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize,socke
                 windowEnd = tickers.length
             }
             logger.info(`storing batch:: windowStart: ${windowStart}, windowEnd: ${windowEnd} uuid: ${uuid} `)
-            for (const ticker of tickers.slice(windowStart, windowEnd)) {
+            let tickersSlice = tickers.slice(windowStart, windowEnd)
+            for (const ticker of tickersSlice) {
 
                 storeKeyStats(ticker, uuid, treasuryStatsRes)
 
             }
             await until(_ => responseCount == windowEnd);
-            socket.emit("batchFinished", 10);
+            socket.emit("batchFinished", tickersSlice);
             windowStart = windowEnd
             windowEnd += batchSize
         } catch (e) {
             logger.info(e)
         }
     } while (windowEnd != tickers.length);
-    socket.emit("complete", 10);
+    socket.emit("complete", tickers.length);
     logger.info(`done`)
 }
 
