@@ -59,6 +59,7 @@
     "proxies-pool": "^2.0.0",
     "request": "^2.79.0",
     "request-promise": "^4.2.6",
+    "socket.io": "^4.5.4",
     "string": "^3.3.3",
     "superagent": "^8.0.3",
     "superagent-proxy": "^3.0.0",
