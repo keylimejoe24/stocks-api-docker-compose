@@ -27,7 +27,7 @@ socketIOConfig.map(url => {
   sockets.push(newSocket)
 })
 
-const MASTER_IP = "54.146.237.10"
+const MASTER_IP = "18.212.185.169"
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fafafa',
   ...theme.typography.body2,
