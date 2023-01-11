@@ -11,7 +11,7 @@ import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import React, { useState, useEffect } from "react";
-
+import CircularProgressWithLabel from './CircularProgressWithLabel'
 
 const StyledButton = styled(Button)(({ theme }) => ({
     margin: theme.spacing(1),
@@ -81,6 +81,7 @@ export default function TickerList({ title, results, testResultsClickHandler, ma
             <Stack direction="row">
                 
                 <StyledButton size={'small'} color="success" onClick={scrapeStartClickHandler} variant="outlined">Start Scrape</StyledButton>
+                <CircularProgressWithLabel  />
 
             </Stack>
             <Stack direction="row">

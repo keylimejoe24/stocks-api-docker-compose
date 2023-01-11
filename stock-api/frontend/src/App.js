@@ -21,10 +21,10 @@ const scrape_urls = []
 
 socketIOConfig.map(url => {
   scrape_urls.push(`http://${url}/api/scrape/run`)
-  // const newSocket = socketIO.connect(url);
-  // newSocket.on("batchFinished", (data) => console.log(data));
-  // newSocket.on("complete", (data) => console.log(data));
-  // sockets.push(newSocket)
+  const newSocket = socketIO.connect(url);
+  newSocket.on("batchFinished", (data) => console.log(data));
+  newSocket.on("complete", (data) => console.log(data));
+  sockets.push(newSocket)
 })
 
 const MASTER_IP = "52.5.21.145"

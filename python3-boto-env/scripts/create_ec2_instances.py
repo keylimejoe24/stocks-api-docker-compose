@@ -173,7 +173,7 @@ def start_scrape(urls,scrape_id):
 def main():
    
     instances = ec2.create_instances(
-        ImageId="ami-03d2b7a23faa4f6a7",
+        ImageId="ami-05c10b50e4d2f0252",
         MinCount=1,
         MaxCount=1,
         InstanceType="t3.xlarge",
@@ -183,7 +183,7 @@ def main():
             'Arn': 'arn:aws:iam::612228415522:instance-profile/ssmaccess'}
     )
     scrape_instances = ec2.create_instances(
-        ImageId="ami-03d2b7a23faa4f6a7",
+        ImageId="ami-0c03cd55b030ad658",
         MinCount=16,
         MaxCount=16,
         InstanceType="t2.micro",
