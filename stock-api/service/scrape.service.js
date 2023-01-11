@@ -409,10 +409,10 @@ async function getData(ticker) {
 }
 
 const storeKeyStats = async (ticker, uuid, treasuryStatsRes) => {
-    logger.info(ticker.symbol)
-    let keyStatsRes = await getData(ticker.symbol);
-    let closingHistories = await getClosingHistories(ticker.symbol);
-    let balanceSheetStatements = await getBalanceSheetHistory(ticker.symbol);
+    logger.info(ticker)
+    let keyStatsRes = await getData(ticker);
+    let closingHistories = await getClosingHistories(ticker);
+    let balanceSheetStatements = await getBalanceSheetHistory(ticker);
     
     let scrapeResult = {
         id: uuid,
@@ -437,12 +437,12 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize,socke
             logger.info(`storing batch:: windowStart: ${windowStart}, windowEnd: ${windowEnd} uuid: ${uuid} `)
             let tickersSlice = tickers.slice(windowStart, windowEnd)
             for (const ticker of tickersSlice) {
-
+                
                 storeKeyStats(ticker, uuid, treasuryStatsRes)
 
             }
             await until(_ => responseCount == windowEnd);
-            socketIO.emit("batchFinished", tickersSlice);
+            socketIO.emit("batchFinished", {finishedTickers:tickersSlice,windowEnd:windowEnd,totalLength:tickers.length});
             windowStart = windowEnd
             windowEnd += batchSize
         } catch (e) {
@@ -572,7 +572,7 @@ class ScrapeService {
         // let scrapeID = randomUUID()
         batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 10,socketIO)
 
-        return { ok:"ok" }
+        
 
     }
 

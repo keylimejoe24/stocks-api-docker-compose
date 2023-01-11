@@ -51,7 +51,7 @@ const socketIO = require('socket.io')(http,  { cors: { origin: '*' } });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors({origin:true,credentials: true}));
+// app.use(cors({origin:true,credentials: true}));
 
 // const socketIO = require("socket.io")(httpServer, {
 //     allowRequest: (req, callback) => {
@@ -105,7 +105,14 @@ app.use(function(req, res, next) {
   });
 
 router.post('/api/scrape/run', (req, res, next) => {
-    return scrapeController.run(req.body.tickers,req.body.scrapeID,socketIO).then(data => res.json(data)); 
+    console.log(req);
+   
+    let tickers = req.body.tickers
+    let id = req.body.scrapeID
+    console.log(tickers)
+    console.log(id)
+    scrapeController.run(tickers,id,socketIO);
+    return res.status(200).send('Ok');
 })
 
 

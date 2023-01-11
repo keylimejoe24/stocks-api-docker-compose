@@ -18,7 +18,7 @@ const StyledInput = styled(TextField)(({ theme }) => ({
 
 const Row = props => {
   const { data, index, style } = props;
-  const item = data.results[index];
+  const item = data.tickers[index];
 
   return (
     <ListItem style={style} key={index} component="div" disablePadding>
@@ -33,43 +33,39 @@ const Row = props => {
 };
 
 
-export default function AlgorithmsList({ title, results, testResultsClickHandler, maxWidth, withFilter }) {
+export default function AlgorithmsList({ height,title, results, testResultsClickHandler, maxWidth, withFilter }) {
 
   const [tickerFilter, setTickerFilter] = React.useState("");
   const [marketCapFilter, setMarketCapFilter] = React.useState("5000000");
-  const [filteredTickers, setFilteredTickers] = React.useState([]);
+  const [filteredTickers, setFilteredTickers] = React.useState(null);
 
-  useEffect(() => {
-    let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) <= parseFloat(marketCapFilter)).map(filteredTicker => {
-        return filteredTicker
-    })
-    setFilteredTickers(filteredByMarketCap);
-  }, [results]);
+
 
 const tickerFilterChangeHandler = event => {
-    let filteredBySymbol = results.filter(ticker => ticker.symbol.includes(event.target.value)).map(filteredTicker => {
+    console.log(event.target.value)
+    let filteredBySymbol = results.filter(ticker => ticker.ticker.includes(event.target.value)).map(filteredTicker => {
         return filteredTicker
     })
+    console.log(filteredBySymbol)
     setTickerFilter(event.target.value)
     setFilteredTickers(filteredBySymbol);
   };
 
-const marketCapFilterChangeHandler = event => {
-    
-    let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) <= parseFloat(event.target.value)).map(filteredTicker => {
-        return filteredTicker
-    })
-    setMarketCapFilter(event.target.value);
-    setFilteredTickers(filteredByMarketCap);
-  };
-  
+  const buildItemData = () => {
+    let tickers = filteredTickers ? filteredTickers : results
+    return {tickers, testResultsClickHandler }
+  }
+  const getItemCount = () => {
+    let tickers = filteredTickers ? filteredTickers : results
+    return tickers.length
+  }
+ 
   return (
     <Box
       sx={{ height: 600, maxWidth: maxWidth, bgcolor: 'background.paper' }}
     >
       <div style={{ fontSize: 12, fontWeight: "bold" }}>{title}</div>
       {withFilter && <Stack direction="row">
-        <CurrencyInput error={""} handleChange={marketCapFilterChangeHandler} value={marketCapFilter} />
         <StyledInput
           fullWidth
           inputProps={{ style: { fontSize: 10 } }} // font size of input text
@@ -77,20 +73,20 @@ const marketCapFilterChangeHandler = event => {
           size={'small'}
           value={tickerFilter}
           onChange={tickerFilterChangeHandler}
-          id="outlined-basic"
+          id="algo-outlined-basic"
           label="Ticker Symbol"
           variant="outlined" />
 
 
       </Stack>}
       <FixedSizeList
-        height={600}
-        itemData={{ results, testResultsClickHandler }}
+        height={height}
+        itemData={buildItemData()}
         // onClickHandler={onClickHandler}
-        //   ids={ids}
+        //   ids={idsŽs
         //   width={360}
         itemSize={60}
-        itemCount={results.length}
+        itemCount={getItemCount()}
         overscanCount={5}
       >
         {Row}

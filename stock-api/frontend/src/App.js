@@ -21,13 +21,13 @@ const scrape_urls = []
 
 socketIOConfig.map(url => {
   scrape_urls.push(`http://${url}/api/scrape/run`)
-  const newSocket = socketIO.connect(url);
-  newSocket.on("batchFinished", (data) => console.log(data));
-  newSocket.on("complete", (data) => console.log(data));
-  sockets.push(newSocket)
+  // const newSocket = socketIO.connect(url);
+  // newSocket.on("batchFinished", (data) => console.log(data));
+  // newSocket.on("complete", (data) => console.log(data));
+  // sockets.push(newSocket)
 })
 
-const MASTER_IP = "18.212.185.169"
+const MASTER_IP = "52.5.21.145"
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fafafa',
   ...theme.typography.body2,
@@ -84,9 +84,10 @@ export default function App() {
     for (const [key, value] of Object.entries(response.totalResults)) {
       totalResults.push({ ticker: key, weight: value["Total Weight"], value: value })
     }
-    totalResults.sort((a, b) => a.ticker.localeCompare(b.ticker))
+    let sorted = totalResults.sort((a, b) => a.ticker.localeCompare(b.ticker))
+    console.log(sorted)
     return {
-      ...response, totalResults: totalResults
+      ...response, totalResults: sorted
     }
 
   }
@@ -241,9 +242,9 @@ export default function App() {
           </Grid>
           <Grid xs={8}>
             <Item align={"left"} style={{ display: "flex", gap: "1rem", alignItems: "center", maxHeight: 700 }}>
-              <span style={{ minWidth: 100 }}>{algorithmsResponse && <AlgorithmsList maxWidth={100} testResultsClickHandler={testResultsClickHandler} title={"Top Ten"} results={algorithmsResponse.topTen} />}</span>
-              <span style={{ minWidth: 100 }}>{algorithmsResponse && <AlgorithmsList maxWidth={100} testResultsClickHandler={testResultsClickHandler} title={"Bottom Ten"} results={algorithmsResponse.bottomTen} />}</span>
-              <span style={{ minWidth: 100 }}>{algorithmsResponse && <AlgorithmsList maxWidth={100} testResultsClickHandler={testResultsClickHandler} title={"Total Results"} results={algorithmsResponse.totalResults} />}</span>
+              <span style={{ minWidth: 100 }}>{algorithmsResponse && <AlgorithmsList height={600} withFilter={false} maxWidth={100} testResultsClickHandler={testResultsClickHandler} title={"Top Ten"} results={algorithmsResponse.topTen} />}</span>
+              <span style={{ minWidth: 100 }}>{algorithmsResponse && <AlgorithmsList height={600} withFilter={false} maxWidth={100} testResultsClickHandler={testResultsClickHandler} title={"Bottom Ten"} results={algorithmsResponse.bottomTen} />}</span>
+              <span style={{ minWidth: 300 }}>{algorithmsResponse && <AlgorithmsList height={530} withFilter={true} maxWidth={300} testResultsClickHandler={testResultsClickHandler} title={"Total Results"} results={algorithmsResponse.totalResults} />}</span>
               <span style={{ minWidth: 500 }}>{testResults && <TestResultsList maxWidth={450} testResultsClickHandler={testResultsClickHandler} title={"Test Results"} results={testResults} />}</span>
 
 
