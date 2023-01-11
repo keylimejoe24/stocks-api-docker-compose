@@ -105,7 +105,7 @@ app.use(function(req, res, next) {
   });
 
 router.post('/api/scrape/run', (req, res, next) => {
-    return scrapeController.run(req.body.tickersToScrape,req.body.scrapeID,socketIO).then(data => res.json(data)); 
+    return scrapeController.run(req.body.tickers,req.body.scrapeID,socketIO).then(data => res.json(data)); 
 })
 
 

@@ -442,14 +442,14 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize,socke
 
             }
             await until(_ => responseCount == windowEnd);
-            socket.emit("batchFinished", tickersSlice);
+            socketIO.emit("batchFinished", tickersSlice);
             windowStart = windowEnd
             windowEnd += batchSize
         } catch (e) {
             logger.info(e)
         }
     } while (windowEnd != tickers.length);
-    socket.emit("complete", tickers.length);
+    socketIO.emit("complete", tickers.length);
     logger.info(`done`)
 }
 
