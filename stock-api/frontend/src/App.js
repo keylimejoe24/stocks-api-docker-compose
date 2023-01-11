@@ -13,10 +13,10 @@ import TickerList from './TickerList';
 import Stack from '@mui/material/Stack';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
-import socketIOConfig from './socket_io_config.json';
+// import socketIOConfig from './socket_io_config.json';
 import socketIO from "socket.io-client";
 
-
+let socketIOConfig = ["http://127.0.0.1:3000"]
 const sockets = []
 socketIOConfig.map(url => {
   const newSocket = socketIO.connect(url);

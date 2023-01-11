@@ -44,7 +44,8 @@ const port = process.env.PORT || 3000;
 
 const router = express.Router();
 const app = express();
-const http = require("http").Server(app);
+const http = require('http').Server(app);
+const socketIO = require('socket.io')(http,  { cors: { origin: '*' } });
 
 
 app.use(bodyParser.json());
@@ -52,11 +53,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({origin:true,credentials: true}));
 
-const socketIO = require("socket.io")(http, {
-	cors: {
-		origin: "http://localhost:3000",
-	},
-});
+// const socketIO = require("socket.io")(httpServer, {
+//     allowRequest: (req, callback) => {
+//       const noOriginHeader = req.headers.origin === undefined;
+//       callback(null, noOriginHeader);
+//     }
+//   });
+
 
 socketIO.on("connection", (socket) => {
 	console.log(`⚡: ${socket.id} user just connected!`);
@@ -122,6 +125,6 @@ router.get('/api/health', (req, res) => {
 });
 app.use(router);
 
-app.listen(port, () => {
+http.listen(port, () => {
     console.log(`Server listening on the port  ${port}`);
 })
