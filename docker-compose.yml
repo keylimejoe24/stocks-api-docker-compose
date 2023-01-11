@@ -75,7 +75,7 @@ services:
     ports:
       - 3001:3001
     environment:
-      - DB_HOST=mongodb
+      - DB_HOST=${DB_HOST}
       - DB_USER=$MONGODB_USER
       - DB_PASSWORD=$MONGODB_PASSWORD
       - DB_NAME=$MONGODB_DATABASE
