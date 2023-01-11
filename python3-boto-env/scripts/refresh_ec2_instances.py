@@ -162,7 +162,7 @@ print(master_instances)
 refresh_master_commands = [
     "sudo su",
     "cd /home/ssm-user",
-    # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
+    "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
     "git pull --no-edit origin main",
     "docker-compose down",
@@ -181,7 +181,7 @@ wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health", 
 commands = [
     "sudo su",
     "cd /home/ssm-user",
-    # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
+    "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
     "git pull --no-edit origin main",
     "docker-compose down",
