@@ -163,8 +163,8 @@ refresh_master_commands = [
     "cd /home/ssm-user",
     "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
-    "git pull --no-edit origin main",
     "docker-compose down",
+    "git pull --no-edit origin main",
     "DB_HOST={} docker-compose up -d --build mongodb prometheus grafana algorithms-server frontend boto3-flask".format(master_instances[0]["public_ip_address"])
 ]
 
@@ -182,12 +182,12 @@ commands = [
     "cd /home/ssm-user",
     "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
+    "docker-compose down",
     "docker system prune -a -f"
     "git pull --no-edit origin main",
-    "docker-compose down",
     "docker login --username joja5627 --password-stdin < my_password.txt",
-    # "docker pull joja5627/node-server:latest",
-    "docker-compose up --build -d scraping-server"
+            
+    "DB_HOST={} docker-compose up --build -d scraping-server".format(master_instances[0]["public_ip_address"])
 ]
 print(commands)
 run_services_start_command(scrape_instance_ids, commands)
