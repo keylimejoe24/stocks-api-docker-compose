@@ -192,7 +192,7 @@ print(commands)
 run_services_start_command(scrape_instance_ids, commands)
 time.sleep(10)
 
-# wait_for_services_to_start(scrape_instances, ["http://{}:3000/metrics"])
+wait_for_services_to_start(scrape_instances, ["http://{}:3000/metrics"])
 
 
 print("MASTER INSTANCE ID: " + master_instances[0]["id"])
