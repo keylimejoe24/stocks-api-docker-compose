@@ -25,6 +25,34 @@ import { format } from 'date-fns'
 
 
   export default function AlgorithmsList({ title,results,testResultsClickHandler,maxWidth  }) {
+
+    const [tickerFilter, setTickerFilter] = React.useState("");
+    const [marketCapFilter, setMarketCapFilter] = React.useState("5000000");
+    const [filteredTickers, setFilteredTickers] = React.useState([]);
+    
+    useEffect(() => {
+      let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) <= parseFloat(marketCapFilter)).map(filteredTicker => {
+          return filteredTicker
+      })
+      setFilteredTickers(filteredByMarketCap);
+    }, [results]);
+
+  const tickerFilterChangeHandler = event => {
+      let filteredBySymbol = results.filter(ticker => ticker.symbol.includes(event.target.value)).map(filteredTicker => {
+          return filteredTicker
+      })
+      setTickerFilter(event.target.value)
+      setFilteredTickers(filteredBySymbol);
+    };
+
+  const marketCapFilterChangeHandler = event => {
+      
+      let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) <= parseFloat(event.target.value)).map(filteredTicker => {
+          return filteredTicker
+      })
+      setMarketCapFilter(event.target.value);
+      setFilteredTickers(filteredByMarketCap);
+    };
     
    console.log(results)
     return (

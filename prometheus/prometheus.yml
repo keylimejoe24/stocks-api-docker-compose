@@ -4,64 +4,64 @@ scrape_configs:
   - job_name: i-01386feaaf2ef673a
     static_configs:
       - targets:
-          - 3.83.90.184:3000
+          - 54.152.224.35:3000
   - job_name: i-022e2085d38a90106
     static_configs:
       - targets:
-          - 44.202.144.223:3000
+          - 54.166.97.98:3000
   - job_name: i-02bbf338a35bdca6d
     static_configs:
       - targets:
-          - 3.93.216.27:3000
+          - 44.202.114.206:3000
   - job_name: i-061e33154c670e57e
     static_configs:
       - targets:
-          - 3.88.116.200:3000
+          - 3.88.173.142:3000
   - job_name: i-07d5c06c2b49e8b2b
     static_configs:
       - targets:
-          - 34.238.153.4:3000
+          - 3.84.194.183:3000
   - job_name: i-062181ed8b7da9864
     static_configs:
       - targets:
-          - 18.212.55.23:3000
+          - 34.205.77.241:3000
   - job_name: i-0c2f7adc63a06a3a4
     static_configs:
       - targets:
-          - 18.212.162.148:3000
+          - 18.208.155.23:3000
   - job_name: i-0bc369e40ac9a400b
     static_configs:
       - targets:
-          - 54.234.166.249:3000
+          - 3.91.61.205:3000
   - job_name: i-030c96cd30b986771
     static_configs:
       - targets:
-          - 34.227.104.94:3000
+          - 44.204.12.118:3000
   - job_name: i-0b048ea6f30525e1d
     static_configs:
       - targets:
-          - 3.93.82.3:3000
+          - 54.84.17.46:3000
   - job_name: i-0fc2701688e8134fc
     static_configs:
       - targets:
-          - 54.211.233.0:3000
+          - 3.92.134.231:3000
   - job_name: i-0258cdb1ec629b20d
     static_configs:
       - targets:
-          - 3.86.12.216:3000
+          - 52.91.101.106:3000
   - job_name: i-037bfb3333abbdfc0
     static_configs:
       - targets:
-          - 52.90.175.202:3000
+          - 18.208.138.67:3000
   - job_name: i-02eaddf98aa83027e
     static_configs:
       - targets:
-          - 3.82.246.118:3000
+          - 34.227.28.90:3000
   - job_name: i-0c7a07c1f2105e4d0
     static_configs:
       - targets:
-          - 44.204.43.26:3000
+          - 52.90.188.159:3000
   - job_name: i-03a7d165f55211c1d
     static_configs:
       - targets:
-          - 107.21.6.4:3000
+          - 18.233.170.2:3000
