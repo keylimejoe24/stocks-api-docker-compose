@@ -90,6 +90,7 @@ services:
       env_file: ./.env
       command: npm run scraping-server
       environment:
+        - DB_HOST=${DB_HOST}
         - DB_USER=$MONGODB_USER
         - DB_PASSWORD=$MONGODB_PASSWORD
         - DB_NAME=$MONGODB_DATABASE

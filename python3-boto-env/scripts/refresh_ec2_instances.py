@@ -186,7 +186,6 @@ commands = [
     "docker system prune -a -f"
     "git pull --no-edit origin main",
     "docker login --username joja5627 --password-stdin < my_password.txt",
-            
     "DB_HOST={} docker-compose up --build -d scraping-server".format(master_instances[0]["public_ip_address"])
 ]
 print(commands)
