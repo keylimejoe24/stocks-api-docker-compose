@@ -10,7 +10,7 @@ const {
   } = process.env;
 
 
-const MONGO_CONNECTION_STRING = `mongodb://${DB_USER}:${DB_PASSWORD}@${"18.212.185.169"}:${DB_PORT}/${DB_NAME}?authSource=admin`
+const MONGO_CONNECTION_STRING = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`
 const connect = () => {
 
     const url = MONGO_CONNECTION_STRING;

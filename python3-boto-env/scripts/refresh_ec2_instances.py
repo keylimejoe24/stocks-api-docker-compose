@@ -166,7 +166,7 @@ refresh_master_commands = [
     "cd stocks-api-docker-compose",
     "git pull --no-edit origin main",
     "docker-compose down",
-    "docker-compose up -d --build mongodb prometheus grafana algorithms-server frontend boto3-flask"
+    "DB_HOST={} docker-compose up -d --build mongodb prometheus grafana algorithms-server frontend boto3-flask".format(master_instances[0]["public_ip_address"])
 ]
 
 
