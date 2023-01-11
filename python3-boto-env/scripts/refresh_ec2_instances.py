@@ -182,7 +182,7 @@ commands = [
     "cd /home/ssm-user",
     "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
-    "docker system prune -a"
+    "docker system prune -a -f"
     "git pull --no-edit origin main",
     "docker-compose down",
     "docker login --username joja5627 --password-stdin < my_password.txt",
