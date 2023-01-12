@@ -440,13 +440,14 @@ const splitToChunks = (array, parts) => {
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize,socketIO) => {
 
     let filteredTickerSymbolChunks = splitToChunks(tickers, batchSize);
-    console.log(filteredTickerSymbolChunks)
+    console.log("filteredTickerSymbolChunks",filteredTickerSymbolChunks)
     for(const tickers in filteredTickerSymbolChunks){
-        console.log(tickers)
+        console.log("tickers",tickers)
+        console.log("filteredTickerSymbolChunks[tickers]",filteredTickerSymbolChunks[tickers])
         logger.info(`storing batch:: chunk: ${tickers} uuid: ${uuid} `)
-        await storeKeyStats(tickers, uuid, treasuryStatsRes)
-        console.log("batchFinished", {finishedTickers:tickers})
-        socketIO.emit("batchFinished", {finishedTickers:tickers});
+        await storeKeyStats(filteredTickerSymbolChunks[tickers], uuid, treasuryStatsRes)
+        console.log("batchFinished", {finishedTickers:filteredTickerSymbolChunks[tickers]})
+        socketIO.emit("batchFinished", {finishedTickers:filteredTickerSymbolChunks[tickers]});
     }
     
     console.log("complete")
