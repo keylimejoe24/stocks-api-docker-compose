@@ -442,15 +442,19 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize,socke
 
             }
             await until(_ => responseCount == windowEnd);
-            socketIO.emit("batchFinished", {finishedTickers:tickersSlice,windowEnd:windowEnd,totalLength:tickers.length});
+            console.log("batchFinished", {finishedTickers:tickersSlice})
+            socketIO.emit("batchFinished", {finishedTickers:tickersSlice});
             windowStart = windowEnd
             windowEnd += batchSize
         } catch (e) {
             logger.info(e)
         }
-    } while (windowEnd != tickers.length);
-    socketIO.emit("complete", tickers.length);
-    logger.info(`done`)
+        
+
+    } while (!_.isEqual( windowEnd, tickers.length));
+    console.log("complete")
+    socketIO.emit("complete");
+    
 }
 
 class ScrapeService {
@@ -560,17 +564,13 @@ class ScrapeService {
         }
     }
     async run(tickers,scrapeID,socketIO) {
-
-        // await scrapeRepository.deleteAll()
-       
         let treasuryStatsRes
         try {
             treasuryStatsRes = await treasuryStats.getData();
         } catch (e) {
             logger.error(e)
         }
-        // let scrapeID = randomUUID()
-        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 10,socketIO)
+        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 2,socketIO)
 
         
 

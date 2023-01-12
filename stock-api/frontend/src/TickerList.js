@@ -12,13 +12,14 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import React, { useState, useEffect } from "react";
 import ProgressBar from './ProgressBar'
+import _ from 'lodash';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     margin: theme.spacing(1),
 }));
 const StyledInput = styled(TextField)(({ theme }) => ({
     margin: theme.spacing(1),
-  }));
+}));
 const Row = props => {
     const { data, index, style } = props;
     const item = data.filteredTickers[index];
@@ -45,7 +46,7 @@ const Row = props => {
 };
 
 
-export default function TickerList({ title, results, testResultsClickHandler, maxWidth, scrapeStartClickHandler,  tickerFilter, setTickerFilter,marketCapFilter, setMarketCapFilter,filteredTickers, setFilteredTickers }) {
+export default function TickerList({ title, results, testResultsClickHandler, maxWidth, scrapeStartClickHandler, tickerFilter, setTickerFilter, marketCapFilter, setMarketCapFilter, filteredTickers, setFilteredTickers, currentScrapeId, completedTickers }) {
 
     
     useEffect(() => {
@@ -53,7 +54,18 @@ export default function TickerList({ title, results, testResultsClickHandler, ma
             return filteredTicker
         })
         setFilteredTickers(filteredByMarketCap);
-      }, [results]);
+    }, [results]);
+
+    //   useEffect(() => {
+    //     if(_.isEqual(scrapeRunning,true)){
+    //         let filteredByCompleted = filteredTickers.filter(ticker => !completedTickers.includes(ticker.symbol) ).map(filteredTicker => {
+    //             return filteredTicker
+    //         })
+    //         setFilteredTickers(filteredByCompleted);    
+    //     }
+    //   }, [scrapeRunning,completedTickers]);
+
+
 
     const tickerFilterChangeHandler = event => {
         let filteredBySymbol = results.filter(ticker => ticker.symbol.includes(event.target.value)).map(filteredTicker => {
@@ -61,46 +73,53 @@ export default function TickerList({ title, results, testResultsClickHandler, ma
         })
         setTickerFilter(event.target.value)
         setFilteredTickers(filteredBySymbol);
-      };
+    };
 
     const marketCapFilterChangeHandler = event => {
-        
+
         let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) <= parseFloat(event.target.value)).map(filteredTicker => {
             return filteredTicker
         })
         setMarketCapFilter(event.target.value);
         setFilteredTickers(filteredByMarketCap);
-      };
-  
+    };
+
     return (
         <Box
             sx={{ height: 400, maxWidth: maxWidth, bgcolor: 'background.paper' }}
         >
-            <div style={{ fontSize: 12, fontWeight: "bold" }}><div style={{ fontSize: 12, fontWeight: "italic" }}><span style={{ fontSize: 10, fontWeight: "bold" }}>Ticker Count: </span> {results.length}</div>
-                <div style={{ fontSize: 12, fontWeight: "italic" }}><span style={{ fontSize: 10, fontWeight: "bold" }}>Tickers Filtered By Market Count: </span> {filteredTickers.length}</div></div>
+            {_.isNil(currentScrapeId) &&
+                <>
+                    <div style={{ fontSize: 12, fontWeight: "bold" }}><div style={{ fontSize: 12, fontWeight: "italic" }}><span style={{ fontSize: 10, fontWeight: "bold" }}>Total Ticker Count: </span> {results.length}</div>
+                        <div style={{ fontSize: 12, fontWeight: "italic" }}><span style={{ fontSize: 10, fontWeight: "bold" }}>Filtered Ticker Count: </span> {filteredTickers.length}</div></div>
+                    <StyledButton size={'small'} color="success" onClick={scrapeStartClickHandler} variant="outlined">Start Scrape</StyledButton>
+                    <Stack direction="row">
+                        <CurrencyInput error={""} handleChange={marketCapFilterChangeHandler} value={marketCapFilter} />
+                        <StyledInput
+                            fullWidth
+                            inputProps={{ style: { fontSize: 10 } }}
+                            InputLabelProps={{ style: { fontSize: 10 } }}
+                            size={'small'}
+                            value={tickerFilter}
+                            onChange={tickerFilterChangeHandler}
+                            id="outlined-basic"
+                            label="Ticker Symbol"
+                            variant="outlined" />
+
+
+                    </Stack>
+                </>
+
+            }
+
+
+
+
             <Stack direction="row">
-                
-                <StyledButton size={'small'} color="success" onClick={scrapeStartClickHandler} variant="outlined">Start Scrape</StyledButton>
-                <ProgressBar  />
+                {!_.isNil(currentScrapeId) && <ProgressBar currentScrapeId={currentScrapeId} completedTickers={completedTickers} filteredTickers={filteredTickers} />}
 
             </Stack>
-            <Stack direction="row">
-                <CurrencyInput error={""} handleChange={marketCapFilterChangeHandler} value={marketCapFilter} />
-                <StyledInput
-                  fullWidth
-                  inputProps={{ style: { fontSize: 10 } }} // font size of input text
-                  InputLabelProps={{ style: { fontSize: 10 } }} // font size of input label
-                  size={'small'}
-                  value={tickerFilter} 
-                  onChange={tickerFilterChangeHandler} 
-                  id="outlined-basic" 
-                  label="Ticker Symbol" 
-                  variant="outlined" />
-
-
-            </Stack>
-
-            <FixedSizeList
+            {_.isNil(currentScrapeId) && <FixedSizeList
                 height={270}
                 itemData={{ filteredTickers, testResultsClickHandler }}
                 // onClickHandler={onClickHandler}
@@ -111,7 +130,8 @@ export default function TickerList({ title, results, testResultsClickHandler, ma
                 overscanCount={5}
             >
                 {Row}
-            </FixedSizeList>
+            </FixedSizeList>}
+
         </Box>
     );
 }

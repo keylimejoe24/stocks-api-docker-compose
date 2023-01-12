@@ -13,8 +13,8 @@ import TickerList from './TickerList';
 import Stack from '@mui/material/Stack';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
-import socketIOConfig from './socket_io_config.json';
 import socketIO from "socket.io-client";
+import socketIOConfig from './socket_io_config.json';
 
 const sockets = []
 const scrape_urls = []
@@ -22,12 +22,11 @@ const scrape_urls = []
 socketIOConfig.map(url => {
   scrape_urls.push(`http://${url}/api/scrape/run`)
   const newSocket = socketIO.connect(url);
-  newSocket.on("batchFinished", (data) => console.log(data));
-  newSocket.on("complete", (data) => console.log(data));
+  
   sockets.push(newSocket)
 })
 
-const MASTER_IP = "52.5.21.145"
+const MASTER_IP = "3.91.106.214"
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fafafa',
   ...theme.typography.body2,
@@ -47,6 +46,8 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 
+
+
 export default function App() {
   const [scrapeIdSelected, setScrapeIdSelected] = React.useState("");
   const [scrapeIds, setScrapeIds] = React.useState([]);
@@ -56,6 +57,32 @@ export default function App() {
   const [tickerFilter, setTickerFilter] = React.useState("");
   const [marketCapFilter, setMarketCapFilter] = React.useState("5000000");
   const [filteredTickers, setFilteredTickers] = React.useState([]);
+  const [currentScrapeId, setCurrentScrapeId] = React.useState(null);
+  const [completedTickers, setCompletedTickers] = React.useState([]);
+  const [currentlyCompletedTickers, setCurrentlyCompletedTickers] = React.useState([]);
+
+  useEffect(() => {
+    sockets.map(socket => {
+      socket.on("batchFinished", (data) => {
+        setCurrentlyCompletedTickers([...data.finishedTickers])
+      });
+      socket.on("complete", (data) => {
+        setCurrentScrapeId(null)
+      });
+      return () => {
+        socket.off('connect');       
+        socket.off('batchFinished');
+      };
+    })
+   
+  }, []);
+
+  useEffect(() => {
+    setCompletedTickers([...completedTickers,...currentlyCompletedTickers]);
+  }, [currentlyCompletedTickers]);
+
+
+  
 
   const testResultsClickHandler = ticker => {
 
@@ -172,9 +199,8 @@ export default function App() {
         })
         .catch(error => console.log(error));
 
-
     })
-
+    setCurrentScrapeId(newScrapeId)
   };
 
 
@@ -187,13 +213,16 @@ export default function App() {
       })
       .catch(error => console.log(error));
 
-    fetch(`http://${MASTER_IP}:3001/api/scrape/tickers`, { method: "GET" })
+    fetch(`http://${MASTER_IP}:3001/api/algorithms/tickers`, { method: "GET" })
       .then(res => res.json())
       .then(response => {
         console.log(response)
         setTickersResponse(response)
       })
       .catch(error => console.log(error));
+
+      
+
   }, []);
 
   useEffect(() => {
@@ -201,6 +230,8 @@ export default function App() {
     setScrapeIds(sortedScrapeIds)
 
   }, [scrapeIds]);
+
+
 
   return (
     <div>
@@ -211,13 +242,19 @@ export default function App() {
           <Grid xs={4}>
             <Item>
               <span style={{ minWidth: 300 }}>{tickersResponse && <TickerList
+
+                currentScrapeId={currentScrapeId}
                 tickerFilter={tickerFilter}
                 setTickerFilter={setTickerFilter}
                 marketCapFilter={marketCapFilter}
                 setMarketCapFilter={setMarketCapFilter}
                 filteredTickers={filteredTickers}
                 setFilteredTickers={setFilteredTickers}
-                maxWidth={500} scrapeStartClickHandler={scrapeStartClickHandler} testResultsClickHandler={testResultsClickHandler} title={"Tickers to Scrape"} results={tickersResponse} />}</span>
+                maxWidth={500} scrapeStartClickHandler={scrapeStartClickHandler} 
+                testResultsClickHandler={testResultsClickHandler} 
+                title={"Tickers to Scrape"} 
+                results={tickersResponse} 
+                completedTickers={completedTickers} />}</span>
 
 
               {/* <span style={{ minWidth: 500 }}>{testResults && <TestResultsList maxWidth={450} testResultsClickHandler={testResultsClickHandler} title={"Test Results"} results={testResults} />}</span> */}

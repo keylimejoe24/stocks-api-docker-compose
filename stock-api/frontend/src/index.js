@@ -7,11 +7,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
+// import { SocketProvider } from './SocketProvider';
 ReactDOM.render(
   <React.StrictMode>
    <StyledEngineProvider injectFirst>
-      <App />
+   <App />
+   {/* <SocketProvider>
+  
+   </SocketProvider> */}
     </StyledEngineProvider>
   </React.StrictMode>,
   document.getElementById('root')

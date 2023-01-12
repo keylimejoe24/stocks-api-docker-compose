@@ -105,14 +105,10 @@ app.use(function(req, res, next) {
   });
 
 router.post('/api/scrape/run', (req, res, next) => {
-    console.log(req);
-   
     let tickers = req.body.tickers
     let id = req.body.scrapeID
-    console.log(tickers)
-    console.log(id)
     scrapeController.run(tickers,id,socketIO);
-    return res.status(200).send('Ok');
+    return res.status(200).send({ok:"ok"});
 })
 
 
@@ -128,7 +124,7 @@ router.get("/metrics", async (req, res, next) => {
 });
 
 router.get('/api/health', (req, res) => {
-    return res.status(200).send('Ok');
+    return res.status(200).send({ok:"ok"});
 });
 app.use(router);
 
