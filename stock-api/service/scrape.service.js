@@ -427,32 +427,23 @@ const storeKeyStats = async (ticker, uuid, treasuryStatsRes) => {
     responseCount += 1
     logger.info(responseCount)
 }
+const splitToChunks = (array, parts) => {
+    let result = [];
+    for (let i = parts; i > 0; i--) {
+      result.push(array.splice(0, Math.ceil(array.length / i)));
+    }
+    return result;
+  }
+  
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize,socketIO) => {
-    let windowStart = 0
-    let windowEnd = windowStart + batchSize
-    do {
-        try {
-            if (windowEnd > tickers.length) {
-                windowEnd = tickers.length
-            }
-            logger.info(`storing batch:: windowStart: ${windowStart}, windowEnd: ${windowEnd} uuid: ${uuid} `)
-            let tickersSlice = tickers.slice(windowStart, windowEnd)
-            for (const ticker of tickersSlice) {
-                
-                storeKeyStats(ticker, uuid, treasuryStatsRes)
 
-            }
-            await until(_ => responseCount == windowEnd);
-            console.log("batchFinished", {finishedTickers:tickersSlice})
-            socketIO.emit("batchFinished", {finishedTickers:tickersSlice});
-            windowStart = windowEnd
-            windowEnd += batchSize
-        } catch (e) {
-            logger.info(e)
-        }
-        
-
-    } while (!_.isEqual( windowEnd, tickers.length));
+    let filteredTickerSymbolChunks = splitToChunks([...tickers], batchSize);
+    filteredTickerSymbolChunks.map(tickers =>{
+        logger.info(`storing batch:: ${tickers} uuid: ${uuid} `)
+        storeKeyStats(tickers, uuid, treasuryStatsRes)
+        console.log("batchFinished", {finishedTickers:tickers})
+        socketIO.emit("batchFinished", {finishedTickers:tickers});
+    })
     console.log("complete")
     socketIO.emit("complete");
     
@@ -571,7 +562,7 @@ class ScrapeService {
         } catch (e) {
             logger.error(e)
         }
-        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 2,socketIO)
+        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 10,socketIO)
     }
 
 

@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext} from "react";
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 import socketIO from "socket.io-client";
 import socketIOConfig from './socket_io_config.json';
+import { ScrapeProgressContext } from "./ScrapeProgressProvider";
 
 const sockets = []
 const scrape_urls = []
@@ -49,6 +50,8 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 
 export default function App() {
+  const { currentScrapeId, setCurrentScrapeId,completedTickers, setCompletedTickers,currentlyCompletedTickers, setCurrentlyCompletedTickers } = useContext(ScrapeProgressContext);
+
   const [scrapeIdSelected, setScrapeIdSelected] = React.useState("");
   const [scrapeIds, setScrapeIds] = React.useState([]);
   const [algorithmsResponse, setAlgorithmsResponse] = useState(null);
@@ -57,9 +60,8 @@ export default function App() {
   const [tickerFilter, setTickerFilter] = React.useState("");
   const [marketCapFilter, setMarketCapFilter] = React.useState("5000000");
   const [filteredTickers, setFilteredTickers] = React.useState([]);
-  const [currentScrapeId, setCurrentScrapeId] = React.useState(null);
-  const [completedTickers, setCompletedTickers] = React.useState([]);
-  const [currentlyCompletedTickers, setCurrentlyCompletedTickers] = React.useState([]);
+
+
 
   useEffect(() => {
     sockets.map(socket => {
@@ -68,6 +70,8 @@ export default function App() {
       });
       socket.on("complete", (data) => {
         setCurrentScrapeId(null)
+        setCurrentlyCompletedTickers([])
+        setCompletedTickers([])
       });
       return () => {
         socket.off('connect');       
@@ -234,6 +238,8 @@ export default function App() {
 
 
   return (
+   
+  
     <div>
       <Box sx={{ flexGrow: 1 }}>
 
@@ -295,7 +301,6 @@ export default function App() {
       </Box>
 
     </div>
-
 
 
 

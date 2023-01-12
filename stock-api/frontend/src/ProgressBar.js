@@ -18,6 +18,8 @@ export default function CircularProgressWithLabel({ completedTickers, filteredTi
     }
   }, [completedTickers, filteredTickers]);
 
+  console.log(completedTickers)
+  console.log(filteredTickers)
   return (
     <Box sx={{ width: '100%' }}>
       <div>Running New Scrape </div>

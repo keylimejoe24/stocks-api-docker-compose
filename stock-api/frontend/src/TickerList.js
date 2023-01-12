@@ -48,7 +48,7 @@ const Row = props => {
 
 export default function TickerList({ title, results, testResultsClickHandler, maxWidth, scrapeStartClickHandler, tickerFilter, setTickerFilter, marketCapFilter, setMarketCapFilter, filteredTickers, setFilteredTickers, currentScrapeId, completedTickers }) {
 
-    
+
     useEffect(() => {
         let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) <= parseFloat(marketCapFilter)).map(filteredTicker => {
             return filteredTicker
@@ -86,40 +86,28 @@ export default function TickerList({ title, results, testResultsClickHandler, ma
 
     return (
         <Box
-            sx={{ height: 400, maxWidth: maxWidth, bgcolor: 'background.paper' }}
+            sx={{ height: 500, maxWidth: maxWidth, bgcolor: 'background.paper' }}
         >
-            {_.isNil(currentScrapeId) &&
-                <>
-                    <div style={{ fontSize: 12, fontWeight: "bold" }}><div style={{ fontSize: 12, fontWeight: "italic" }}><span style={{ fontSize: 10, fontWeight: "bold" }}>Total Ticker Count: </span> {results.length}</div>
-                        <div style={{ fontSize: 12, fontWeight: "italic" }}><span style={{ fontSize: 10, fontWeight: "bold" }}>Filtered Ticker Count: </span> {filteredTickers.length}</div></div>
-                    <StyledButton size={'small'} color="success" onClick={scrapeStartClickHandler} variant="outlined">Start Scrape</StyledButton>
-                    <Stack direction="row">
-                        <CurrencyInput error={""} handleChange={marketCapFilterChangeHandler} value={marketCapFilter} />
-                        <StyledInput
-                            fullWidth
-                            inputProps={{ style: { fontSize: 10 } }}
-                            InputLabelProps={{ style: { fontSize: 10 } }}
-                            size={'small'}
-                            value={tickerFilter}
-                            onChange={tickerFilterChangeHandler}
-                            id="outlined-basic"
-                            label="Ticker Symbol"
-                            variant="outlined" />
+           
 
-
-                    </Stack>
-                </>
-
-            }
-
-
-
-
+            <div style={{ fontSize: 12, fontWeight: "bold" }}><div style={{ fontSize: 12, fontWeight: "italic" }}><span style={{ fontSize: 10, fontWeight: "bold" }}>Total Ticker Count: </span> {results.length}</div>
+                <div style={{ fontSize: 12, fontWeight: "italic" }}><span style={{ fontSize: 10, fontWeight: "bold" }}>Filtered Ticker Count: </span> {filteredTickers.length}</div></div>
+            <StyledButton size={'small'} color="success" onClick={scrapeStartClickHandler} variant="outlined">Start Scrape</StyledButton>
             <Stack direction="row">
-                {!_.isNil(currentScrapeId) && <ProgressBar currentScrapeId={currentScrapeId} completedTickers={completedTickers} filteredTickers={filteredTickers} />}
-
+                <CurrencyInput error={""} handleChange={marketCapFilterChangeHandler} value={marketCapFilter} />
+                <StyledInput
+                    fullWidth
+                    inputProps={{ style: { fontSize: 10 } }}
+                    InputLabelProps={{ style: { fontSize: 10 } }}
+                    size={'small'}
+                    value={tickerFilter}
+                    onChange={tickerFilterChangeHandler}
+                    id="outlined-basic"
+                    label="Ticker Symbol"
+                    variant="outlined" />
             </Stack>
-            {_.isNil(currentScrapeId) && <FixedSizeList
+
+            <FixedSizeList
                 height={270}
                 itemData={{ filteredTickers, testResultsClickHandler }}
                 // onClickHandler={onClickHandler}
@@ -130,8 +118,10 @@ export default function TickerList({ title, results, testResultsClickHandler, ma
                 overscanCount={5}
             >
                 {Row}
-            </FixedSizeList>}
-
+            </FixedSizeList>
+            <Stack direction="row">
+                {!_.isNil(currentScrapeId) && <ProgressBar currentScrapeId={currentScrapeId} completedTickers={completedTickers} filteredTickers={filteredTickers} />}
+            </Stack>
         </Box>
     );
 }
