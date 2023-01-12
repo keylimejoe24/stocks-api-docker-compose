@@ -240,7 +240,7 @@ export default function App() {
     setCurrentScrapeId(newScrapeId)
   };
 
-
+  
 
   return (
    
