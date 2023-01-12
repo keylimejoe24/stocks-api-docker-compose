@@ -409,23 +409,24 @@ async function getData(ticker) {
 
 }
 
-const storeKeyStats = async (ticker, uuid, treasuryStatsRes) => {
-    logger.info(ticker)
-    let keyStatsRes = await getData(ticker);
-    let closingHistories = await getClosingHistories(ticker);
-    let balanceSheetStatements = await getBalanceSheetHistory(ticker);
-    
-    let scrapeResult = {
-        id: uuid,
-        ...ticker,
-        ...keyStatsRes,
-        ...closingHistories,
-        ...balanceSheetStatements,
-        ...treasuryStatsRes
+const storeKeyStats = async (tickers, uuid, treasuryStatsRes) => {
+  
+    for(const ticker in tickers){
+        let keyStatsRes = await getData(ticker);
+        let closingHistories = await getClosingHistories(ticker);
+        let balanceSheetStatements = await getBalanceSheetHistory(ticker);
+        
+        let scrapeResult = {
+            id: uuid,
+            ...ticker,
+            ...keyStatsRes,
+            ...closingHistories,
+            ...balanceSheetStatements,
+            ...treasuryStatsRes
+        }
+        scrapeRepository.create(scrapeResult)
     }
-    scrapeRepository.create(scrapeResult)
-    responseCount += 1
-    logger.info(responseCount)
+   
 }
 const splitToChunks = (array, parts) => {
     let result = [];
@@ -434,13 +435,15 @@ const splitToChunks = (array, parts) => {
     }
     return result;
   }
-  
+
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize,socketIO) => {
 
     let filteredTickerSymbolChunks = splitToChunks([...tickers], batchSize);
-    filteredTickerSymbolChunks.map(tickers =>{
+    console.log(filteredTickerSymbolChunks)
+    filteredTickerSymbolChunks.map(async tickers => {
         logger.info(`storing batch:: ${tickers} uuid: ${uuid} `)
-        storeKeyStats(tickers, uuid, treasuryStatsRes)
+        console.log(tickers)
+        await storeKeyStats(tickers, uuid, treasuryStatsRes)
         console.log("batchFinished", {finishedTickers:tickers})
         socketIO.emit("batchFinished", {finishedTickers:tickers});
     })

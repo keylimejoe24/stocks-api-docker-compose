@@ -62,6 +62,8 @@ export default function App() {
   const [marketCapFilter, setMarketCapFilter] = React.useState("5000000");
   const [filteredTickers, setFilteredTickers] = React.useState([]);
 
+ 
+
 
 
   useEffect(() => {
@@ -200,7 +202,7 @@ export default function App() {
     const scrapeStartrequestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: newScrapeId,tickers:filteredTickers.length })
+      body: JSON.stringify({ id: newScrapeId,ticker_count:filteredTickers.length })
     };
    
 
@@ -220,13 +222,11 @@ export default function App() {
     let filteredTickerSymbols = filteredTickers.map(a => a.symbol);
     
     let filteredTickerSymbolChunks = splitToChunks([...filteredTickerSymbols], scrape_urls.length);
-
     scrape_urls.map((url, index) => {
-     
       const scrapeRequestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scrapeID: newScrapeId, ticker_count:filteredTickerSymbolChunks[index] })
+        body: JSON.stringify({ scrapeID: newScrapeId, tickers:filteredTickerSymbolChunks[index] })
       };
 
       fetch(url, scrapeRequestOptions)
