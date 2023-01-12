@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/bbachi/nodejs-restapi-mongo#readme",
   "dependencies": {
+    "@supercharge/promise-pool": "^2.3.2",
     "ajv": "8.10.0",
     "ajv-formats": "2.1.1",
     "async": "^3.2.4",

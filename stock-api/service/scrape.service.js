@@ -8,6 +8,7 @@ const cheerio = require("cheerio");
 const yahooFinance = require('../node-yahoo-finance')
 const ProxiedRequest = require('../service/request.service');
 var _ = require('lodash');
+const PromisePool = require('@supercharge/promise-pool')
 
 
 
@@ -313,22 +314,22 @@ async function getAssetsSharesAndLiabilities(ticker) {
         if (res === null) {
             logger.info(`retrying https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?lang=en-US&region=US&symbol=${ticker}&padTimeSeries=true&type=quarterlyCurrentLiabilities%2CquarterlyCurrentAssets%2CquarterlyShareIssued&merge=false&period1=493590046&period2=${currentTime.slice(0, -3)}&corsDomain=finance.yahoo.com`);
         }
-       
-        let quarterlySharesIssued =  _.get( _.find(res.body.timeseries.result,  "quarterlyShareIssued"),"quarterlyShareIssued",null)
-        let quarterlyCurrentLiabilities =  _.get( _.find(res.body.timeseries.result,  "quarterlyCurrentLiabilities"),"quarterlyCurrentLiabilities",null)
-        let quarterlyCurrentAssets =  _.get( _.find(res.body.timeseries.result,  "quarterlyCurrentAssets"),"quarterlyCurrentAssets",null)
-   
-        if(quarterlySharesIssued != null){
+
+        let quarterlySharesIssued = _.get(_.find(res.body.timeseries.result, "quarterlyShareIssued"), "quarterlyShareIssued", null)
+        let quarterlyCurrentLiabilities = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentLiabilities"), "quarterlyCurrentLiabilities", null)
+        let quarterlyCurrentAssets = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentAssets"), "quarterlyCurrentAssets", null)
+
+        if (quarterlySharesIssued != null) {
             balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 2].reportedValue.raw
             balanceSheetRes['currentlyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 1].reportedValue.raw
         }
-        if(quarterlyCurrentLiabilities != null){
+        if (quarterlyCurrentLiabilities != null) {
             balanceSheetRes['currentLiabilities'] = quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1].reportedValue.raw
         }
-        if(quarterlyCurrentAssets != null){
+        if (quarterlyCurrentAssets != null) {
             balanceSheetRes['currentAssets'] = quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1].reportedValue.raw
         }
-        
+
         return balanceSheetRes
 
 
@@ -341,8 +342,8 @@ async function getAssetsSharesAndLiabilities(ticker) {
 async function quoteSummary(ticker) {
     let results = null
     while (results === null) {
-        
-        
+
+
 
         try {
 
@@ -372,7 +373,7 @@ async function quoteSummary(ticker) {
 
 async function getData(ticker) {
     let results = null
-    
+
     let quoteSummaryRes = await quoteSummary(ticker);
     let financialsRes = await getAssetsSharesAndLiabilities(ticker);
     while (results === null) {
@@ -386,7 +387,7 @@ async function getData(ticker) {
             let shortPercentOfSharesOutStandingVal = Object.values(shortPercentOfSharesOutStanding)[0]
 
             results = {
-                symbol:ticker,
+                symbol: ticker,
                 ...financialsRes,
                 ...quoteSummaryRes,
                 quarterlyRevenueGrowth: parsedTables["Quarterly Revenue Growth (yoy)"],
@@ -410,12 +411,15 @@ async function getData(ticker) {
 }
 
 const storeKeyStats = async (batch, uuid, treasuryStatsRes) => {
-   
-    batch.map(async chunk => {
-        let keyStatsRes = await getData(chunk);
+
+    const { results, errors } = await PromisePool
+        .for(batch)
+        .withConcurrency(batch.length)
+        .process(async chunk => {
+            let keyStatsRes = await getData(chunk);
         let closingHistories = await getClosingHistories(chunk);
         let balanceSheetStatements = await getBalanceSheetHistory(chunk);
-        
+
         let scrapeResult = {
             id: uuid,
             ticker: batch[index].ticker,
@@ -425,32 +429,34 @@ const storeKeyStats = async (batch, uuid, treasuryStatsRes) => {
             ...treasuryStatsRes
         }
         scrapeRepository.create(scrapeResult)
-    })
-    
-   
+        })
+    console.log(results)
+    console.log(errors)
+
+
 }
 const splitToChunks = (array, parts) => {
     let result = [];
     for (let i = parts; i > 0; i--) {
-      result.push(array.splice(0, Math.ceil(array.length / i)));
+        result.push(array.splice(0, Math.ceil(array.length / i)));
     }
     return result;
-  }
+}
 
-const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize,socketIO) => {
+const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize, socketIO) => {
 
     let filteredTickerSymbolChunks = splitToChunks(tickers, batchSize);
-    console.log("filteredTickerSymbolChunks",filteredTickerSymbolChunks)
-    for(const index in filteredTickerSymbolChunks){
+    console.log("filteredTickerSymbolChunks", filteredTickerSymbolChunks)
+    for (const index in filteredTickerSymbolChunks) {
         logger.info(`storing batch:: chunk: ${filteredTickerSymbolChunks[index]} uuid: ${uuid} `)
         await storeKeyStats(filteredTickerSymbolChunks[index], uuid, treasuryStatsRes)
-        console.log("batchFinished", {finishedTickers:filteredTickerSymbolChunks[index]})
-        socketIO.emit("batchFinished", {finishedTickers:filteredTickerSymbolChunks[index]});
+        console.log("batchFinished", { finishedTickers: filteredTickerSymbolChunks[index] })
+        socketIO.emit("batchFinished", { finishedTickers: filteredTickerSymbolChunks[index] });
     }
-    
+
     console.log("complete")
     socketIO.emit("complete");
-    
+
 }
 
 class ScrapeService {
@@ -546,8 +552,7 @@ class ScrapeService {
         })
 
 
-        let filteredResWeightNan = summaryRes.filter(x =>
-            {return x.weight !== null}
+        let filteredResWeightNan = summaryRes.filter(x => { return x.weight !== null }
         );
 
         let sortedAndFilteredRes = filteredResWeightNan.sort((a, b) => parseFloat(b.weight) - parseFloat(a.weight));
@@ -559,14 +564,14 @@ class ScrapeService {
             bottomTen: bottomTenResults
         }
     }
-    async run(tickers,scrapeID,socketIO) {
+    async run(tickers, scrapeID, socketIO) {
         let treasuryStatsRes
         try {
             treasuryStatsRes = await treasuryStats.getData();
         } catch (e) {
             logger.error(e)
         }
-        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 10,socketIO)
+        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 10, socketIO)
     }
 
 
