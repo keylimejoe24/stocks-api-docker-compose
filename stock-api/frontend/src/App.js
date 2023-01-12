@@ -196,11 +196,11 @@ export default function App() {
   
   const scrapeStartClickHandler = event => {
     let newScrapeId = uuidv4()
-    let filteredSymbols = filteredTickers.map(ticker => ticker.symbol)
+
     const scrapeStartrequestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: newScrapeId,tickers:filteredSymbols.length })
+      body: JSON.stringify({ id: newScrapeId,tickers:filteredTickers.length })
     };
    
 

@@ -12,7 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const Row = props => {
   const { data, index, style } = props;
   const item = data.ids[index].id;
-  const tickers = data.ids[index].tickers;
+  const ticker_count = data.ids[index].ticker_count;
   const date = data.ids[index].created;
   return (
     <ListItem style={style} key={index} component="div" disablePadding>
@@ -24,7 +24,7 @@ const Row = props => {
           <ListItemText>
             <div style={{ fontSize: 10, fontWeight: "bold" }}>{"Scrape Date: " + date}</div>
             <div style={{ fontSize: 10 }}>{item} </div>
-            <div style={{ fontSize: 10 }}>{"Ticker Count: " + tickers.length}</div>
+            <div style={{ fontSize: 10 }}>{"Ticker Count: " + ticker_count}</div>
           </ListItemText>
         </ListItemButton>
       </Stack>
