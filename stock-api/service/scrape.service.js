@@ -411,11 +411,11 @@ async function getData(ticker) {
 
 const storeKeyStats = async (tickers, uuid, treasuryStatsRes) => {
     console.log(tickers)
-    for(const ticker in tickers){
-        console.log(ticker)
-        let keyStatsRes = await getData(ticker);
-        let closingHistories = await getClosingHistories(ticker);
-        let balanceSheetStatements = await getBalanceSheetHistory(ticker);
+    for(const index in tickers){
+        console.log(tickers[index])
+        let keyStatsRes = await getData(tickers[index]);
+        let closingHistories = await getClosingHistories(tickers[index]);
+        let balanceSheetStatements = await getBalanceSheetHistory(tickers[index]);
         
         let scrapeResult = {
             id: uuid,
@@ -441,11 +441,10 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize,socke
 
     let filteredTickerSymbolChunks = splitToChunks(tickers, batchSize);
     console.log("filteredTickerSymbolChunks",filteredTickerSymbolChunks)
-    for(const tickers in filteredTickerSymbolChunks){
-        console.log("tickers",tickers)
-        console.log("filteredTickerSymbolChunks[tickers]",filteredTickerSymbolChunks[tickers])
-        logger.info(`storing batch:: chunk: ${tickers} uuid: ${uuid} `)
-        await storeKeyStats(filteredTickerSymbolChunks[tickers], uuid, treasuryStatsRes)
+    for(const index in filteredTickerSymbolChunks){
+ 
+        logger.info(`storing batch:: chunk: ${filteredTickerSymbolChunks[index]} uuid: ${uuid} `)
+        await storeKeyStats(filteredTickerSymbolChunks[index], uuid, treasuryStatsRes)
         console.log("batchFinished", {finishedTickers:filteredTickerSymbolChunks[tickers]})
         socketIO.emit("batchFinished", {finishedTickers:filteredTickerSymbolChunks[tickers]});
     }
