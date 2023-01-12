@@ -411,22 +411,22 @@ async function getData(ticker) {
 
 const storeKeyStats = async (batch, uuid, treasuryStatsRes) => {
    
-    for(const index in batch){
-      
-        let keyStatsRes = await getData(batch[index]);
-        let closingHistories = await getClosingHistories(batch[index]);
-        let balanceSheetStatements = await getBalanceSheetHistory(batch[index]);
+    batch.map(async chunk => {
+        let keyStatsRes = await getData(chunk);
+        let closingHistories = await getClosingHistories(chunk);
+        let balanceSheetStatements = await getBalanceSheetHistory(chunk);
         
         let scrapeResult = {
             id: uuid,
-            ...batch[index].ticker,
+            ticker: batch[index].ticker,
             ...keyStatsRes,
             ...closingHistories,
             ...balanceSheetStatements,
             ...treasuryStatsRes
         }
         scrapeRepository.create(scrapeResult)
-    }
+    })
+    
    
 }
 const splitToChunks = (array, parts) => {
