@@ -411,10 +411,10 @@ async function getData(ticker) {
 }
 
 
-const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize, socketIO) => {
+const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
 
-    const { results, errors } = await PromisePool.for(tickers).withConcurrency(batchSize).process(async ticker => {
-            console.log("ticker: ", ticker)
+    const { results, errors } = await PromisePool.for(tickers).withConcurrency(3).process(async ticker => {
+            
             let keyStatsRes = await getData(ticker);
             let closingHistories = await getClosingHistories(ticker);
             let balanceSheetStatements = await getBalanceSheetHistory(ticker);
@@ -428,6 +428,8 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize, sock
                 ...treasuryStatsRes
             }
             scrapeRepository.create(scrapeResult)
+            console.log("batchFinished", { finishedTickers: [ticker] })
+            socketIO.emit("batchFinished", { finishedTickers: [ticker] });
         })
     console.log(results)
     console.log(errors)
@@ -550,7 +552,7 @@ class ScrapeService {
         } catch (e) {
             logger.error(e)
         }
-        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 2, socketIO)
+        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, socketIO)
     }
 
 
