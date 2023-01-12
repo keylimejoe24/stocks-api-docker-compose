@@ -16,7 +16,7 @@ todo = todo.Todo()
 parser = RequestParser()
 
 parser.add_argument("id")
-parser.add_argument("tickers")
+parser.add_argument("ticker_count")
 
 class TodoCollection(Resource):
     def get(self):
@@ -25,7 +25,7 @@ class TodoCollection(Resource):
     def post(self):
         args = parser.parse_args()
         log.debug(args)
-        response = todo.create({"id": args["id"],"tickers":args["tickers"]})
+        response = todo.create({"id": args["id"],"ticker_count":args["ticker_count"]})
         return response, 201
 
 

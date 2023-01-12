@@ -226,7 +226,7 @@ export default function App() {
       const scrapeRequestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scrapeID: newScrapeId, tickers: filteredTickerSymbolChunks[index] })
+        body: JSON.stringify({ scrapeID: newScrapeId, ticker_count: filteredTickerSymbolChunks.length })
       };
 
       fetch(url, scrapeRequestOptions)
