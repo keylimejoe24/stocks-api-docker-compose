@@ -410,25 +410,14 @@ async function getData(ticker) {
 
 }
 
-const storeKeyStats = async (batch, uuid, treasuryStatsRes) => {
-
-
-
-}
-const splitToChunks = (array, parts) => {
-    let result = [];
-    for (let i = parts; i > 0; i--) {
-        result.push(array.splice(0, Math.ceil(array.length / i)));
-    }
-    return result;
-}
 
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize, socketIO) => {
 
-    const { results, errors } = await PromisePool.for(tickers).withConcurrency(batchSize).process(async chunk => {
-            let keyStatsRes = await getData(chunk);
-            let closingHistories = await getClosingHistories(chunk);
-            let balanceSheetStatements = await getBalanceSheetHistory(chunk);
+    const { results, errors } = await PromisePool.for(tickers).withConcurrency(batchSize).process(async ticker => {
+            console.log("ticker: ", ticker)
+            let keyStatsRes = await getData(ticker);
+            let closingHistories = await getClosingHistories(ticker);
+            let balanceSheetStatements = await getBalanceSheetHistory(ticker);
 
             let scrapeResult = {
                 id: uuid,
@@ -561,7 +550,7 @@ class ScrapeService {
         } catch (e) {
             logger.error(e)
         }
-        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 10, socketIO)
+        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 4, socketIO)
     }
 
 
