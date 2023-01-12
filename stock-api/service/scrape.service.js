@@ -409,17 +409,17 @@ async function getData(ticker) {
 
 }
 
-const storeKeyStats = async (tickers, uuid, treasuryStatsRes) => {
-    console.log(tickers)
-    for(const index in tickers){
-        console.log(tickers[index])
-        let keyStatsRes = await getData(tickers[index]);
-        let closingHistories = await getClosingHistories(tickers[index]);
-        let balanceSheetStatements = await getBalanceSheetHistory(tickers[index]);
+const storeKeyStats = async (batch, uuid, treasuryStatsRes) => {
+   
+    for(const index in batch){
+      
+        let keyStatsRes = await getData(batch[index]);
+        let closingHistories = await getClosingHistories(batch[index]);
+        let balanceSheetStatements = await getBalanceSheetHistory(batch[index]);
         
         let scrapeResult = {
             id: uuid,
-            ...ticker,
+            ...batch[index].ticker,
             ...keyStatsRes,
             ...closingHistories,
             ...balanceSheetStatements,
