@@ -8,7 +8,7 @@ const cheerio = require("cheerio");
 const yahooFinance = require('../node-yahoo-finance')
 const ProxiedRequest = require('../service/request.service');
 var _ = require('lodash');
-const PromisePool = require('@supercharge/promise-pool')
+const { PromisePool } = require('@supercharge/promise-pool')
 
 
 
@@ -412,26 +412,6 @@ async function getData(ticker) {
 
 const storeKeyStats = async (batch, uuid, treasuryStatsRes) => {
 
-    const { results, errors } = await PromisePool
-        .for(batch)
-        .withConcurrency(batch.length)
-        .process(async chunk => {
-            let keyStatsRes = await getData(chunk);
-        let closingHistories = await getClosingHistories(chunk);
-        let balanceSheetStatements = await getBalanceSheetHistory(chunk);
-
-        let scrapeResult = {
-            id: uuid,
-            ticker: batch[index].ticker,
-            ...keyStatsRes,
-            ...closingHistories,
-            ...balanceSheetStatements,
-            ...treasuryStatsRes
-        }
-        scrapeRepository.create(scrapeResult)
-        })
-    console.log(results)
-    console.log(errors)
 
 
 }
@@ -445,14 +425,24 @@ const splitToChunks = (array, parts) => {
 
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize, socketIO) => {
 
-    let filteredTickerSymbolChunks = splitToChunks(tickers, batchSize);
-    console.log("filteredTickerSymbolChunks", filteredTickerSymbolChunks)
-    for (const index in filteredTickerSymbolChunks) {
-        logger.info(`storing batch:: chunk: ${filteredTickerSymbolChunks[index]} uuid: ${uuid} `)
-        await storeKeyStats(filteredTickerSymbolChunks[index], uuid, treasuryStatsRes)
-        console.log("batchFinished", { finishedTickers: filteredTickerSymbolChunks[index] })
-        socketIO.emit("batchFinished", { finishedTickers: filteredTickerSymbolChunks[index] });
-    }
+    const { results, errors } = await PromisePool.for(tickers).withConcurrency(batchSize).process(async chunk => {
+            let keyStatsRes = await getData(chunk);
+            let closingHistories = await getClosingHistories(chunk);
+            let balanceSheetStatements = await getBalanceSheetHistory(chunk);
+
+            let scrapeResult = {
+                id: uuid,
+                ticker: batch[index].ticker,
+                ...keyStatsRes,
+                ...closingHistories,
+                ...balanceSheetStatements,
+                ...treasuryStatsRes
+            }
+            scrapeRepository.create(scrapeResult)
+        })
+    console.log(results)
+    console.log(errors)
+
 
     console.log("complete")
     socketIO.emit("complete");
