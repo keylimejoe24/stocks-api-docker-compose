@@ -386,6 +386,7 @@ async function getData(ticker) {
             let shortPercentOfSharesOutStandingVal = Object.values(shortPercentOfSharesOutStanding)[0]
 
             results = {
+                symbol:ticker,
                 ...financialsRes,
                 ...quoteSummaryRes,
                 quarterlyRevenueGrowth: parsedTables["Quarterly Revenue Growth (yoy)"],
@@ -571,9 +572,6 @@ class ScrapeService {
             logger.error(e)
         }
         batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 2,socketIO)
-
-        
-
     }
 
 
