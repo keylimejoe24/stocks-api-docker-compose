@@ -24,6 +24,7 @@ class TodoCollection(Resource):
 
     def post(self):
         args = parser.parse_args()
+        log.debug(args)
         response = todo.create({"id": args["id"],"tickers":args["tickers"]})
         return response, 201
 
