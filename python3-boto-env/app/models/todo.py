@@ -10,17 +10,20 @@ class Todo(object):
 
         self.fields = {
             "id": "string",
+            "tickers":  "array",
             "created": "datetime",
 	        "updated": "datetime"
         }
 
         self.create_required_fields = ["id"]
+        self.create_required_fields = ["tickers"]
 
         # Fields optional for CREATE
         self.create_optional_fields = []
 
         # Fields required for UPDATE
         self.update_required_fields = ["id"]
+        self.update_required_fields = ["tickers"]
 
         # Fields optional for UPDATE
         self.update_optional_fields = []

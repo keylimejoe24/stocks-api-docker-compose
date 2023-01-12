@@ -50,6 +50,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 
 export default function App() {
+
   const { currentScrapeId, setCurrentScrapeId,completedTickers, setCompletedTickers,currentlyCompletedTickers, setCurrentlyCompletedTickers } = useContext(ScrapeProgressContext);
 
   const [scrapeIdSelected, setScrapeIdSelected] = React.useState("");
@@ -154,20 +155,44 @@ export default function App() {
       .catch(error => console.log(error));
 
   }
-  function splitToChunks(array, parts) {
-    let result = [];
-    for (let i = parts; i > 0; i--) {
-      result.push(array.splice(0, Math.ceil(array.length / i)));
-    }
-    return result;
-  }
+  
+  
+
+
+  useEffect(() => {
+    fetch(`http://${MASTER_IP}:5000/api/v1/scrape_starts`, { method: "GET" })
+      .then(res => res.json())
+      .then(response => {
+        console.log(response)
+        setScrapeIds(response)
+      })
+      .catch(error => console.log(error));
+
+    fetch(`http://${MASTER_IP}:3001/api/algorithms/tickers`, { method: "GET" })
+      .then(res => res.json())
+      .then(response => {
+        console.log(response)
+        setTickersResponse(response)
+      })
+      .catch(error => console.log(error));
+
+      
+
+  }, []);
+
+  useEffect(() => {
+    const sortedScrapeIds = scrapeIds.sort((a, b) => a.createdAt - b.createdAt)
+    setScrapeIds(sortedScrapeIds)
+
+  }, [scrapeIds]);
+
   const scrapeStartClickHandler = event => {
     let newScrapeId = uuidv4()
 
     const scrapeStartrequestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: newScrapeId })
+      body: JSON.stringify({ id: newScrapeId,tickers:filteredTickers })
     };
 
 
@@ -206,34 +231,6 @@ export default function App() {
     })
     setCurrentScrapeId(newScrapeId)
   };
-
-
-  useEffect(() => {
-    fetch(`http://${MASTER_IP}:5000/api/v1/scrape_starts`, { method: "GET" })
-      .then(res => res.json())
-      .then(response => {
-        console.log(response)
-        setScrapeIds(response)
-      })
-      .catch(error => console.log(error));
-
-    fetch(`http://${MASTER_IP}:3001/api/algorithms/tickers`, { method: "GET" })
-      .then(res => res.json())
-      .then(response => {
-        console.log(response)
-        setTickersResponse(response)
-      })
-      .catch(error => console.log(error));
-
-      
-
-  }, []);
-
-  useEffect(() => {
-    const sortedScrapeIds = scrapeIds.sort((a, b) => a.createdAt - b.createdAt)
-    setScrapeIds(sortedScrapeIds)
-
-  }, [scrapeIds]);
 
 
 
