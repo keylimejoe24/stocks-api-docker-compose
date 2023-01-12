@@ -410,8 +410,9 @@ async function getData(ticker) {
 }
 
 const storeKeyStats = async (tickers, uuid, treasuryStatsRes) => {
-  
+    console.log(tickers)
     for(const ticker in tickers){
+        console.log(ticker)
         let keyStatsRes = await getData(ticker);
         let closingHistories = await getClosingHistories(ticker);
         let balanceSheetStatements = await getBalanceSheetHistory(ticker);
@@ -438,10 +439,11 @@ const splitToChunks = (array, parts) => {
 
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, batchSize,socketIO) => {
 
-    let filteredTickerSymbolChunks = splitToChunks([...tickers], batchSize);
+    let filteredTickerSymbolChunks = splitToChunks(tickers, batchSize);
+    console.log(filteredTickerSymbolChunks)
     for(const tickers in filteredTickerSymbolChunks){
-        
-        logger.info(`storing batch:: ${tickers} uuid: ${uuid} `)
+        console.log(tickers)
+        logger.info(`storing batch:: chunk: ${tickers} uuid: ${uuid} `)
         await storeKeyStats(tickers, uuid, treasuryStatsRes)
         console.log("batchFinished", {finishedTickers:tickers})
         socketIO.emit("batchFinished", {finishedTickers:tickers});
