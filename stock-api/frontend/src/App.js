@@ -200,7 +200,7 @@ export default function App() {
     const scrapeStartrequestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: newScrapeId,tickers:filteredSymbols })
+      body: JSON.stringify({ id: newScrapeId,tickers:filteredSymbols.length })
     };
    
 
@@ -226,7 +226,7 @@ export default function App() {
       const scrapeRequestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scrapeID: newScrapeId, ticker_count: filteredTickerSymbolChunks.length })
+        body: JSON.stringify({ scrapeID: newScrapeId, ticker_count:filteredTickerSymbolChunks[index] })
       };
 
       fetch(url, scrapeRequestOptions)
