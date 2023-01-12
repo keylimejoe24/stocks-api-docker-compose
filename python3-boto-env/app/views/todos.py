@@ -16,7 +16,7 @@ todo = todo.Todo()
 parser = RequestParser()
 
 parser.add_argument("id")
-
+parser.add_argument("tickers")
 
 class TodoCollection(Resource):
     def get(self):
