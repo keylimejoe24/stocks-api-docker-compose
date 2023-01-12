@@ -550,7 +550,7 @@ class ScrapeService {
         } catch (e) {
             logger.error(e)
         }
-        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 4, socketIO)
+        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, 2, socketIO)
     }
 
 
