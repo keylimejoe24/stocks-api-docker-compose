@@ -186,6 +186,14 @@ export default function App() {
 
   }, [scrapeIds]);
 
+  function splitToChunks(array, parts) {
+    let result = [];
+    for (let i = parts; i > 0; i--) {
+      result.push(array.splice(0, Math.ceil(array.length / i)));
+    }
+    return result;
+  }
+  
   const scrapeStartClickHandler = event => {
     let newScrapeId = uuidv4()
 
