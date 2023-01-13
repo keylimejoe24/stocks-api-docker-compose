@@ -16,34 +16,26 @@ const { PromisePool } = require('@supercharge/promise-pool')
 
 const Algorithms = require('./algorithms.js');
 
-function until(conditionFunction) {
 
-    const poll = resolve => {
-        if (conditionFunction()) resolve();
-        else setTimeout(_ => poll(resolve), 400);
-    }
 
-    return new Promise(poll);
-}
-let responseCount = 0
 async function getClosingHistories(ticker) {
     let retry = false
-    do{
+    do {
         try {
             const today = new Date()
             const yesterday = new Date(today)
             const tenDaysAgo = new Date(today)
-    
+
             tenDaysAgo.setDate(yesterday.getDate() - 10)
             let yesterdayISOFormat = yesterday.toISOString().split("T")[0]
             let tenDaysAgoISOFormat = tenDaysAgo.toISOString().split("T")[0]
-    
+
             const queryOptions = { period1: tenDaysAgoISOFormat, period2: yesterdayISOFormat };
             let ProxiedRequestStart = performance.now();
-    
+
             const result = await yahooFinance2.historical(ticker, queryOptions);
             logger.info(`function  yahooFinance2.historical took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
-    
+
             return {
                 "closingHistories": result.slice(0, 4).map(q => {
                     return q.close
@@ -55,8 +47,8 @@ async function getClosingHistories(ticker) {
             logger.info("retrying...");
             retry = true
         }
-    }while(retry === true)
-    
+    } while (retry === true)
+
 
 }
 
@@ -76,6 +68,7 @@ async function getBalanceSheetHistory(ticker) {
         }
     } catch (error) {
         logger.error(error);
+        logger.info("retrying...");
     }
 }
 function convertToNum(text) {
@@ -177,52 +170,6 @@ function removeFootnotes(data) {
     }
 }
 
-async function yahooFinanceSDK(ticker) {
-    let financeRes = null
-    let yahooFinanceSDKStart = performance.now();
-
-    while (financeRes == null) {
-
-        try {
-            let agent = { proxy: "http://scraperapi:3a2d1ce726317bca068416409b016741@proxy-server.scraperapi.com:8001" }
-            financeRes = await yahooFinance.quote({
-                symbol: ticker,
-                modules: ['defaultKeyStatistics', 'summaryDetail', 'financialData'],
-                agent
-            }, function (err, quotes) {
-                if (err != null) {
-                    logger.error(err)
-                }
-                return quotes
-            });
-        } catch (error) {
-            logger.error(error)
-
-        }
-        logger.info(`function yahooFinanceSDK took ${(performance.now() - yahooFinanceSDKStart).toFixed(3)}ms`);
-
-    }
-
-
-
-    let response = {}
-    if (typeof financeRes['defaultKeyStatistics'] != undefined) {
-        response = { ...financeRes['defaultKeyStatistics'] }
-    }
-    if (typeof financeRes['summaryDetail'] != undefined) {
-        resWithoutOmmited = _.omit(financeRes['summaryDetail'], ['trailingAnnualDividendRate']);
-        response = { ...response, ...resWithoutOmmited }
-
-    }
-    if (typeof financeRes['financialData'] != undefined) {
-        response = { ...response, ...financeRes['financialData'] }
-    }
-
-    return response
-
-
-
-}
 
 
 async function quoteSummary(ticker) {
@@ -251,92 +198,53 @@ async function quoteSummary(ticker) {
 
         catch (e) {
             logger.error(e)
+            logger.info("retrying...");
         }
         return results
     }
 }
 
-
-async function yahooFinanceSDK(ticker) {
-    let financeRes = null
-    let yahooFinanceSDKStart = performance.now();
-
-    while (financeRes == null) {
-
-        try {
-            let agent = { proxy: "http://scraperapi:3a2d1ce726317bca068416409b016741@proxy-server.scraperapi.com:8001" }
-            financeRes = await yahooFinance.quote({
-                symbol: ticker,
-                modules: ['defaultKeyStatistics', 'summaryDetail', 'financialData'],
-                agent
-            }, function (err, quotes) {
-                if (err != null) {
-                    logger.error(err)
-                }
-                return quotes
-            });
-        } catch (error) {
-            logger.error(error)
-
-        }
-        logger.info(`function yahooFinanceSDK took ${(performance.now() - yahooFinanceSDKStart).toFixed(3)}ms`);
-
-    }
-
-
-
-    let response = {}
-    if (typeof financeRes['defaultKeyStatistics'] != undefined) {
-        response = { ...financeRes['defaultKeyStatistics'] }
-    }
-    if (typeof financeRes['summaryDetail'] != undefined) {
-        resWithoutOmmited = _.omit(financeRes['summaryDetail'], ['trailingAnnualDividendRate']);
-        response = { ...response, ...resWithoutOmmited }
-
-    }
-    if (typeof financeRes['financialData'] != undefined) {
-        response = { ...response, ...financeRes['financialData'] }
-    }
-
-    return response
-
-
-
-}
 async function getAssetsSharesAndLiabilities(ticker) {
-    let balanceSheetRes = {}
-    try {
-        let currentTime = `${Date.now()}`
 
-        let url = `https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?lang=en-US&region=US&symbol=${ticker}&padTimeSeries=true&type=quarterlyCurrentLiabilities%2CquarterlyCurrentAssets%2CquarterlyShareIssued&merge=false&period1=493590046&period2=${currentTime.slice(0, -3)}&corsDomain=finance.yahoo.com`
-        let res = await ProxiedRequest.get(url)
+    let retry = false
+    do {
+        try {
+            let balanceSheetRes = {}
+            let currentTime = `${Date.now()}`
 
-        if (res === null) {
-            logger.info(`retrying https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?lang=en-US&region=US&symbol=${ticker}&padTimeSeries=true&type=quarterlyCurrentLiabilities%2CquarterlyCurrentAssets%2CquarterlyShareIssued&merge=false&period1=493590046&period2=${currentTime.slice(0, -3)}&corsDomain=finance.yahoo.com`);
+            let url = `https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?lang=en-US&region=US&symbol=${ticker}&padTimeSeries=true&type=quarterlyCurrentLiabilities%2CquarterlyCurrentAssets%2CquarterlyShareIssued&merge=false&period1=493590046&period2=${currentTime.slice(0, -3)}&corsDomain=finance.yahoo.com`
+            let res = await ProxiedRequest.get(url)
+
+            if (res === null) {
+                logger.info(`retrying https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?lang=en-US&region=US&symbol=${ticker}&padTimeSeries=true&type=quarterlyCurrentLiabilities%2CquarterlyCurrentAssets%2CquarterlyShareIssued&merge=false&period1=493590046&period2=${currentTime.slice(0, -3)}&corsDomain=finance.yahoo.com`);
+            }
+
+            let quarterlySharesIssued = _.get(_.find(res.body.timeseries.result, "quarterlyShareIssued"), "quarterlyShareIssued", null)
+            let quarterlyCurrentLiabilities = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentLiabilities"), "quarterlyCurrentLiabilities", null)
+            let quarterlyCurrentAssets = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentAssets"), "quarterlyCurrentAssets", null)
+
+            if (quarterlySharesIssued != null) {
+                balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 2].reportedValue.raw
+                balanceSheetRes['currentlyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 1].reportedValue.raw
+            }
+            if (quarterlyCurrentLiabilities != null) {
+                balanceSheetRes['currentLiabilities'] = quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1].reportedValue.raw
+            }
+            if (quarterlyCurrentAssets != null) {
+                balanceSheetRes['currentAssets'] = quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1].reportedValue.raw
+            }
+
+            return balanceSheetRes
+
         }
-
-        let quarterlySharesIssued = _.get(_.find(res.body.timeseries.result, "quarterlyShareIssued"), "quarterlyShareIssued", null)
-        let quarterlyCurrentLiabilities = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentLiabilities"), "quarterlyCurrentLiabilities", null)
-        let quarterlyCurrentAssets = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentAssets"), "quarterlyCurrentAssets", null)
-
-        if (quarterlySharesIssued != null) {
-            balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 2].reportedValue.raw
-            balanceSheetRes['currentlyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 1].reportedValue.raw
+        catch (error) {
+            logger.error(error);
+            logger.info("retrying...");
+            retry = true
         }
-        if (quarterlyCurrentLiabilities != null) {
-            balanceSheetRes['currentLiabilities'] = quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1].reportedValue.raw
-        }
-        if (quarterlyCurrentAssets != null) {
-            balanceSheetRes['currentAssets'] = quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1].reportedValue.raw
-        }
-
-        return balanceSheetRes
+    } while (retry === true)
 
 
-    } catch (error) {
-        console.log(error)
-        return balanceSheetRes
-    }
 }
 
 async function quoteSummary(ticker) {
@@ -366,6 +274,7 @@ async function quoteSummary(ticker) {
 
         catch (e) {
             logger.error(e)
+            logger.info("retrying...")
         }
         return results
     }
@@ -402,8 +311,8 @@ async function getData(ticker) {
 
         }
         catch (e) {
-            logger.info("HERE!!")
             logger.error(e)
+            logger.info("retrying...")
         }
         return results;
     }
@@ -413,26 +322,26 @@ async function getData(ticker) {
 
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
 
-    await PromisePool.for(tickers).withConcurrency(2).process(async ticker => {
-            logger.info("batchFinished", { finishedTickers: [ticker] })
-            socketIO.emit("batchFinished", { finishedTickers: [ticker] });
+    await PromisePool.for(tickers).withConcurrency(4).process(async ticker => {
+        logger.info("batchFinished", { finishedTickers: [ticker] })
+        socketIO.emit("batchFinished", { finishedTickers: [ticker] });
 
-            let keyStatsRes = await getData(ticker);
-            let closingHistories = await getClosingHistories(ticker);
-            let balanceSheetStatements = await getBalanceSheetHistory(ticker);
+        let keyStatsRes = await getData(ticker);
+        let closingHistories = await getClosingHistories(ticker);
+        let balanceSheetStatements = await getBalanceSheetHistory(ticker);
 
-            let scrapeResult = {
-                id: uuid,
-                ticker: batch[index].ticker,
-                ...keyStatsRes,
-                ...closingHistories,
-                ...balanceSheetStatements,
-                ...treasuryStatsRes
-            }
-            scrapeRepository.create(scrapeResult)
-           
-        })
-    
+        let scrapeResult = {
+            id: uuid,
+            ticker: batch[index].ticker,
+            ...keyStatsRes,
+            ...closingHistories,
+            ...balanceSheetStatements,
+            ...treasuryStatsRes
+        }
+        scrapeRepository.create(scrapeResult)
+
+    })
+
     socketIO.emit("complete");
 
 }
