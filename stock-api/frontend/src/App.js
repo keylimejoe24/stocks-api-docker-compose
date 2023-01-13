@@ -70,6 +70,7 @@ export default function App() {
   useEffect(() => {
     sockets.map(socket => {
       socket.on("batchFinished", (data) => {
+        console.log(data)
         let averageScrapeTime = Math.round(data.scrapeTime + scrapeTime/completedTickers.length)
         console.log(averageScrapeTime)
         setScrapeTime(averageScrapeTime)
