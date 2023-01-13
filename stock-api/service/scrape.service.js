@@ -336,7 +336,7 @@ const  batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
 
     await PromisePool.for(tickers).withConcurrency(2).process(async ticker => {
         
-        const start = process.hrtime()
+        const start = performance.now();
         let keyStatsRes = await getData(ticker);
         let closingHistories = await getClosingHistories(ticker);
         let balanceSheetStatements = await getBalanceSheetHistory(ticker);
