@@ -327,11 +327,11 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
         socketIO.emit("batchFinished", { finishedTickers: [ticker] });
 
         let keyStatsRes = await getData(ticker);
-        logger.info(keyStatsRes)
+        logger.info(JSON.stringify(keyStatsRes))
         let closingHistories = await getClosingHistories(ticker);
-        logger.info(closingHistories)
+        logger.info(JSON.stringify(closingHistories))
         let balanceSheetStatements = await getBalanceSheetHistory(ticker);
-        logger.info(balanceSheetStatements)
+        logger.info(JSON.stringify(balanceSheetStatements))
 
         let scrapeResult = {
             id: uuid,
@@ -341,7 +341,7 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
             ...balanceSheetStatements,
             ...treasuryStatsRes
         }
-        logger.info(scrapeResult)
+        logger.info(JSON.stringify(scrapeResult))
         scrapeRepository.create(scrapeResult)
 
     })
