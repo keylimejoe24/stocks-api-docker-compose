@@ -3,7 +3,6 @@ const scrapeRepository = require('../repository/scrape.repository');
 const { randomUUID } = require('crypto'); // Added in: node v14.17.0
 const logger = require('../logger/api.logger');
 const yahooFinance2 = require('../node-yahoo-finance2').default;
-const { performance } = require('perf_hooks');
 const cheerio = require("cheerio");
 const yahooFinance = require('../node-yahoo-finance')
 const ProxiedRequest = require('../service/request.service');
