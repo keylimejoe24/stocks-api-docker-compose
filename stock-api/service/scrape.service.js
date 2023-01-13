@@ -27,36 +27,36 @@ function until(conditionFunction) {
 }
 let responseCount = 0
 async function getClosingHistories(ticker) {
-    try {
-        const today = new Date()
-        const yesterday = new Date(today)
-        const tenDaysAgo = new Date(today)
-
-        tenDaysAgo.setDate(yesterday.getDate() - 10)
-        let yesterdayISOFormat = yesterday.toISOString().split("T")[0]
-        let tenDaysAgoISOFormat = tenDaysAgo.toISOString().split("T")[0]
-
-        const queryOptions = { period1: tenDaysAgoISOFormat, period2: yesterdayISOFormat };
-        let ProxiedRequestStart = performance.now();
-
-        const result = await yahooFinance2.historical(ticker, queryOptions);
-        if (result === null) {
-            logger.info(`retrying await yahooFinance2.historical(${ticker}, queryOptions)`);
+    let retry = false
+    do{
+        try {
+            const today = new Date()
+            const yesterday = new Date(today)
+            const tenDaysAgo = new Date(today)
+    
+            tenDaysAgo.setDate(yesterday.getDate() - 10)
+            let yesterdayISOFormat = yesterday.toISOString().split("T")[0]
+            let tenDaysAgoISOFormat = tenDaysAgo.toISOString().split("T")[0]
+    
+            const queryOptions = { period1: tenDaysAgoISOFormat, period2: yesterdayISOFormat };
+            let ProxiedRequestStart = performance.now();
+    
+            const result = await yahooFinance2.historical(ticker, queryOptions);
+            logger.info(`function  yahooFinance2.historical took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
+    
+            return {
+                "closingHistories": result.slice(0, 4).map(q => {
+                    return q.close
+                })
+            }
         }
-        logger.info(`function  yahooFinance2.historical took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
-
-        return {
-            "closingHistories": result.slice(0, 4).map(q => {
-                return q.close
-            })
+        catch (error) {
+            logger.error(error);
+            logger.info("retrying...");
+            retry = true
         }
-    }
-    catch (error) {
-        logger.error(error);
-        return {
-            "closingHistories": []
-        }
-    }
+    }while(retry === true)
+    
 
 }
 
@@ -413,9 +413,8 @@ async function getData(ticker) {
 
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
 
-    const { results, errors } = await PromisePool.for(tickers).withConcurrency(2).process(async ticker => {
+    await PromisePool.for(tickers).withConcurrency(2).process(async ticker => {
             logger.info("batchFinished", { finishedTickers: [ticker] })
-    
             socketIO.emit("batchFinished", { finishedTickers: [ticker] });
 
             let keyStatsRes = await getData(ticker);
