@@ -322,7 +322,7 @@ async function getData(ticker) {
 
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
 
-    await PromisePool.for(tickers).withConcurrency(10).process(async ticker => {
+    await PromisePool.for(tickers).withConcurrency(2).process(async ticker => {
         logger.info("batchFinished", { finishedTickers: [ticker] })
         socketIO.emit("batchFinished", { finishedTickers: [ticker] });
 
@@ -332,7 +332,7 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
         logger.info(closingHistories)
         let balanceSheetStatements = await getBalanceSheetHistory(ticker);
         logger.info(balanceSheetStatements)
-        
+
         let scrapeResult = {
             id: uuid,
             ticker: batch[index].ticker,
