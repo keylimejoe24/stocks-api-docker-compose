@@ -1,14 +1,22 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
+import React, { useState, useEffect,useRef,useHasChanged} from "react";
 
-export default function CircularProgressWithLabel({ completedTickers, filteredTickers,currentScrapeId }) {
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
 
-  const [progress, setProgress] = React.useState(0);
+export default function CircularProgressWithLabel({ completedTickers, filteredTickers,currentScrapeId,scrapeTime }) {
 
-  React.useEffect(() => {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
     if (completedTickers.length > 0) {
       let completedRatio = Math.min(completedTickers.length / filteredTickers.length)  * 100
       console.log(completedRatio)
@@ -18,14 +26,13 @@ export default function CircularProgressWithLabel({ completedTickers, filteredTi
     }
   }, [completedTickers, filteredTickers]);
 
-  console.log(completedTickers)
-  console.log(filteredTickers)
   return (
     <Box sx={{ width: '100%' }}>
       <div>Running New Scrape </div>
       <span style={{ fontSize: 12, fontWeight: "bold" }}>{"Scrape ID: "}</span><span style={{ fontSize: 10 }}>{currentScrapeId}</span>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Box sx={{ width: '100%', mr: 1 }}>
+        <Typography variant="body2" color="text.secondary">{`scrape speed ${scrapeTime} ticker/s`}</Typography>
           <LinearProgress variant="determinate" value={progress} />
         </Box>
         <Box sx={{ minWidth: 35 }}>

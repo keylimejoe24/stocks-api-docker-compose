@@ -61,6 +61,7 @@ export default function App() {
   const [tickerFilter, setTickerFilter] = React.useState("");
   const [marketCapFilter, setMarketCapFilter] = React.useState("5000000");
   const [filteredTickers, setFilteredTickers] = React.useState([]);
+  const [scrapeTime, setScrapeTime] = React.useState(0);
 
  
 
@@ -69,6 +70,9 @@ export default function App() {
   useEffect(() => {
     sockets.map(socket => {
       socket.on("batchFinished", (data) => {
+        let averageScrapeTime = Math.round(data.scrapeTime + scrapeTime/completedTickers.length)
+        console.log(averageScrapeTime)
+        setScrapeTime(averageScrapeTime)
         setCurrentlyCompletedTickers([...data.finishedTickers])
       });
       socket.on("complete", (data) => {
@@ -253,7 +257,7 @@ export default function App() {
           <Grid xs={4}>
             <Item>
               <span style={{ minWidth: 300 }}>{tickersResponse && <TickerList
-
+                scrapeTime={scrapeTime}
                 currentScrapeId={currentScrapeId}
                 tickerFilter={tickerFilter}
                 setTickerFilter={setTickerFilter}

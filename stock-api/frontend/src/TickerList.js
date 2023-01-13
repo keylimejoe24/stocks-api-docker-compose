@@ -46,7 +46,7 @@ const Row = props => {
 };
 
 
-export default function TickerList({ title, results, testResultsClickHandler, maxWidth, scrapeStartClickHandler, tickerFilter, setTickerFilter, marketCapFilter, setMarketCapFilter, filteredTickers, setFilteredTickers, currentScrapeId, completedTickers }) {
+export default function TickerList({ title, results, testResultsClickHandler, maxWidth, scrapeStartClickHandler, tickerFilter, setTickerFilter, marketCapFilter, setMarketCapFilter, filteredTickers, setFilteredTickers, currentScrapeId, completedTickers,scrapeTime }) {
 
 
     useEffect(() => {
@@ -120,7 +120,7 @@ export default function TickerList({ title, results, testResultsClickHandler, ma
                 {Row}
             </FixedSizeList>
             <Stack direction="row">
-                {!_.isNil(currentScrapeId) && <ProgressBar currentScrapeId={currentScrapeId} completedTickers={completedTickers} filteredTickers={filteredTickers} />}
+                {!_.isEmpty(completedTickers) && <ProgressBar scrapeTime={scrapeTime} currentScrapeId={currentScrapeId} completedTickers={completedTickers} filteredTickers={filteredTickers} />}
             </Stack>
         </Box>
     );

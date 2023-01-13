@@ -9,6 +9,7 @@ const yahooFinance = require('../node-yahoo-finance')
 const ProxiedRequest = require('../service/request.service');
 var _ = require('lodash');
 const { PromisePool } = require('@supercharge/promise-pool')
+const { performance } = require('perf_hooks');
 
 
 
@@ -320,10 +321,11 @@ async function getData(ticker) {
 }
 
 
-const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
+const  batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
 
     await PromisePool.for(tickers).withConcurrency(2).process(async ticker => {
-    
+        
+        const start = process.hrtime()
         let keyStatsRes = await getData(ticker);
         let closingHistories = await getClosingHistories(ticker);
         let balanceSheetStatements = await getBalanceSheetHistory(ticker);
@@ -337,8 +339,9 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
             ...treasuryStatsRes
         }
         scrapeRepository.create(scrapeResult)
-        logger.info("batchFinished", { finishedTickers: [ticker] })
-        socketIO.emit("batchFinished", { finishedTickers: [ticker] });
+        let scrapeTime = (performance.now() - time) / 1000
+        logger.info("batchFinished", { finishedTickers: [ticker],scrapeTime:scrapeTime })
+        socketIO.emit("batchFinished", {finishedTickers: [ticker],scrapeTime:scrapeTime });
 
     })
 
