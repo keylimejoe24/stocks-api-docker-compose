@@ -349,8 +349,9 @@ const  batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
             ...balanceSheetStatements,
             ...treasuryStatsRes
         }
+        
         scrapeRepository.create(scrapeResult)
-        let scrapeTime = (performance.now() - time) / 1000
+        let scrapeTime = (performance.now() - start) / 1000
         logger.info("batchFinished", { finishedTickers: [ticker],scrapeTime:scrapeTime })
         socketIO.emit("batchFinished", {finishedTickers: [ticker],scrapeTime:scrapeTime });
 
