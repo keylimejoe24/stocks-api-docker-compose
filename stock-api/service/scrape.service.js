@@ -44,8 +44,12 @@ async function getClosingHistories(ticker) {
         }
         catch (error) {
             logger.error(error);
-            logger.info("retrying...");
-            retry = true
+            if(error != "HTTPError: Not Found"){
+                logger.info("retrying...");
+                retry = true
+            }
+          
+            
         }
     } while (retry === true)
 
@@ -68,6 +72,10 @@ async function getBalanceSheetHistory(ticker) {
         }
     } catch (error) {
         logger.error(error);
+        if(error != "HTTPError: Not Found"){
+                logger.info("retrying...");
+                retry = true
+            }
         logger.info("retrying...");
     }
 }
@@ -239,6 +247,10 @@ async function getAssetsSharesAndLiabilities(ticker) {
         }
         catch (error) {
             logger.error(error);
+            if(error != "HTTPError: Not Found"){
+                logger.info("retrying...");
+                retry = true
+            }
             logger.info("retrying...");
             retry = true
         }
