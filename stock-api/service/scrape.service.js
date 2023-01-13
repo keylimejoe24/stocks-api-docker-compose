@@ -338,6 +338,7 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
             ...balanceSheetStatements,
             ...treasuryStatsRes
         }
+        logger.info(scrapeResult)
         scrapeRepository.create(scrapeResult)
 
     })
