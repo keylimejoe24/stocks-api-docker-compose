@@ -144,6 +144,9 @@ async function getClosingHistories(ticker) {
             if(error != "HTTPError: Not Found"){
                 logger.info("retrying...");
                 retry = true
+            }else if(error != "HTTPError: Forbidden"){
+                logger.info("retrying...");
+                retry = true
             }
           
             
