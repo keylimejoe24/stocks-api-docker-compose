@@ -15,7 +15,104 @@ const { performance } = require('perf_hooks');
 
 
 const Algorithms = require('./algorithms.js');
+function convertToNum(text) {
+    text = text.replace(/,/g, "");
+    let last = text[text.length - 1];
+    switch (last) {
+        case "T":
+            text = Number(text.slice(0, -1)) * 1000000000000;
+            break;
+        case "B":
+            text = Number(text.slice(0, -1)) * 1000000000;
+            break;
+        case "M":
+            text = Number(text.slice(0, -1)) * 1000000;
+            break;
+        case "k":
+            text = Number(text.slice(0, -1)) * 1000;
+            break;
+        case "%":
+            text = Number(text.slice(0, -1)) / 100.0;
+            break;
+        case "A":
+            text = 0;
+            break;
+        default:
+            text = Number(text);
+    }
+    return text;
+}
+async function parseYahooHtml(html) {
 
+    let $ = cheerio.load(html);
+    let table = $('tbody');
+    let vals = {};
+    table.each(function () {
+        for (let i = 0; i < this.childNodes.length; i++) {
+            let val = convertToNum($(this.childNodes[i].childNodes[1]).text());
+            vals[removeFootnotes($(this.childNodes[i].childNodes[0]).text().trim())] = val;
+        }
+    });
+    return vals
+}
+// Takes string as input and returns same string with footnote character and whitespace removed
+function removeFootnotes(data) {
+    let nums = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    if (nums.includes(data.slice(-1))) {
+        return data.slice(0, -2);
+    } else {
+        return data;
+    }
+}
+function convertToNum(text) {
+    text = text.replace(/,/g, "");
+    let last = text[text.length - 1];
+    switch (last) {
+        case "T":
+            text = Number(text.slice(0, -1)) * 1000000000000;
+            break;
+        case "B":
+            text = Number(text.slice(0, -1)) * 1000000000;
+            break;
+        case "M":
+            text = Number(text.slice(0, -1)) * 1000000;
+            break;
+        case "k":
+            text = Number(text.slice(0, -1)) * 1000;
+            break;
+        case "%":
+            text = Number(text.slice(0, -1)) / 100.0;
+            break;
+        case "A":
+            text = 0;
+            break;
+        default:
+            text = Number(text);
+    }
+    return text;
+}
+async function parseYahooHtml(html) {
+
+    let $ = cheerio.load(html);
+    let table = $('tbody');
+    let vals = {};
+    table.each(function () {
+        for (let i = 0; i < this.childNodes.length; i++) {
+            let val = convertToNum($(this.childNodes[i].childNodes[1]).text());
+            vals[removeFootnotes($(this.childNodes[i].childNodes[0]).text().trim())] = val;
+        }
+    });
+    return vals
+}
+// Takes string as input and returns same string with footnote character and whitespace removed
+function removeFootnotes(data) {
+    let nums = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    if (nums.includes(data.slice(-1))) {
+        return data.slice(0, -2);
+    } else {
+        return data;
+    }
+}
 
 
 async function getClosingHistories(ticker) {
@@ -79,107 +176,6 @@ async function getBalanceSheetHistory(ticker) {
         logger.info("retrying...");
     }
 }
-function convertToNum(text) {
-    text = text.replace(/,/g, "");
-    let last = text[text.length - 1];
-    switch (last) {
-        case "T":
-            text = Number(text.slice(0, -1)) * 1000000000000;
-            break;
-        case "B":
-            text = Number(text.slice(0, -1)) * 1000000000;
-            break;
-        case "M":
-            text = Number(text.slice(0, -1)) * 1000000;
-            break;
-        case "k":
-            text = Number(text.slice(0, -1)) * 1000;
-            break;
-        case "%":
-            text = Number(text.slice(0, -1)) / 100.0;
-            break;
-        case "A":
-            text = 0;
-            break;
-        default:
-            text = Number(text);
-    }
-    return text;
-}
-async function parseYahooHtml(html) {
-
-    let $ = cheerio.load(html);
-    let table = $('tbody');
-    let vals = {};
-    table.each(function () {
-        for (let i = 0; i < this.childNodes.length; i++) {
-            let val = convertToNum($(this.childNodes[i].childNodes[1]).text());
-            vals[removeFootnotes($(this.childNodes[i].childNodes[0]).text().trim())] = val;
-        }
-    });
-    return vals
-}
-// Takes string as input and returns same string with footnote character and whitespace removed
-function removeFootnotes(data) {
-    let nums = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-    if (nums.includes(data.slice(-1))) {
-        return data.slice(0, -2);
-    } else {
-        return data;
-    }
-}
-function convertToNum(text) {
-    text = text.replace(/,/g, "");
-    let last = text[text.length - 1];
-    switch (last) {
-        case "T":
-            text = Number(text.slice(0, -1)) * 1000000000000;
-            break;
-        case "B":
-            text = Number(text.slice(0, -1)) * 1000000000;
-            break;
-        case "M":
-            text = Number(text.slice(0, -1)) * 1000000;
-            break;
-        case "k":
-            text = Number(text.slice(0, -1)) * 1000;
-            break;
-        case "%":
-            text = Number(text.slice(0, -1)) / 100.0;
-            break;
-        case "A":
-            text = 0;
-            break;
-        default:
-            text = Number(text);
-    }
-    return text;
-}
-async function parseYahooHtml(html) {
-
-    let $ = cheerio.load(html);
-    let table = $('tbody');
-    let vals = {};
-    table.each(function () {
-        for (let i = 0; i < this.childNodes.length; i++) {
-            let val = convertToNum($(this.childNodes[i].childNodes[1]).text());
-            vals[removeFootnotes($(this.childNodes[i].childNodes[0]).text().trim())] = val;
-        }
-    });
-    return vals
-}
-// Takes string as input and returns same string with footnote character and whitespace removed
-function removeFootnotes(data) {
-    let nums = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-    if (nums.includes(data.slice(-1))) {
-        return data.slice(0, -2);
-    } else {
-        return data;
-    }
-}
-
-
-
 async function quoteSummary(ticker) {
     let results = null
     while (results === null) {
@@ -349,6 +345,8 @@ const  batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
             ...balanceSheetStatements,
             ...treasuryStatsRes
         }
+        logger.info("scrapeResult", scrapeResult)
+
         scrapeRepository.create(scrapeResult)
         let scrapeDuration = (performance.now() - start) / 1000
 
