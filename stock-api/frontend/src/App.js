@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect,useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -23,7 +23,7 @@ const scrape_urls = []
 socketIOConfig.map(url => {
   scrape_urls.push(`http://${url}/api/scrape/run`)
   const newSocket = socketIO.connect(url);
-  
+
   sockets.push(newSocket)
 })
 
@@ -51,7 +51,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 export default function App() {
 
-  const { currentScrapeId, setCurrentScrapeId,completedTickers, setCompletedTickers,currentlyCompletedTickers, setCurrentlyCompletedTickers } = useContext(ScrapeProgressContext);
+  const { currentScrapeId, setCurrentScrapeId, completedTickers, setCompletedTickers, currentlyCompletedTickers, setCurrentlyCompletedTickers } = useContext(ScrapeProgressContext);
 
   const [scrapeIdSelected, setScrapeIdSelected] = React.useState("");
   const [scrapeIds, setScrapeIds] = React.useState([]);
@@ -62,18 +62,17 @@ export default function App() {
   const [marketCapFilter, setMarketCapFilter] = React.useState("5000000");
   const [filteredTickers, setFilteredTickers] = React.useState([]);
   const [scrapeTime, setScrapeTime] = React.useState(0);
+  const [averageScrapeTime, setAverageScrapeTime] = React.useState(0);
 
- 
+
 
 
 
   useEffect(() => {
     sockets.map(socket => {
       socket.on("batchFinished", (data) => {
-        console.log(data)
-        let averageScrapeTime = Math.round(data.scrapeTime + scrapeTime/completedTickers.length)
-        console.log(averageScrapeTime)
-        setScrapeTime(averageScrapeTime)
+       
+        setScrapeTime(data.scrapeTime)
         setCurrentlyCompletedTickers([...data.finishedTickers])
       });
       socket.on("complete", (data) => {
@@ -82,19 +81,27 @@ export default function App() {
         setCompletedTickers([])
       });
       return () => {
-        socket.off('connect');       
+        socket.off('connect');
         socket.off('batchFinished');
       };
     })
-   
+
   }, []);
 
   useEffect(() => {
-    setCompletedTickers([...completedTickers,...currentlyCompletedTickers]);
+    setCompletedTickers([...completedTickers, ...currentlyCompletedTickers]);
   }, [currentlyCompletedTickers]);
 
 
-  
+  useEffect(() => {
+    if(completedTickers.length != 0){
+      console.log((scrapeTime + averageScrapeTime) / completedTickers.length)
+      setAverageScrapeTime(Math.round((scrapeTime + averageScrapeTime) / completedTickers.length))
+    }
+  }, [scrapeTime]);
+
+
+
 
   const testResultsClickHandler = ticker => {
 
@@ -162,8 +169,8 @@ export default function App() {
       .catch(error => console.log(error));
 
   }
-  
-  
+
+
 
 
   useEffect(() => {
@@ -183,7 +190,7 @@ export default function App() {
       })
       .catch(error => console.log(error));
 
-      
+
 
   }, []);
 
@@ -200,16 +207,16 @@ export default function App() {
     }
     return result;
   }
-  
+
   const scrapeStartClickHandler = event => {
     let newScrapeId = uuidv4()
 
     const scrapeStartrequestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: newScrapeId,ticker_count:filteredTickers.length })
+      body: JSON.stringify({ id: newScrapeId, ticker_count: filteredTickers.length })
     };
-   
+
 
     fetch(`http://${MASTER_IP}:5000/api/v1/scrape_starts`, scrapeStartrequestOptions)
       .then(res => res.json())
@@ -225,13 +232,13 @@ export default function App() {
       .catch(error => console.log(error));
 
     let filteredTickerSymbols = filteredTickers.map(a => a.symbol);
-    
+
     let filteredTickerSymbolChunks = splitToChunks([...filteredTickerSymbols], scrape_urls.length);
     scrape_urls.map((url, index) => {
       const scrapeRequestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scrapeID: newScrapeId, tickers:filteredTickerSymbolChunks[index] })
+        body: JSON.stringify({ scrapeID: newScrapeId, tickers: filteredTickerSymbolChunks[index] })
       };
 
       fetch(url, scrapeRequestOptions)
@@ -245,11 +252,11 @@ export default function App() {
     setCurrentScrapeId(newScrapeId)
   };
 
-  
+
 
   return (
-   
-  
+
+
     <div>
       <Box sx={{ flexGrow: 1 }}>
 
@@ -258,7 +265,7 @@ export default function App() {
           <Grid xs={4}>
             <Item>
               <span style={{ minWidth: 300 }}>{tickersResponse && <TickerList
-                scrapeTime={scrapeTime}
+                averageScrapeTime={averageScrapeTime}
                 currentScrapeId={currentScrapeId}
                 tickerFilter={tickerFilter}
                 setTickerFilter={setTickerFilter}
@@ -266,10 +273,10 @@ export default function App() {
                 setMarketCapFilter={setMarketCapFilter}
                 filteredTickers={filteredTickers}
                 setFilteredTickers={setFilteredTickers}
-                maxWidth={500} scrapeStartClickHandler={scrapeStartClickHandler} 
-                testResultsClickHandler={testResultsClickHandler} 
-                title={"Tickers to Scrape"} 
-                results={tickersResponse} 
+                maxWidth={500} scrapeStartClickHandler={scrapeStartClickHandler}
+                testResultsClickHandler={testResultsClickHandler}
+                title={"Tickers to Scrape"}
+                results={tickersResponse}
                 completedTickers={completedTickers} />}</span>
 
 

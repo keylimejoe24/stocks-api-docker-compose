@@ -12,7 +12,7 @@ function usePrevious(value) {
   return ref.current;
 }
 
-export default function CircularProgressWithLabel({ completedTickers, filteredTickers,currentScrapeId,scrapeTime }) {
+export default function CircularProgressWithLabel({ completedTickers, filteredTickers,currentScrapeId,averageScrapeTime }) {
 
   const [progress, setProgress] = useState(0);
 
@@ -32,7 +32,7 @@ export default function CircularProgressWithLabel({ completedTickers, filteredTi
       <span style={{ fontSize: 12, fontWeight: "bold" }}>{"Scrape ID: "}</span><span style={{ fontSize: 10 }}>{currentScrapeId}</span>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Box sx={{ width: '100%', mr: 1 }}>
-        <Typography variant="body2" color="text.secondary">{`scrape speed ${scrapeTime} ticker/s`}</Typography>
+        <Typography variant="body2" color="text.secondary">{`avg scrape time ${averageScrapeTime} ticker/s`}</Typography>
           <LinearProgress variant="determinate" value={progress} />
         </Box>
         <Box sx={{ minWidth: 35 }}>
