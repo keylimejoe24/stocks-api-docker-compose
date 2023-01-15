@@ -184,6 +184,7 @@ commands = [
     # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "docker-compose down",
     "docker system prune --filter  'until=5h' -f",
+    "touch ~/temp1"
     "git pull --all --dry-run > ~/temp1 2>&1"
     "git pull",
     # "docker login --username joja5627 --password-stdin < my_password.txt",  
