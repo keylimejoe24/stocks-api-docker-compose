@@ -184,7 +184,7 @@ commands = [
     "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
     "docker-compose down",
-    # "docker system prune --filter  'until=5h' -f"
+    "docker system prune --filter  'until=5h' -f"
     "git pull --no-edit origin main",
     # "docker login --username joja5627 --password-stdin < my_password.txt",  
     "DB_HOST={} docker-compose up --build -d scraping-server".format(master_instances[0]["public_ip_address"])
