@@ -141,13 +141,13 @@ async function getClosingHistories(ticker) {
         }
         catch (error) {
             logger.error(error);
-            if (error != "HTTPError: Not Found") {
-                logger.info("retrying...");
-                retry = true
-            } else if (error != "HTTPError: Forbidden") {
-                logger.info("retrying...");
-                retry = true
-            }
+            logger.error(e.code)
+            // if (error != "HTTPError: Not Found") {
+            //     logger.info("retrying...");
+            //     retry = true
+            // }
+            // logger.info("retrying...");
+            // retry = true
 
 
         }
@@ -172,11 +172,13 @@ async function getBalanceSheetHistory(ticker) {
         }
     } catch (error) {
         logger.error(error);
-        if (error != "HTTPError: Not Found") {
-            logger.info("retrying...");
-            retry = true
-        }
-        logger.info("retrying...");
+        logger.error(e.code)
+        // if (error != "HTTPError: Not Found") {
+        //     logger.info("retrying...");
+        //     retry = true
+        // }
+        // logger.info("retrying...");
+        // retry = true
     }
 }
 async function quoteSummary(ticker) {
@@ -204,8 +206,14 @@ async function quoteSummary(ticker) {
         }
 
         catch (e) {
-            logger.error(e)
-            logger.info("retrying...");
+            logger.error(error);
+            logger.error(e.code)
+            // if (error != "HTTPError: Not Found") {
+            //     logger.info("retrying...");
+            //     retry = true
+            // }
+            // logger.info("retrying...");
+            // retry = true
         }
         return results
     }
@@ -246,12 +254,13 @@ async function getAssetsSharesAndLiabilities(ticker) {
         }
         catch (error) {
             logger.error(error);
-            if (error != "HTTPError: Not Found") {
-                logger.info("retrying...");
-                retry = true
-            }
-            logger.info("retrying...");
-            retry = true
+            logger.error(e.code)
+            // if (error != "HTTPError: Not Found") {
+            //     logger.info("retrying...");
+            //     retry = true
+            // }
+            // logger.info("retrying...");
+            // retry = true
         }
     } while (retry === true)
 
@@ -285,6 +294,7 @@ async function quoteSummary(ticker) {
 
         catch (e) {
             logger.error(e)
+            logger.error(e.code)
             logger.info("retrying...")
         }
         return results
@@ -323,6 +333,7 @@ async function getData(ticker) {
         }
         catch (e) {
             logger.error(e)
+            logger.error(e.code)
             logger.info("retrying...")
         }
         return results;

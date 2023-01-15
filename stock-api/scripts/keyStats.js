@@ -73,11 +73,10 @@ async function yahooFinanceSDK(ticker) {
   while (financeRes == null) {
 
     try {
-      let agent = { proxy: "http://scraperapi:3a2d1ce726317bca068416409b016741@proxy-server.scraperapi.com:8001" }
+      // let agent = { proxy: "http://scraperapi:3a2d1ce726317bca068416409b016741@proxy-server.scraperapi.com:8001" }
       financeRes = await yahooFinance.quote({
         symbol: ticker,
         modules: ['defaultKeyStatistics', 'summaryDetail', 'financialData'],
-        agent
       }, function (err, quotes) {
         if (err != null) {
           logger.error(err)
@@ -86,6 +85,7 @@ async function yahooFinanceSDK(ticker) {
       });
     } catch (error) {
       logger.error(error)
+      logger.error(e.code)
 
     }
     logger.info(`function yahooFinanceSDK took ${(performance.now() - yahooFinanceSDKStart).toFixed(3)}ms`);
@@ -157,6 +157,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
 
   } catch (error) {
     console.log(error)
+    logger.error(e.code)
     return balanceSheetRes
   }
 }
@@ -187,6 +188,7 @@ async function quoteSummary(ticker) {
 
     catch (e) {
       logger.error(e)
+      logger.error(e.code)
     }
     return results
   }
@@ -224,6 +226,7 @@ async function getData(ticker) {
     }
     catch (e) {
       logger.error(e)
+      logger.error(e.code)
     }
     return results;
   }
