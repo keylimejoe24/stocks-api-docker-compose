@@ -110,31 +110,31 @@ class ProxiedRequest {
         let response = null
         
         while (response === null) {
-            var randInt = getRandomInt(1, 5);
+            // var randInt = getRandomInt(1, 5);
             
-            if (randInt === 5) {
-                request = Fetcher.fetch(url,{
-                    skipTrackRequest: false,
-                    headers:{ ...headerGenerator.getHeaders() },      
-                    agent: new HttpsProxyAgent({
-                        keepAlive: false,
-                        rejectUnauthorized: false,
-                        keepAliveMsecs: 10,
-                        maxSockets: 256,
-                        maxFreeSockets: 256,
-                        scheduling: 'lifo',
-                        proxy: 'http://scraperapi:3a2d1ce726317bca068416409b016741@proxy-server.scraperapi.com:8001'
-                    }),           
+            // if (randInt === 5) {
+            //     request = Fetcher.fetch(url,{
+            //         skipTrackRequest: false,
+            //         headers:{ ...headerGenerator.getHeaders() },      
+            //         agent: new HttpsProxyAgent({
+            //             keepAlive: false,
+            //             rejectUnauthorized: false,
+            //             keepAliveMsecs: 10,
+            //             maxSockets: 256,
+            //             maxFreeSockets: 256,
+            //             scheduling: 'lifo',
+            //             proxy: 'http://scraperapi:3a2d1ce726317bca068416409b016741@proxy-server.scraperapi.com:8001'
+            //         }),           
 
-                })
+            //     })
                
-            } else {
-                request = Fetcher.fetch(url,{
-                    skipTrackRequest: false,
-                    headers:{ ...headerGenerator.getHeaders() },           
-                })
-            }
-            
+            // } else {
+               
+            // }
+            request = Fetcher.fetch(url,{
+                skipTrackRequest: false,
+                headers:{ ...headerGenerator.getHeaders() },           
+            })
             response = await request.then(function (resp) {
                 return resp
             }).catch(function (error) {

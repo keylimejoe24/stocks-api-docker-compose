@@ -141,15 +141,15 @@ async function getClosingHistories(ticker) {
         }
         catch (error) {
             logger.error(error);
-            if(error != "HTTPError: Not Found"){
+            if (error != "HTTPError: Not Found") {
                 logger.info("retrying...");
                 retry = true
-            }else if(error != "HTTPError: Forbidden"){
+            } else if (error != "HTTPError: Forbidden") {
                 logger.info("retrying...");
                 retry = true
             }
-          
-            
+
+
         }
     } while (retry === true)
 
@@ -172,10 +172,10 @@ async function getBalanceSheetHistory(ticker) {
         }
     } catch (error) {
         logger.error(error);
-        if(error != "HTTPError: Not Found"){
-                logger.info("retrying...");
-                retry = true
-            }
+        if (error != "HTTPError: Not Found") {
+            logger.info("retrying...");
+            retry = true
+        }
         logger.info("retrying...");
     }
 }
@@ -246,7 +246,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
         }
         catch (error) {
             logger.error(error);
-            if(error != "HTTPError: Not Found"){
+            if (error != "HTTPError: Not Found") {
                 logger.info("retrying...");
                 retry = true
             }
@@ -331,10 +331,10 @@ async function getData(ticker) {
 }
 
 
-const  batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
+const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
 
     await PromisePool.for(tickers).withConcurrency(2).process(async ticker => {
-        
+
         const start = performance.now();
         let keyStatsRes = await getData(ticker);
         let closingHistories = await getClosingHistories(ticker);
@@ -353,8 +353,8 @@ const  batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
         scrapeRepository.create(scrapeResult)
         let scrapeDuration = (performance.now() - start) / 1000
 
-        logger.info("batchFinished", { finishedTickers: [ticker],scrapeTime:scrapeDuration })
-        socketIO.emit("batchFinished", {finishedTickers: [ticker],scrapeTime:scrapeDuration });
+        logger.info("batchFinished", { finishedTickers: [ticker], scrapeTime: scrapeDuration })
+        socketIO.emit("batchFinished", { finishedTickers: [ticker], scrapeTime: scrapeDuration });
 
     })
 
