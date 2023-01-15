@@ -348,14 +348,14 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
 
         const start = performance.now();
         let keyStatsRes = await getData(ticker);
-        let closingHistories = await getClosingHistories(ticker);
+        // let closingHistories = await getClosingHistories(ticker);
         let balanceSheetStatements = await getBalanceSheetHistory(ticker);
 
         let scrapeResult = {
             id: uuid,
             ticker: ticker,
             ...keyStatsRes,
-            ...closingHistories,
+            // ...closingHistories,
             ...balanceSheetStatements,
             ...treasuryStatsRes
         }
