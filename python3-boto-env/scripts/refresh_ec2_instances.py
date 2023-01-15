@@ -180,12 +180,12 @@ wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health", 
 
 commands = [
     "sudo su",
-    "cd /home/ssm-user",
+    "cd /home/ssm-user/stocks-api-docker-compose",
     # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
-    "cd stocks-api-docker-compose",
+    
     "docker-compose down",
     "docker system prune --filter  'until=5h' -f"
-    "git pull --no-edit origin main",
+    "git pull",
     # "docker login --username joja5627 --password-stdin < my_password.txt",  
     "DB_HOST={} docker-compose up --build -d scraping-server".format(master_instances[0]["public_ip_address"])
 ]
