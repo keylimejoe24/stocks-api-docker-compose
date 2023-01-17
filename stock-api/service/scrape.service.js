@@ -138,7 +138,7 @@ async function getClosingHistories(ticker) {
         }
     }
     catch (error) {
-        logger.error(error);
+        // logger.error(error);
         logger.error(e.code)
         // if (error != "HTTPError: Not Found") {
         //     logger.info("retrying...");

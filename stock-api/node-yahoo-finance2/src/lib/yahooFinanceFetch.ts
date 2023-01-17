@@ -5,7 +5,6 @@ import type { QueueOptions } from "./queue.js";
 
 import errors from "./errors.js";
 import pkg from "../../package.json";
-import {HttpsProxyAgent} from 'hpagent';
 
 const userAgent = `${pkg.name}/${pkg.version} (+${pkg.repository})`;
 
@@ -82,24 +81,12 @@ async function yahooFinanceFetch(
   /* istanbul ignore next */
   // no need to force coverage on real network request.
   const fetchFunc = moduleOpts.devel ? await fetchDevel() : fetch;
-  
-  let fetchOptions =  {
+
+  const fetchOptions = {
     "User-Agent": userAgent,
     ...moduleOpts.fetchOptions,
     devel: moduleOpts.devel,
-    agent: new HttpsProxyAgent({
-      keepAlive: false,
-      rejectUnauthorized: false,
-      keepAliveMsecs: 10,
-      maxSockets: 256,
-      maxFreeSockets: 256,
-      scheduling: 'lifo',
-      proxy: 'http://scraperapi:3a2d1ce726317bca068416409b016741@proxy-server.scraperapi.com:8001'
-  })
   };
-
-    
-  
 
   // used in moduleExec.ts
   if (func === "csv") func = "text";

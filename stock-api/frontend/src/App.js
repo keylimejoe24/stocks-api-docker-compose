@@ -76,6 +76,7 @@ export default function App() {
         setCurrentlyCompletedTickers([...data.finishedTickers])
       });
       socket.on("complete", (data) => {
+        console.log("complete")
         setCurrentScrapeId(null)
         setCurrentlyCompletedTickers([])
         setCompletedTickers([])
