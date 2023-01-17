@@ -25,7 +25,7 @@ export default function CircularProgressWithLabel({ completedTickers, filteredTi
       setProgress(100)
     }
   }, [completedTickers, filteredTickers]);
-
+  console.log(averageScrapeTime)
   return (
     <Box sx={{ width: '100%' }}>
       <div>Running New Scrape </div>

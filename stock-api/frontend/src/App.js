@@ -71,7 +71,7 @@ export default function App() {
   useEffect(() => {
     sockets.map(socket => {
       socket.on("batchFinished", (data) => {
-       
+        console.log(data.scrapeTime)
         setScrapeTime(data.scrapeTime)
         setCurrentlyCompletedTickers([...data.finishedTickers])
       });
