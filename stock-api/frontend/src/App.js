@@ -71,7 +71,6 @@ export default function App() {
   useEffect(() => {
     sockets.map(socket => {
       socket.on("batchFinished", (data) => {
-        console.log(data.scrapeTime)
         setScrapeTime(data.scrapeTime)
         setCurrentlyCompletedTickers([...data.finishedTickers])
       });
@@ -96,8 +95,12 @@ export default function App() {
 
   useEffect(() => {
     if(completedTickers.length != 0){
+      console.log(parseFloat((scrapeTime + averageScrapeTime) / completedTickers.length).toFixed(4))
       console.log((scrapeTime + averageScrapeTime) / completedTickers.length)
-      setAverageScrapeTime(Math.round((scrapeTime + averageScrapeTime) / completedTickers.length))
+      let averageScapeTime = parseFloat((scrapeTime + averageScrapeTime) / completedTickers.length).toFixed(4)
+      if(!_.isNil(averageScapeTime)){
+        setAverageScrapeTime(averageScapeTime)
+      }
     }
   }, [scrapeTime]);
 
