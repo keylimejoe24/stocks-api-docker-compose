@@ -95,8 +95,10 @@ export default function App() {
 
   useEffect(() => {
     if(completedTickers.length != 0){
-      console.log(parseFloat((scrapeTime + averageScrapeTime) / completedTickers.length).toFixed(4))
-      console.log((scrapeTime + averageScrapeTime) / completedTickers.length)
+      console.log(scrapeTime)
+      console.log(averageScrapeTime)
+      // console.log(parseFloat((scrapeTime + averageScrapeTime) / completedTickers.length).toFixed(4))
+      // console.log((scrapeTime + averageScrapeTime) / completedTickers.length)
       let averageScapeTime = parseFloat((scrapeTime + averageScrapeTime) / completedTickers.length).toFixed(4)
       if(!_.isNil(averageScapeTime)){
         setAverageScrapeTime(averageScapeTime)
