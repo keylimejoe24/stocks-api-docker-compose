@@ -116,61 +116,28 @@ function removeFootnotes(data) {
 
 
 async function getClosingHistories(ticker) {
-    let retry = false
-    do {
-        try {
-            const today = new Date()
-            const yesterday = new Date(today)
-            const tenDaysAgo = new Date(today)
-
-            tenDaysAgo.setDate(yesterday.getDate() - 10)
-            let yesterdayISOFormat = yesterday.toISOString().split("T")[0]
-            let tenDaysAgoISOFormat = tenDaysAgo.toISOString().split("T")[0]
-
-            const queryOptions = { period1: tenDaysAgoISOFormat, period2: yesterdayISOFormat };
-            let ProxiedRequestStart = performance.now();
-
-            const result = await yahooFinance2.historical(ticker, queryOptions);
-            logger.info(`function  yahooFinance2.historical took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
-
-            return {
-                "closingHistories": result.slice(0, 4).map(q => {
-                    return q.close
-                })
-            }
-        }
-        catch (error) {
-            logger.error(error);
-            logger.error(e.code)
-            // if (error != "HTTPError: Not Found") {
-            //     logger.info("retrying...");
-            //     retry = true
-            // }
-            // logger.info("retrying...");
-            // retry = true
-
-
-        }
-    } while (retry === true)
-
-
-}
-
-async function getBalanceSheetHistory(ticker) {
     try {
-        let res = null
-        while (res === null) {
-            let ProxiedRequestStart = performance.now();
-            let res = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory"] });
-            if (res === null) {
+        const today = new Date()
+        const yesterday = new Date(today)
+        const tenDaysAgo = new Date(today)
 
-                logger.info(`retrying yahooFinance2.quoteSummary(${ticker}, { modules: ["balanceSheetHistory"] })`);
-            }
-            logger.info(`function yahooFinance2.quoteSummary took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
+        tenDaysAgo.setDate(yesterday.getDate() - 10)
+        let yesterdayISOFormat = yesterday.toISOString().split("T")[0]
+        let tenDaysAgoISOFormat = tenDaysAgo.toISOString().split("T")[0]
 
-            return res.balanceSheetHistory.balanceSheetStatements[0]
+        const queryOptions = { period1: tenDaysAgoISOFormat, period2: yesterdayISOFormat };
+        let ProxiedRequestStart = performance.now();
+
+        const result = await yahooFinance2.historical(ticker, queryOptions);
+        logger.info(`function  yahooFinance2.historical took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
+
+        return {
+            "closingHistories": result.slice(0, 4).map(q => {
+                return q.close
+            })
         }
-    } catch (error) {
+    }
+    catch (error) {
         logger.error(error);
         logger.error(e.code)
         // if (error != "HTTPError: Not Found") {
@@ -179,7 +146,44 @@ async function getBalanceSheetHistory(ticker) {
         // }
         // logger.info("retrying...");
         // retry = true
+
+
     }
+}
+
+async function getBalanceSheetHistory(ticker) {
+    let ProxiedRequestStart = performance.now();
+    let res = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory"] });
+    if (res === null) {
+
+        logger.info(`retrying yahooFinance2.quoteSummary(${ticker}, { modules: ["balanceSheetHistory"] })`);
+    }
+    logger.info(`function yahooFinance2.quoteSummary took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
+
+    return res.balanceSheetHistory.balanceSheetStatements[0]
+    // try {
+    //     let res = null
+    //     while (res === null) {
+    //         let ProxiedRequestStart = performance.now();
+    //         let res = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory"] });
+    //         if (res === null) {
+
+    //             logger.info(`retrying yahooFinance2.quoteSummary(${ticker}, { modules: ["balanceSheetHistory"] })`);
+    //         }
+    //         logger.info(`function yahooFinance2.quoteSummary took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
+
+    //         return res.balanceSheetHistory.balanceSheetStatements[0]
+    //     }
+    // } catch (error) {
+    //     logger.error(error);
+    //     logger.error(e.code)
+    //     // if (error != "HTTPError: Not Found") {
+    //     //     logger.info("retrying...");
+    //     //     retry = true
+    //     // }
+    //     // logger.info("retrying...");
+    //     // retry = true
+    // }
 }
 async function quoteSummary(ticker) {
     let results = null
@@ -348,15 +352,15 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
 
         const start = performance.now();
         let keyStatsRes = await getData(ticker);
-        // let closingHistories = await getClosingHistories(ticker);
-        // let balanceSheetStatements = await getBalanceSheetHistory(ticker);
+        let closingHistories = await getClosingHistories(ticker);
+        let balanceSheetStatements = await getBalanceSheetHistory(ticker);
 
         let scrapeResult = {
             id: uuid,
             ticker: ticker,
             ...keyStatsRes,
-            // ...closingHistories,
-            // ...balanceSheetStatements,
+            ...closingHistories,
+            ...balanceSheetStatements,
             ...treasuryStatsRes
         }
         logger.info("scrapeResult", scrapeResult)
