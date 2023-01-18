@@ -431,16 +431,18 @@ class ScrapeService {
             }
 
             totalResults[r.symbol] = tickerCalculationResults
-            summaryRes.push({
-                ticker: r.symbol,
-                weight: totalWeight
-            })
+            if(!_.isNil(totalWeight)){
+                summaryRes.push({
+                    ticker: r.symbol,
+                    weight: totalWeight
+                })
+            }
+           
 
         })
 
 
         let filteredResWeightNan = summaryRes.filter(x => { return !_.isNil(x.weight)});
-
         let sortedAndFilteredRes = filteredResWeightNan.sort((a, b) => parseFloat(b.weight) - parseFloat(a.weight));
         let topTenResults = sortedAndFilteredRes.slice(0, 10)
         let bottomTenResults = sortedAndFilteredRes.slice(sortedAndFilteredRes.length - 10, sortedAndFilteredRes.length)
