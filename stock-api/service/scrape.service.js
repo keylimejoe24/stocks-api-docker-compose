@@ -401,7 +401,7 @@ class ScrapeService {
                 if (typeof calc != 'undefined') {
                     if (calc.hasOwnProperty('weight')) {
                         if (typeof calc.weight === 'number') {
-                            if(!_.isNaN(calc.weight)){
+                            if(!_.isNull(calc.weight) && !_.isNil(calc.weight)){
                                 logger.info(r.symbol,calc.weight )
                                 totalWeight += calc.weight  
                             }
