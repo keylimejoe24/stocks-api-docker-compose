@@ -402,8 +402,6 @@ class ScrapeService {
                     if (calc.hasOwnProperty('weight')) {
                         if (typeof calc.weight === 'number') {
                             if(!_.isNull(calc.weight) && !_.isNil(calc.weight) &&  calc.weight != null){
-                                logger.info(r.symbol,calc.weight )
-                                logger.info(typeof calc.weight )
                                 totalWeight += calc.weight  
                             }
                             
@@ -443,11 +441,12 @@ class ScrapeService {
            
 
         })
-        let ticker = _.find(summaryRes,{ticker:"LFMPD"})
-        logger.info(JSON.stringify(ticker))
-        logger.info("summaryRes.length",summaryRes.length)
+        summaryRes.forEach(r => {
+            logger.info(JSON.stringify(r))
+            logger.info(typeof r.weight)
+        })
+       
         let filteredResWeightNan = _.reject(summaryRes, i => isNaN(i.weight) === true);
-        logger.info("filteredResWeightNan.length",filteredResWeightNan.length)
         let sortedAndFilteredRes = filteredResWeightNan.sort((a, b) => parseFloat(b.weight) - parseFloat(a.weight));
         let topTenResults = sortedAndFilteredRes.slice(0, 10)
         let bottomTenResults = sortedAndFilteredRes.slice(sortedAndFilteredRes.length - 10, sortedAndFilteredRes.length)

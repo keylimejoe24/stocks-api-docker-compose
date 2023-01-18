@@ -42,8 +42,11 @@ const dividendRateComparison = (ticker) => {
     if (_.has(missingFieldsResObj, "description")) {
         return missingFieldsResObj
     }
-    let percentSwing = ((parseFloat(ticker["trailingAnnualDividendRate"]) - parseFloat(ticker["forwardAnnualDividendRate"])) / parseFloat(ticker["trailingAnnualDividendRate"]))
-
+    logger.info(parseFloat(ticker["trailingAnnualDividendRate"]))
+    logger.info(parseFloat(ticker["forwardAnnualDividendRate"]))
+    let forwardAndTrailingDifference = parseFloat(ticker["trailingAnnualDividendRate"]) - parseFloat(ticker["forwardAnnualDividendRate"])
+    let percentSwing = parseFloat(forwardAndTrailingDifference / parseFloat(ticker["trailingAnnualDividendRate"]))
+    logger.info(percentSwing)
     if ((parseFloat(ticker["forwardAnnualDividendRate"]) > parseFloat(ticker["trailingAnnualDividendRate"]))) {
         return {
             "Trailing Annual Dividend Rate": ticker["forwardAnnualDividendRate"],
