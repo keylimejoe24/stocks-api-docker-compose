@@ -441,10 +441,10 @@ class ScrapeService {
            
 
         })
-        summaryRes.forEach(r => {
-            logger.info(JSON.stringify(r))
-            logger.info(typeof r.weight)
-        })
+        // summaryRes.forEach(r => {
+        //     logger.info(JSON.stringify(r))
+        //     logger.info(typeof r.weight)
+        // })
        
         let filteredResWeightNan = _.reject(summaryRes, i => isNaN(i.weight) === true);
         let sortedAndFilteredRes = filteredResWeightNan.sort((a, b) => parseFloat(b.weight) - parseFloat(a.weight));
