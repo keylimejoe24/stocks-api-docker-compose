@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 const Row = props => {
     const { data, index, style } = props;
     const item = data.results[index];
-
+    const totalWeight = data.results["Total Weight"]
     let entries = Object.entries(item)
 
 

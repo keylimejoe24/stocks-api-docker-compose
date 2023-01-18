@@ -410,6 +410,7 @@ class ScrapeService {
                 }
             }
             let tickerCalculationResults = {
+                "Total Weight": totalWeight,
                 "1.) Dividend Rate Comparison": dividendRateComparisonRes,
                 "2.) Peg Ratio and EPS": pegRatioAndEPSRes,
                 "3.) Beta Swings": betaSwingsRes,
@@ -430,7 +431,7 @@ class ScrapeService {
                 "17.) 10 Year Treasury Rate Increasing or Decreasing Quarterly": tenYearTreasuryRateQuarterlyRes,
                 "18.) Money Supply": m1SeasonallyAdjustedRes,
                 "19.) Average Wage Growth": averageWageGrowthRes,
-                "Total Weight": totalWeight
+                
             }
 
             totalResults[r.symbol] = tickerCalculationResults
