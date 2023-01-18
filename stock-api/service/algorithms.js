@@ -43,9 +43,10 @@ const dividendRateComparison = (ticker) => {
         return missingFieldsResObj
     }
     logger.info(JSON.stringify(ticker))
-    logger.info(parseFloat(ticker["trailingAnnualDividendRate"]))
-    logger.info(parseFloat(ticker["forwardAnnualDividendRate"]))
+    logger.info("trailingAnnualDividendRate",parseFloat(ticker["trailingAnnualDividendRate"]))
+    logger.info("forwardAnnualDividendRate",parseFloat(ticker["forwardAnnualDividendRate"]))
     let forwardAndTrailingDifference = parseFloat(ticker["trailingAnnualDividendRate"]) - parseFloat(ticker["forwardAnnualDividendRate"])
+    logger.info("forwardAnnualDividendRate",parseFloat(ticker["forwardAnnualDividendRate"]))
     let percentSwing = parseFloat(forwardAndTrailingDifference / parseFloat(ticker["trailingAnnualDividendRate"]))
     logger.info(percentSwing)
     if ((parseFloat(ticker["forwardAnnualDividendRate"]) > parseFloat(ticker["trailingAnnualDividendRate"]))) {
