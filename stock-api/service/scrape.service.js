@@ -441,7 +441,7 @@ class ScrapeService {
            
 
         })
-        let ticker = _.get(summaryRes,{"weight":"LFMPD"})
+        let ticker = _.find(summaryRes,{weight:"LFMPD"})
         logger.info(JSON.stringify(ticker))
         logger.info("summaryRes.length",summaryRes.length)
         let filteredResWeightNan = summaryRes.filter(x => { return !_.isNaN(x.weight)});
