@@ -116,65 +116,54 @@ function removeFootnotes(data) {
 
 
 async function getClosingHistories(ticker) {
-    try {
-        const today = new Date()
-        const yesterday = new Date(today)
-        const tenDaysAgo = new Date(today)
+    let result = null
+    while (result === null) {
+        try {
+            const today = new Date()
+            const yesterday = new Date(today)
+            const tenDaysAgo = new Date(today)
 
-        tenDaysAgo.setDate(yesterday.getDate() - 10)
-        let yesterdayISOFormat = yesterday.toISOString().split("T")[0]
-        let tenDaysAgoISOFormat = tenDaysAgo.toISOString().split("T")[0]
+            tenDaysAgo.setDate(yesterday.getDate() - 10)
+            let yesterdayISOFormat = yesterday.toISOString().split("T")[0]
+            let tenDaysAgoISOFormat = tenDaysAgo.toISOString().split("T")[0]
 
-        const queryOptions = { period1: tenDaysAgoISOFormat, period2: yesterdayISOFormat };
-        let ProxiedRequestStart = performance.now();
+            const queryOptions = { period1: tenDaysAgoISOFormat, period2: yesterdayISOFormat };
+            let ProxiedRequestStart = performance.now();
 
-        const result = await yahooFinance2.historical(ticker, queryOptions);
-        logger.info(`function  yahooFinance2.historical took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
+            const result = await yahooFinance2.historical(ticker, queryOptions);
+            logger.info(`function  yahooFinance2.historical took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
 
-        return {
-            "closingHistories": result.slice(0, 4).map(q => {
-                return q.close
-            })
+            return {
+                "closingHistories": result.slice(0, 4).map(q => {
+                    return q.close
+                })
+            }
+        }
+        catch (error) {
+            logger.error(error);
         }
     }
-    catch (error) {
-        logger.error(error);
-    }
+
 }
 
 async function getBalanceSheetHistory(ticker) {
-    let ProxiedRequestStart = performance.now();
-    let res = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory"] });
-    if (res === null) {
+    let result = null
+    while (result === null) {
+        try {
+            let ProxiedRequestStart = performance.now();
+            let result = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory"] });
+            if (result === null) {
 
-        logger.info(`retrying yahooFinance2.quoteSummary(${ticker}, { modules: ["balanceSheetHistory"] })`);
+                logger.info(`retrying yahooFinance2.quoteSummary(${ticker}, { modules: ["balanceSheetHistory"] })`);
+            }
+            logger.info(`function yahooFinance2.quoteSummary took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
+
+            return result.balanceSheetHistory.balanceSheetStatements[0]
+        } catch (e) {
+            logger.error(e);
+        }
+
     }
-    logger.info(`function yahooFinance2.quoteSummary took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
-
-    return res.balanceSheetHistory.balanceSheetStatements[0]
-    // try {
-    //     let res = null
-    //     while (res === null) {
-    //         let ProxiedRequestStart = performance.now();
-    //         let res = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory"] });
-    //         if (res === null) {
-
-    //             logger.info(`retrying yahooFinance2.quoteSummary(${ticker}, { modules: ["balanceSheetHistory"] })`);
-    //         }
-    //         logger.info(`function yahooFinance2.quoteSummary took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
-
-    //         return res.balanceSheetHistory.balanceSheetStatements[0]
-    //     }
-    // } catch (error) {
-    //     logger.error(error);
-    //     logger.error(e.code)
-    //     // if (error != "HTTPError: Not Found") {
-    //     //     logger.info("retrying...");
-    //     //     retry = true
-    //     // }
-    //     // logger.info("retrying...");
-    //     // retry = true
-    // }
 }
 async function quoteSummary(ticker) {
     let results = null
@@ -203,12 +192,7 @@ async function quoteSummary(ticker) {
         catch (e) {
             logger.error(error);
             logger.error(e.code)
-            // if (error != "HTTPError: Not Found") {
-            //     logger.info("retrying...");
-            //     retry = true
-            // }
-            // logger.info("retrying...");
-            // retry = true
+
         }
         return results
     }
@@ -250,12 +234,6 @@ async function getAssetsSharesAndLiabilities(ticker) {
         catch (error) {
             logger.error(error);
             logger.error(e.code)
-            // if (error != "HTTPError: Not Found") {
-            //     logger.info("retrying...");
-            //     retry = true
-            // }
-            // logger.info("retrying...");
-            // retry = true
         }
     } while (retry === true)
 
@@ -339,7 +317,7 @@ async function getData(ticker) {
 
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
 
-    await PromisePool.for(tickers).withConcurrency(2).process(async ticker => {
+    await PromisePool.for(tickers).withConcurrency(4).process(async ticker => {
 
         const start = performance.now();
         let keyStatsRes = await getData(ticker);
@@ -461,8 +439,7 @@ class ScrapeService {
         })
 
 
-        let filteredResWeightNan = summaryRes.filter(x => { return x.weight !== null }
-        );
+        let filteredResWeightNan = summaryRes.filter(x => { return !_.isNil(x.weight)});
 
         let sortedAndFilteredRes = filteredResWeightNan.sort((a, b) => parseFloat(b.weight) - parseFloat(a.weight));
         let topTenResults = sortedAndFilteredRes.slice(0, 10)

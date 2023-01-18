@@ -83,7 +83,6 @@ export default function TickerList({ title, results, testResultsClickHandler, ma
         setMarketCapFilter(event.target.value);
         setFilteredTickers(filteredByMarketCap);
     };
-
     return (
         <Box
             sx={{ height: 500, maxWidth: maxWidth, bgcolor: 'background.paper' }}
@@ -120,7 +119,7 @@ export default function TickerList({ title, results, testResultsClickHandler, ma
                 {Row}
             </FixedSizeList>
             <Stack direction="row">
-                {!_.isEmpty(completedTickers) && <ProgressBar averageScrapeTime={averageScrapeTime} currentScrapeId={currentScrapeId} completedTickers={completedTickers} filteredTickers={filteredTickers} />}
+                {!_.isEmpty(currentScrapeId) && <ProgressBar averageScrapeTime={averageScrapeTime} currentScrapeId={currentScrapeId} completedTickers={completedTickers} filteredTickers={filteredTickers} />}
             </Stack>
         </Box>
     );

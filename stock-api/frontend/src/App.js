@@ -64,10 +64,6 @@ export default function App() {
   const [scrapeTime, setScrapeTime] = React.useState(0);
   const [averageScrapeTime, setAverageScrapeTime] = React.useState(0);
 
-
-
-
-
   useEffect(() => {
     sockets.map(socket => {
       socket.on("batchFinished", (data) => {
@@ -95,11 +91,8 @@ export default function App() {
 
   useEffect(() => {
     if(completedTickers.length != 0){
-      console.log(scrapeTime)
-      console.log(averageScrapeTime)
-      console.log(parseFloat((parseFloat(scrapeTime) + averageScrapeTime) / completedTickers.length).toFixed(2))
-      console.log(completedTickers.length)
-      let averageScapeTime = parseFloat((scrapeTime + averageScrapeTime) / completedTickers.length).toFixed(2)
+      let summedScrapeTimes = parseFloat(scrapeTime + averageScrapeTime).toFixed(2)
+      let averageScapeTime = parseFloat( summedScrapeTimes / completedTickers.length).toFixed(2)
       if(!_.isNaN(averageScapeTime)){
         setAverageScrapeTime(averageScapeTime)
       }

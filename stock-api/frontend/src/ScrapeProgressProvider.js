@@ -9,11 +9,11 @@ const ScrapeProgressProvider = ({ children }) => {
     const [completedTickers, setCompletedTickers] = React.useState([]);
     const [currentlyCompletedTickers, setCurrentlyCompletedTickers] = React.useState([]);
 
-    useEffect(() => {
-        console.log(currentlyCompletedTickers)
-        console.log(completedTickers)
+  //   useEffect(() => {
+  //       console.log(currentlyCompletedTickers)
+  //       console.log(completedTickers)
    
-  }, [currentlyCompletedTickers,completedTickers]);
+  // }, [currentlyCompletedTickers,completedTickers]);
     
   return (
     <ScrapeProgressContext.Provider value={{currentScrapeId, setCurrentScrapeId,completedTickers, setCompletedTickers,currentlyCompletedTickers, setCurrentlyCompletedTickers }}>
