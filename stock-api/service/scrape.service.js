@@ -445,7 +445,7 @@ class ScrapeService {
         let ticker = _.find(summaryRes,{ticker:"LFMPD"})
         logger.info(JSON.stringify(ticker))
         logger.info("summaryRes.length",summaryRes.length)
-        let filteredResWeightNan = summaryRes.filter(x => { return !_.isNaN(x.weight)});
+        let filteredResWeightNan = _.reject(summaryRes, i => _.isNil(i?.weight));
         logger.info("filteredResWeightNan.length",filteredResWeightNan.length)
         let sortedAndFilteredRes = filteredResWeightNan.sort((a, b) => parseFloat(b.weight) - parseFloat(a.weight));
         let topTenResults = sortedAndFilteredRes.slice(0, 10)
