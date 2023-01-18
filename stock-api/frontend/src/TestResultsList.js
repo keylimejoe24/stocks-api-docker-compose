@@ -12,19 +12,31 @@ import { v4 as uuidv4 } from 'uuid';
 const Row = props => {
     const { data, index, style } = props;
     const item = data.results[index];
-    const totalWeight = data.results["Total Weight"]
     let entries = Object.entries(item)
-
 
     return (
         <ListItem style={style} key={index} component="div" >
 
             <ListItemButton onClick={() => data.testResultsClickHandler(item.ticker)}>
                 <ListItemText key={uuidv4()}>
-                    <div style={{ fontSize: 12, fontWeight: "bold" }}>{entries[0][0]}</div>
+                    
+                    {index === 0 && 
+                    <>
+                     <span style={{ fontSize: 12, fontWeight: "bold" }}>{entries[0][0] + ": "}</span>
+                     <span style={{ fontSize: 12 }}>{entries[0][1]}</span> 
+                    </>
+                     }
+                   
+                    {index != 0 && 
+                    <>
+                        <div style={{ fontSize: 12, fontWeight: "bold" }}>{entries[0][0]}</div>
                     <pre style={{ fontSize: 8 }}>{Object.entries(entries[0][1]).map(([key, value]) => (
                         `${key}: ${value}\n`
                     ))}</pre>
+                    </>
+                     }
+
+                  
 
                 </ListItemText>
 
