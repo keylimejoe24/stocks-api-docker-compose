@@ -42,14 +42,16 @@ const dividendRateComparison = (ticker) => {
     if (_.has(missingFieldsResObj, "description")) {
         return missingFieldsResObj
     }
-    logger.info(JSON.stringify(ticker))
-    logger.info("trailingAnnualDividendRate",parseFloat(ticker["trailingAnnualDividendRate"]))
-    logger.info("forwardAnnualDividendRate",parseFloat(ticker["forwardAnnualDividendRate"]))
-    let forwardAndTrailingDifference = parseFloat(ticker["trailingAnnualDividendRate"]) - parseFloat(ticker["forwardAnnualDividendRate"])
-    logger.info("forwardAnnualDividendRate",parseFloat(ticker["forwardAnnualDividendRate"]))
-    let percentSwing = parseFloat(forwardAndTrailingDifference / parseFloat(ticker["trailingAnnualDividendRate"]))
-    logger.info(percentSwing)
+    
+    
+    let percentSwing  = 0
     if ((parseFloat(ticker["forwardAnnualDividendRate"]) > parseFloat(ticker["trailingAnnualDividendRate"]))) {
+
+        if(parseFloat(ticker["trailingAnnualDividendRate"]) !=0){
+            let forwardAndTrailingDifference = parseFloat(ticker["trailingAnnualDividendRate"]) - parseFloat(ticker["forwardAnnualDividendRate"])
+            percentSwing = parseFloat(forwardAndTrailingDifference / parseFloat(ticker["trailingAnnualDividendRate"]))
+        }
+        
         return {
             "Trailing Annual Dividend Rate": ticker["forwardAnnualDividendRate"],
             "Forward Annual Dividend Rate": ticker["trailingAnnualDividendRate"],
@@ -59,6 +61,11 @@ const dividendRateComparison = (ticker) => {
             weight: 1 + percentSwing
         }
     } else if ((parseFloat(ticker["forwardAnnualDividendRate"]) < parseFloat(ticker["trailingAnnualDividendRate"]))) {
+        if(parseFloat(ticker["trailingAnnualDividendRate"]) !=0){
+            
+            let forwardAndTrailingDifference = parseFloat(ticker["trailingAnnualDividendRate"]) - parseFloat(ticker["forwardAnnualDividendRate"])
+            percentSwing = parseFloat(forwardAndTrailingDifference / parseFloat(ticker["trailingAnnualDividendRate"]))
+        }
         return {
             "Trailing Annual Dividend Rate": ticker["forwardAnnualDividendRate"],
             "Forward Annual Dividend Rate": ticker["trailingAnnualDividendRate"],
