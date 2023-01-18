@@ -401,7 +401,10 @@ class ScrapeService {
                 if (typeof calc != 'undefined') {
                     if (calc.hasOwnProperty('weight')) {
                         if (typeof calc.weight === 'number') {
-                            totalWeight += calc.weight
+                            if(!_.isNaN(calc.weight)){
+                                totalWeight += calc.weight  
+                            }
+                            
                         }
                     }
                 }
@@ -438,7 +441,8 @@ class ScrapeService {
            
 
         })
-
+        let ticker = _.get(summaryRes,{"weight":"LFMPD"})
+        logger.info(JSON.stringify(ticker))
         logger.info("summaryRes.length",summaryRes.length)
         let filteredResWeightNan = summaryRes.filter(x => { return !_.isNaN(x.weight)});
         logger.info("filteredResWeightNan.length",filteredResWeightNan.length)
