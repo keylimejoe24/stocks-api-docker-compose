@@ -3,7 +3,7 @@ import boto3
 ec2_resource = boto3.resource('ec2')
 ec2_client = boto3.client('ec2')
 
-version = "c3214c7b-a638-4fb5-a705-1a9173736b97"
+version = "86f5efea-e061-4b33-b71d-ca443f39e619"
 
 
 scrape_instance_filter = [{
