@@ -20,14 +20,14 @@ import { ScrapeProgressContext } from "./ScrapeProgressProvider";
 const sockets = []
 const scrape_urls = []
 
-socketIOConfig.map(url => {
-  scrape_urls.push(`http://${url}/api/scrape/run`)
-  const newSocket = socketIO.connect(url);
+// socketIOConfig.map(url => {
+//   scrape_urls.push(`http://${url}/api/scrape/run`)
+//   const newSocket = socketIO.connect(url);
 
-  sockets.push(newSocket)
-})
+//   sockets.push(newSocket)
+// })
 
-const MASTER_IP = "3.235.172.146"
+const MASTER_IP = "3.238.202.60"
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fafafa',
   ...theme.typography.body2,
@@ -65,25 +65,25 @@ export default function App() {
   const [scrapeTime, setScrapeTime] = React.useState(0);
   const [averageScrapeTime, setAverageScrapeTime] = React.useState(0);
 
-  useEffect(() => {
-    sockets.map(socket => {
-      socket.on("batchFinished", (data) => {
-        setScrapeTime(data.scrapeTime)
-        setCurrentlyCompletedTickers([...data.finishedTickers])
-      });
-      socket.on("complete", (data) => {
-        console.log("complete")
-        setCurrentScrapeId(null)
-        setCurrentlyCompletedTickers([])
-        setCompletedTickers([])
-      });
-      return () => {
-        socket.off('connect');
-        socket.off('batchFinished');
-      };
-    })
+  // useEffect(() => {
+  //   sockets.map(socket => {
+  //     socket.on("batchFinished", (data) => {
+  //       setScrapeTime(data.scrapeTime)
+  //       setCurrentlyCompletedTickers([...data.finishedTickers])
+  //     });
+  //     socket.on("complete", (data) => {
+  //       console.log("complete")
+  //       setCurrentScrapeId(null)
+  //       setCurrentlyCompletedTickers([])
+  //       setCompletedTickers([])
+  //     });
+  //     return () => {
+  //       socket.off('connect');
+  //       socket.off('batchFinished');
+  //     };
+  //   })
 
-  }, []);
+  // }, []);
 
   useEffect(() => {
     setCompletedTickers([...completedTickers, ...currentlyCompletedTickers]);
