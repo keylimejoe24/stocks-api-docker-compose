@@ -48,11 +48,13 @@ const Row = props => {
 
 export default function TickerList({ title, results, testResultsClickHandler, maxWidth, scrapeStartClickHandler, tickerFilter, setTickerFilter, marketCapFilter, setMarketCapFilter, filteredTickers, setFilteredTickers, currentScrapeId, completedTickers,averageScrapeTime }) {
 
-
+    
     useEffect(() => {
-        let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) <= parseFloat(marketCapFilter)).map(filteredTicker => {
+        let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) >= parseFloat(marketCapFilter)).map(filteredTicker => {
             return filteredTicker
         })
+        // console.log(filteredByMarketCap)
+        
         setFilteredTickers(filteredByMarketCap);
     }, [results]);
 
@@ -77,7 +79,7 @@ export default function TickerList({ title, results, testResultsClickHandler, ma
 
     const marketCapFilterChangeHandler = event => {
 
-        let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) <= parseFloat(event.target.value)).map(filteredTicker => {
+        let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) >= parseFloat(event.target.value)).map(filteredTicker => {
             return filteredTicker
         })
         setMarketCapFilter(event.target.value);

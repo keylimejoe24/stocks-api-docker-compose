@@ -59,7 +59,8 @@ export default function App() {
   const [tickersResponse, setTickersResponse] = useState(null);
   const [testResults, setTestResults] = useState(null);
   const [tickerFilter, setTickerFilter] = React.useState("");
-  const [marketCapFilter, setMarketCapFilter] = React.useState("5000000");
+  
+  const [marketCapFilter, setMarketCapFilter] = React.useState("100000000000");
   const [filteredTickers, setFilteredTickers] = React.useState([]);
   const [scrapeTime, setScrapeTime] = React.useState(0);
   const [averageScrapeTime, setAverageScrapeTime] = React.useState(0);
