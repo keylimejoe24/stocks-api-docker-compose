@@ -282,7 +282,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
                         balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 2].reportedValue.raw
                     }
                     if (quarterlySharesIssued[quarterlySharesIssued.length - 1] != null) {
-                        balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 1].reportedValue.raw
+                        balanceSheetRes['currentlyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 1].reportedValue.raw
                     }
                 }
                 if (quarterlyCurrentLiabilities != null) {
@@ -470,16 +470,6 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
             ...treasuryStatsRes,
             ...quoteRes
         }
-
-        logger.info(scrapeResult["revenueGrowth"])
-        logger.info(scrapeResult["earningsGrowth"])
-        logger.info(scrapeResult["averageVolume"])
-        logger.info(scrapeResult["fiftyTwoWeekLow"])
-        logger.info(scrapeResult["fiftyTwoWeekHigh"])
-        logger.info(scrapeResult["fiftyDayAverage"])
-        logger.info(scrapeResult["twoHundredDayAverage"])
-        logger.info(scrapeResult["trailingPE"])
-        logger.info(scrapeResult["forwardPE"])
 
         logger.info("scrapeResult", scrapeResult)
 
