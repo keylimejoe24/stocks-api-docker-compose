@@ -267,6 +267,13 @@ async function getAssetsSharesAndLiabilities(ticker) {
             logger.info(quarterlyCurrentLiabilities)
             logger.info(quarterlyCurrentAssets)
 
+            if(retryCount === 10){
+                balanceSheetRes['previouslyIssuedShares'] = undefined
+                balanceSheetRes['currentlyIssuedShares'] = undefined
+                balanceSheetRes['currentLiabilities'] = undefined
+                balanceSheetRes['currentAssets'] = undefined
+            }
+
             if (!_.isNil(error) ) {
                 logger.info(error)
                 let sleepFor = retryCount * 20000
