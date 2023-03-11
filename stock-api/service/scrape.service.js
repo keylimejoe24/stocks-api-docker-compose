@@ -272,7 +272,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
             }
 
             if (_.isNil(quarterlySharesIssued) && _.isNil(quarterlyCurrentLiabilities) && _.isNil(quarterlyCurrentAssets)  ) {
-                logger.info(error)
+                
                 let sleepFor = retryCount * 20000
                 retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
