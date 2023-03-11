@@ -1,67 +1,67 @@
 global:
   scrape_interval: 5s
 scrape_configs:
-  - job_name: i-0511453be04440134
+  - job_name: i-08f51e57ef4ba893f
     static_configs:
       - targets:
-          - 100.24.253.58:3000
-  - job_name: i-07f819db8705612cd
+          - 54.237.117.120:3000
+  - job_name: i-09ca014e14358b00b
     static_configs:
       - targets:
-          - 35.174.176.95:3000
-  - job_name: i-0ac7b3e4031bd1db4
+          - 100.25.111.0:3000
+  - job_name: i-02b8eb461ec330840
     static_configs:
       - targets:
-          - 54.236.8.248:3000
-  - job_name: i-0732af3593a392499
+          - 100.26.213.140:3000
+  - job_name: i-0c07a35f5248471ee
     static_configs:
       - targets:
-          - 100.26.167.94:3000
-  - job_name: i-025bc5e0e11ead1ea
+          - 100.26.159.73:3000
+  - job_name: i-0e59879cbed3e3dc4
     static_configs:
       - targets:
-          - 18.234.105.154:3000
-  - job_name: i-009e8483f3e0de3f8
+          - 52.86.71.85:3000
+  - job_name: i-0f0ed7ac6feaed193
     static_configs:
       - targets:
-          - 54.90.40.92:3000
-  - job_name: i-0522f88f582b345ac
+          - 54.174.109.144:3000
+  - job_name: i-015977f1df308cfd8
     static_configs:
       - targets:
-          - 18.206.206.161:3000
-  - job_name: i-0cc7583b6021c2d80
+          - 54.237.77.144:3000
+  - job_name: i-0206805c27ae89372
     static_configs:
       - targets:
-          - 54.210.89.38:3000
-  - job_name: i-052c9989a3f027e01
+          - 18.208.120.214:3000
+  - job_name: i-0cf150a5144794534
     static_configs:
       - targets:
-          - 3.83.245.19:3000
-  - job_name: i-0666618459b7c895b
+          - 34.224.3.132:3000
+  - job_name: i-07b858852167fc03b
     static_configs:
       - targets:
-          - 54.160.75.169:3000
-  - job_name: i-017d5c821548a47c7
+          - 54.157.159.168:3000
+  - job_name: i-0509e9fec3251ae59
     static_configs:
       - targets:
-          - 100.26.177.179:3000
-  - job_name: i-08226002c0970a5a2
+          - 35.153.17.57:3000
+  - job_name: i-0347825862a571529
     static_configs:
       - targets:
-          - 54.160.87.107:3000
-  - job_name: i-0c76eff7d504b2486
+          - 54.242.190.220:3000
+  - job_name: i-0d7a5c97fb5c8e23d
     static_configs:
       - targets:
-          - 54.173.84.25:3000
-  - job_name: i-06eafcb9b382a788e
+          - 100.25.154.211:3000
+  - job_name: i-0ea25344a99515b6f
     static_configs:
       - targets:
-          - 100.26.173.151:3000
-  - job_name: i-01ad14c9401f0d595
+          - 100.25.47.200:3000
+  - job_name: i-057e05623012c9c72
     static_configs:
       - targets:
-          - 18.207.234.213:3000
-  - job_name: i-0fe7ee02fb214135a
+          - 54.173.118.28:3000
+  - job_name: i-0d54702fcc6db5246
     static_configs:
       - targets:
-          - 100.26.230.89:3000
+          - 52.3.246.83:3000
