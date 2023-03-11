@@ -111,7 +111,7 @@ function removeFootnotes(data) {
 }
 
 
-async function  getClosingHistories(ticker) {
+async function getClosingHistories(ticker) {
     let result = null
     while (result === null) {
         try {
@@ -129,7 +129,7 @@ async function  getClosingHistories(ticker) {
             result = await yahooFinance2.historical(ticker, queryOptions);
             logger.info(`function  yahooFinance2.historical took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
 
-           
+
         }
         catch (error) {
             logger.info(e.toString())
@@ -163,7 +163,7 @@ async function getBalanceSheetHistory(ticker) {
             }
             logger.info(`function yahooFinance2.quoteSummary took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
 
-            
+
         } catch (e) {
             logger.info(e.toString())
             if (e.toString() === "HTTPError: Too Many Requests") {
@@ -214,7 +214,7 @@ async function quoteSummary(ticker) {
             logger.error(e.code)
 
         }
-        
+
     }
     return results
 }
@@ -225,55 +225,55 @@ async function getAssetsSharesAndLiabilities(ticker) {
     while (_.isEmpty(balanceSheetRes)) {
         try {
             let currentTime = `${Date.now()}`
-            
+
             let url = `https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?lang=en-US&region=US&symbol=${ticker}&padTimeSeries=true&type=quarterlyCurrentLiabilities%2CquarterlyCurrentAssets%2CquarterlyShareIssued&merge=false&period1=493590046&period2=${currentTime.slice(0, -3)}&corsDomain=finance.yahoo.com`
             logger.info(url)
             let res = await ProxiedRequest.get(url)
 
-            if(_.isEmpty(res.body)){
+            if (_.isEmpty(res.body)) {
                 logger.info("res.body empty")
                 let sleepFor = retryCount * 10
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-            }else{
+            } else {
                 let quarterlySharesIssued = _.get(_.find(res.body.timeseries.result, "quarterlyShareIssued"), "quarterlyShareIssued", null)
-            let quarterlyCurrentLiabilities = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentLiabilities"), "quarterlyCurrentLiabilities", null)
-            let quarterlyCurrentAssets = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentAssets"), "quarterlyCurrentAssets", null)
+                let quarterlyCurrentLiabilities = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentLiabilities"), "quarterlyCurrentLiabilities", null)
+                let quarterlyCurrentAssets = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentAssets"), "quarterlyCurrentAssets", null)
 
-            logger.info(JSON.stringify(quarterlySharesIssued))
-            logger.info(JSON.stringify(quarterlyCurrentLiabilities))
-            logger.info(JSON.stringify(quarterlyCurrentAssets))
-
-            if (quarterlySharesIssued != null) {
                 logger.info(JSON.stringify(quarterlySharesIssued))
-                logger.info("quarterlySharesIssued")
-                if(quarterlySharesIssued[quarterlySharesIssued.length - 2] != null){
-                    balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 2].reportedValue.raw
-                }
-                if(quarterlySharesIssued[quarterlySharesIssued.length - 1] != null){
-                    balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 1].reportedValue.raw
-                }
-            }
-            if (quarterlyCurrentLiabilities != null) {
                 logger.info(JSON.stringify(quarterlyCurrentLiabilities))
-                logger.info("quarterlyCurrentLiabilities")
-               
-                if(quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1] != null){
-                    balanceSheetRes['currentLiabilities'] = quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1].reportedValue.raw
-                }
-            }
-            if (quarterlyCurrentAssets != null) {
                 logger.info(JSON.stringify(quarterlyCurrentAssets))
-                logger.info("quarterlyCurrentAssets")
-                if(quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1] != null){
-                    balanceSheetRes['currentAssets'] = quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1].reportedValue.raw
+
+                if (quarterlySharesIssued != null) {
+                    logger.info(JSON.stringify(quarterlySharesIssued))
+                    logger.info("quarterlySharesIssued")
+                    if (quarterlySharesIssued[quarterlySharesIssued.length - 2] != null) {
+                        balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 2].reportedValue.raw
+                    }
+                    if (quarterlySharesIssued[quarterlySharesIssued.length - 1] != null) {
+                        balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 1].reportedValue.raw
+                    }
+                }
+                if (quarterlyCurrentLiabilities != null) {
+                    logger.info(JSON.stringify(quarterlyCurrentLiabilities))
+                    logger.info("quarterlyCurrentLiabilities")
+
+                    if (quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1] != null) {
+                        balanceSheetRes['currentLiabilities'] = quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1].reportedValue.raw
+                    }
+                }
+                if (quarterlyCurrentAssets != null) {
+                    logger.info(JSON.stringify(quarterlyCurrentAssets))
+                    logger.info("quarterlyCurrentAssets")
+                    if (quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1] != null) {
+                        balanceSheetRes['currentAssets'] = quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1].reportedValue.raw
+                    }
                 }
             }
-            }
-           
 
-            
 
-           
+
+
+
 
         }
 
@@ -288,7 +288,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
             logger.error(e.code)
             logger.info("retrying...")
         }
-        
+
     }
     return balanceSheetRes
 }
@@ -330,7 +330,7 @@ async function quoteSummary(ticker) {
             logger.error(e.code)
             logger.info("retrying...")
         }
-        
+
     }
     return results
 }
