@@ -64,6 +64,8 @@ var Schema = mongoose.Schema;
 // "Operating Cash Flow (ttm)": -28560000,
 // "Levered Free Cash Flow (ttm)": -14500000
 
+
+
 const scrapeSchema = new mongoose.Schema({
     id: Schema.Types.Mixed,
     name: Schema.Types.Mixed,

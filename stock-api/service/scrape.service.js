@@ -154,21 +154,14 @@ async function getClosingHistories(ticker) {
     }
 
 }
-
-async function getBalanceSheetHistory(ticker) {
+async function getQuote(ticker) {
     let result = null
     var retryCount = 1;
     while (result === null) {
         try {
-            let ProxiedRequestStart = performance.now();
-            result = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory"] });
-            if (result === null) {
-
-                logger.info(`retrying yahooFinance2.quoteSummary(${ticker}, { modules: ["balanceSheetHistory"] })`);
-            }
-            logger.info(`function yahooFinance2.quoteSummary took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
-
-
+          
+            result = await yahooFinance2.quote(ticker);    
+          
         } catch (e) {
             logger.info(e.toString())
             if (e.toString() === "HTTPError: Too Many Requests") {
@@ -182,7 +175,34 @@ async function getBalanceSheetHistory(ticker) {
         }
 
     }
-    return result.balanceSheetHistory.balanceSheetStatements[0]
+    return result
+}
+
+async function getQuoteSummary(ticker) {
+    let result = null
+    var retryCount = 1;
+    while (result === null) {
+        try {
+        
+            result = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory","financialData"] });
+           
+        } catch (e) {
+            logger.info(e.toString())
+            if (e.toString() === "HTTPError: Too Many Requests") {
+                let sleepFor = retryCount * 10000
+                retryCount += 1 
+                logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
+                 await sleep(sleepFor)
+            }
+            logger.error(error);
+            logger.error(e.code)
+        }
+
+    }
+    return {
+        ...result.balanceSheetHistory.balanceSheetStatements[0],
+        ...result.financialData
+    }
 }
 async function quoteSummary(ticker) {
     let results = null
@@ -351,10 +371,37 @@ async function quoteSummary(ticker) {
 async function getData(ticker) {
     var retryCount = 1;
     let results = null
+
+// https://github.com/gadicc/node-yahoo-finance2/blob/devel/docs/modules/quote.md
+// fiftyTwoWeekLow 
+// fiftyTwoWeekHigh 
+// fiftyDayAverage
+// twoHundredDayAverage
+// trailingPE 
+// forwardPE
+
+https://github.com/gadicc/node-yahoo-finance2/blob/devel/docs/modules/quoteSummary.md
+// await yahooFinance.quoteSummary('TSLA', { modules: [ "financialData" ] });
+
+// averageVolume    
+// revenueGrowth
+// earningsGrowth 
+// fiftyTwoWeekLow 
+// fiftyTwoWeekHigh 
+// fiftyDayAverage
+// twoHundredDayAverage
+// trailingPE 
+// forwardPE
+
+// currentlyIssuedShares
+
+
     logger.info("quoteSummary")
     let quoteSummaryRes = await quoteSummary(ticker);
     logger.info("getAssetsSharesAndLiabilities")
     let financialsRes = await getAssetsSharesAndLiabilities(ticker);
+
+
     while (results === null) {
         try {
             let res = await ProxiedRequest.get(`https://finance.yahoo.com/quote/${ticker}/key-statistics?p=${ticker}`)
@@ -408,17 +455,40 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
         let keyStatsRes = await getData(ticker);
         logger.info("getClosingHistories")
         let closingHistories = await getClosingHistories(ticker);
-        logger.info("getBalanceSheetHistory")
-        let balanceSheetStatements = await getBalanceSheetHistory(ticker);
+        logger.info("getQuoteSummary")
+        let quoteSummaryRes = await getQuoteSummary(ticker);
+        logger.info("getQuote")
+        let quoteRes = await getQuote(ticker);
 
         let scrapeResult = {
             id: uuid,
             ticker: ticker,
             ...keyStatsRes,
             ...closingHistories,
-            ...balanceSheetStatements,
-            ...treasuryStatsRes
+            ...quoteSummaryRes,
+            ...treasuryStatsRes,
+            ...quoteRes
         }
+        logger.info(scrapeResult["averageVolume"])
+        logger.info(scrapeResult["revenueGrowth"])
+        logger.info(scrapeResult["earningsGrowth"])
+        logger.info(scrapeResult["averageVolume"])
+        logger.info(scrapeResult["fiftyTwoWeekLow"])
+        logger.info(scrapeResult["fiftyTwoWeekHigh"])
+        logger.info(scrapeResult["fiftyDayAverage"])
+        logger.info(scrapeResult["twoHundredDayAverage"])
+        logger.info(scrapeResult["trailingPE"])
+        logger.info(scrapeResult["forwardPE"])
+
+// averageVolume    
+// revenueGrowth
+// earningsGrowth 
+// fiftyTwoWeekLow 
+// fiftyTwoWeekHigh 
+// fiftyDayAverage
+// twoHundredDayAverage
+// trailingPE 
+// forwardPE
         logger.info("scrapeResult", scrapeResult)
 
         scrapeRepository.create(scrapeResult)

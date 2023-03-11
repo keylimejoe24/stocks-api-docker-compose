@@ -224,7 +224,7 @@ const isNumberWithinPercentOfNumber = (firstN, percent, secondN) => {
     return lowRange <= firstN && firstN <= highRange;
 }
 
-
+   
 const fiftyTwoWeekLowsHighsAndVolume = (ticker) => {
 
     let missingFieldsResObj = checkForNullOrUndefinedFields(ticker, ["sAndPFiveHundredFiftyTwoWeekChange", "fiftyTwoWeekChange", "fiftyTwoWeekLow", "fiftyTwoWeekHigh", "averageVolume", "previousClose"])
