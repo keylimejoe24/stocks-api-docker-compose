@@ -229,7 +229,8 @@ async function getAssetsSharesAndLiabilities(ticker) {
             let url = `https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?lang=en-US&region=US&symbol=${ticker}&padTimeSeries=true&type=quarterlyCurrentLiabilities%2CquarterlyCurrentAssets%2CquarterlyShareIssued&merge=false&period1=493590046&period2=${currentTime.slice(0, -3)}&corsDomain=finance.yahoo.com`
             logger.info(url)
             let res = await ProxiedRequest.get(url)
-            logger.info(res)
+            logger.info(res.ok)
+            logger.info(res.body)
             logger.info(res.status)
             logger.info(res.statusText)
             // logger.info(JSON.stringify(res.st))
