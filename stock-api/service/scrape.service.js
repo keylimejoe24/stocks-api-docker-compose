@@ -184,7 +184,7 @@ async function getQuoteSummary(ticker) {
     while (result === null) {
         try {
         
-            result = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory","financialData"] });
+            result = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory","financialData","summaryDetail"] });
            
         } catch (e) {
             logger.info(e.toString())
@@ -201,7 +201,8 @@ async function getQuoteSummary(ticker) {
     }
     return {
         ...result.balanceSheetHistory.balanceSheetStatements[0],
-        ...result.financialData
+        ...result.financialData,
+        ...result.summaryDetail
     }
 }
 async function quoteSummary(ticker) {
@@ -469,7 +470,7 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
             ...treasuryStatsRes,
             ...quoteRes
         }
-        logger.info(scrapeResult["averageVolume"])
+
         logger.info(scrapeResult["revenueGrowth"])
         logger.info(scrapeResult["earningsGrowth"])
         logger.info(scrapeResult["averageVolume"])
@@ -480,15 +481,6 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
         logger.info(scrapeResult["trailingPE"])
         logger.info(scrapeResult["forwardPE"])
 
-// averageVolume    
-// revenueGrowth
-// earningsGrowth 
-// fiftyTwoWeekLow 
-// fiftyTwoWeekHigh 
-// fiftyDayAverage
-// twoHundredDayAverage
-// trailingPE 
-// forwardPE
         logger.info("scrapeResult", scrapeResult)
 
         scrapeRepository.create(scrapeResult)
