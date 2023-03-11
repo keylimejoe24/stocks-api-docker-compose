@@ -9,8 +9,11 @@ const ProxiedRequest = require('../service/request.service');
 var _ = require('lodash');
 const { PromisePool } = require('@supercharge/promise-pool')
 const { performance } = require('perf_hooks');
-var sleep = require('sleep');
 const Algorithms = require('./algorithms.js');
+
+const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
+
+
 function convertToNum(text) {
     text = text.replace(/,/g, "");
     let last = text[text.length - 1];
@@ -134,9 +137,9 @@ async function getClosingHistories(ticker) {
         catch (error) {
             logger.info(e.toString())
             if (e.toString() === "HTTPError: Too Many Requests") {
-                let sleepFor = retryCount * 10
+                let sleepFor = retryCount * 10000
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                await sleep.sleep(sleepFor);
+                await sleep(sleepFor);
             }
             logger.error(error);
             logger.error(e.code)
