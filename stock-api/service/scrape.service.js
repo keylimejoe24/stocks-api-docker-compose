@@ -239,16 +239,22 @@ async function getAssetsSharesAndLiabilities(ticker) {
 
             if (quarterlySharesIssued != null) {
                 log.info(JSON.stringify(quarterlySharesIssued))
-                balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 2].reportedValue.raw
-                balanceSheetRes['currentlyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 1].reportedValue.raw
+                log.info("quarterlySharesIssued")
+                balanceSheetRes['previouslyIssuedShares'] = 0
+                // balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 2].reportedValue.raw
+                // balanceSheetRes['currentlyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 1].reportedValue.raw
             }
             if (quarterlyCurrentLiabilities != null) {
                 log.info(JSON.stringify(quarterlyCurrentLiabilities))
-                balanceSheetRes['currentLiabilities'] = quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1].reportedValue.raw
+                log.info("quarterlyCurrentLiabilities")
+                balanceSheetRes['currentLiabilities'] = 0
+                // balanceSheetRes['currentLiabilities'] = quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1].reportedValue.raw
             }
             if (quarterlyCurrentAssets != null) {
                 log.info(JSON.stringify(quarterlyCurrentAssets))
-                balanceSheetRes['currentAssets'] = quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1].reportedValue.raw
+                log.info("quarterlyCurrentAssets")
+
+                // balanceSheetRes['currentAssets'] = quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1].reportedValue.raw
             }
 
            
