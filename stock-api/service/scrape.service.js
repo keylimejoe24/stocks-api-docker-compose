@@ -175,7 +175,7 @@ async function getBalanceSheetHistory(ticker) {
                 let sleepFor = retryCount * 10000
                 retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                await sleep.sleep(sleepFor);
+                 await sleep(sleepFor)
             }
             logger.error(error);
             logger.error(e.code)
@@ -215,7 +215,7 @@ async function quoteSummary(ticker) {
                 let sleepFor = retryCount * 10000
                 retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                await sleep.sleep(sleepFor);
+                 await sleep(sleepFor)
             }
             logger.error(error);
             logger.error(e.code)
@@ -293,7 +293,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
                 let sleepFor = retryCount * 10000
                 retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                await sleep.sleep(sleepFor);
+                 await sleep(sleepFor)
             }
 
             logger.error(e)
@@ -336,7 +336,7 @@ async function quoteSummary(ticker) {
                 let sleepFor = retryCount * 10000
                 retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                await sleep.sleep(sleepFor);
+                 await sleep(sleepFor)
             }
 
             logger.error(e)
@@ -386,7 +386,7 @@ async function getData(ticker) {
                 let sleepFor = retryCount * 10000
                 retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                await sleep.sleep(sleepFor);
+                 await sleep(sleepFor)
             }
 
             logger.error(error.message)
