@@ -107,12 +107,14 @@ export default function App() {
 
     let testRes = _.find(algorithmsResponse.totalResults, ['ticker', ticker]);
     let formattedTestRes = []
-
     for (const [key, value] of Object.entries(testRes.value)) {
-      console.log(key)
-      formattedTestRes.push({ [`${key}`]: value })
+      if(key === "Total Weight"){ 
+        formattedTestRes.push({ [`[ ${ticker} ] ${key}`]: value })
+      }else{
+        formattedTestRes.push({ [`${key}`]: value })
+      }
+      
     }
-
     setTestResults(formattedTestRes)
 
   };
@@ -125,13 +127,13 @@ export default function App() {
     setScrapeIdSelected(id);
   };
   const formatAlgorithmsResponse = response => {
-    console.log(response)
+   
     let totalResults = []
     for (const [key, value] of Object.entries(response.totalResults)) {
-      totalResults.push({ ticker: key, weight: value["Total Weight"], value: value })
+      totalResults.push({ ticker: key, weight: value["Total Weight"], value: value }) 
     }
     let sorted = totalResults.sort((a, b) => a.ticker.localeCompare(b.ticker))
-    console.log(sorted)
+    
     return {
       ...response, totalResults: sorted
     }
@@ -162,8 +164,10 @@ export default function App() {
   const runAlgorithmsClickHandler = event => {
     fetch(`http://${MASTER_IP}:3001/api/algorithms/run/${scrapeIdSelected}`, { method: 'GET' })
       .then(res => res.json())
-      .then(response => {
+      .then(response => {     
+        console.log(response)
         let formattedRes = formatAlgorithmsResponse(response)
+        
         setAlgorithmsResponse(formattedRes)
       })
       .catch(error => console.log(error));

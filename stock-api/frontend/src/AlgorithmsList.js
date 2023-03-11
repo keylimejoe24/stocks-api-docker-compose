@@ -18,11 +18,13 @@ const StyledInput = styled(TextField)(({ theme }) => ({
 
 const Row = props => {
   const { data, index, style } = props;
+  const totalResults = data.totalResults
   const item = data.tickers[index];
 
   return (
     <ListItem style={style} key={index} component="div" disablePadding>
       <ListItemButton onClick={() => data.testResultsClickHandler(item.ticker)}>
+     
         <ListItemText>
           <div style={{ fontSize: 12, fontWeight: "bold" }}>{item.ticker}</div>
           <div style={{ fontSize: 10, fontWeight: "italic" }}>weight: {parseFloat(item.weight).toFixed(3)}</div>
@@ -51,9 +53,9 @@ const tickerFilterChangeHandler = event => {
     setFilteredTickers(filteredBySymbol);
   };
 
-  const buildItemData = () => {
+  const buildItemData = (totalResults) => {
     let tickers = filteredTickers ? filteredTickers : results
-    return {tickers, testResultsClickHandler }
+    return {tickers, testResultsClickHandler,totalResults }
   }
   const getItemCount = () => {
     let tickers = filteredTickers ? filteredTickers : results
