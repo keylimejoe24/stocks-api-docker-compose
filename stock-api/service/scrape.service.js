@@ -261,13 +261,14 @@ async function getAssetsSharesAndLiabilities(ticker) {
             let quarterlySharesIssued = _.get(_.find(res.body.timeseries.result, "quarterlyShareIssued"), "quarterlyShareIssued", null)
             let quarterlyCurrentLiabilities = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentLiabilities"), "quarterlyCurrentLiabilities", null)
             let quarterlyCurrentAssets = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentAssets"), "quarterlyCurrentAssets", null)
+            let error = _.get(_.find(res.body, "error"), "error", null)
 
             logger.info(quarterlySharesIssued)
             logger.info(quarterlyCurrentLiabilities)
             logger.info(quarterlyCurrentAssets)
 
-            if (_.isNil(quarterlySharesIssued) && _.isNil(quarterlyCurrentLiabilities) && _.isNil(quarterlyCurrentAssets) ) {
-               
+            if (!_.isNil(error) ) {
+                logger.info(error)
                 let sleepFor = retryCount * 20000
                 retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
@@ -373,28 +374,6 @@ async function getData(ticker) {
     var retryCount = 1;
     let results = null
 
-// https://github.com/gadicc/node-yahoo-finance2/blob/devel/docs/modules/quote.md
-// fiftyTwoWeekLow 
-// fiftyTwoWeekHigh 
-// fiftyDayAverage
-// twoHundredDayAverage
-// trailingPE 
-// forwardPE
-
-https://github.com/gadicc/node-yahoo-finance2/blob/devel/docs/modules/quoteSummary.md
-// await yahooFinance.quoteSummary('TSLA', { modules: [ "financialData" ] });
-
-// averageVolume    
-// revenueGrowth
-// earningsGrowth 
-// fiftyTwoWeekLow 
-// fiftyTwoWeekHigh 
-// fiftyDayAverage
-// twoHundredDayAverage
-// trailingPE 
-// forwardPE
-
-// currentlyIssuedShares
 
 
     logger.info("quoteSummary")
