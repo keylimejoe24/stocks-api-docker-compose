@@ -234,6 +234,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
                 logger.info("res.body empty")
                 let sleepFor = retryCount * 10
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
+                sleep(sleepFor)
             } else {
                 let quarterlySharesIssued = _.get(_.find(res.body.timeseries.result, "quarterlyShareIssued"), "quarterlyShareIssued", null)
                 let quarterlyCurrentLiabilities = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentLiabilities"), "quarterlyCurrentLiabilities", null)
