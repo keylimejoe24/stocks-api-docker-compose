@@ -10,8 +10,8 @@ const {
   } = process.env;
 
 
-// const MONGO_CONNECTION_STRING = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`
-const MONGO_CONNECTION_STRING =  "mongodb://root:123456@52.91.175.194:27017/bezkoder_db?authSource=admin"
+const MONGO_CONNECTION_STRING = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`
+// const MONGO_CONNECTION_STRING =  "mongodb://root:123456@52.91.175.194:27017/bezkoder_db?authSource=admin"
 const connect = () => {
 
     const url = MONGO_CONNECTION_STRING;
