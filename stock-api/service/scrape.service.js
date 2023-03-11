@@ -266,12 +266,13 @@ async function getAssetsSharesAndLiabilities(ticker) {
             logger.info(quarterlySharesIssued)
             logger.info(quarterlyCurrentLiabilities)
             logger.info(quarterlyCurrentAssets)
+            logger.info(error)
 
             if(retryCount === 10){
                 balanceSheetRes['previouslyIssuedShares'] = undefined
                 balanceSheetRes['currentlyIssuedShares'] = undefined
                 balanceSheetRes['currentLiabilities'] = undefined
-                balanceSheetRes['currentAssets'] = undefined
+                balanceSheetRes['currentAssets'] = undefined    
             }
 
             if (!_.isNil(error) ) {
