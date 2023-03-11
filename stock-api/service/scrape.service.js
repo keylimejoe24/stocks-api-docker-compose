@@ -126,7 +126,7 @@ async function getClosingHistories(ticker) {
             const queryOptions = { period1: tenDaysAgoISOFormat, period2: yesterdayISOFormat };
             let ProxiedRequestStart = performance.now();
 
-            const result = await yahooFinance2.historical(ticker, queryOptions);
+            result = await yahooFinance2.historical(ticker, queryOptions);
             logger.info(`function  yahooFinance2.historical took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
 
            
@@ -156,7 +156,7 @@ async function getBalanceSheetHistory(ticker) {
     while (result === null) {
         try {
             let ProxiedRequestStart = performance.now();
-            let result = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory"] });
+            result = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory"] });
             if (result === null) {
 
                 logger.info(`retrying yahooFinance2.quoteSummary(${ticker}, { modules: ["balanceSheetHistory"] })`);
@@ -248,7 +248,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
                 balanceSheetRes['currentAssets'] = quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1].reportedValue.raw
             }
 
-            return balanceSheetRes
+           
 
         }
 
@@ -265,7 +265,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
         }
         
     }
-    return results
+    return balanceSheetRes
 }
 
 async function quoteSummary(ticker) {
