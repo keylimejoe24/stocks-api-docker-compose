@@ -103,6 +103,7 @@ volumes:
 
 # docker-compose logs -f -t
 # DB_HOST=54.202.122.11 docker build -t joja5627/node-server:latest  --build-arg MASTER_IP=54.202.122.11 
+# DB_HOST=52.91.175.194 docker build -t joja5627/node-server:latest  --build-arg MASTER_IP=52.91.175.194 
 
 # external_http_request_duration_seconds_bucket{status_code="200"}
 # sum(increase([1m]))
