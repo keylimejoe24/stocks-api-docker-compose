@@ -10,11 +10,6 @@ var _ = require('lodash');
 const { PromisePool } = require('@supercharge/promise-pool')
 const { performance } = require('perf_hooks');
 var sleep = require('sleep');
-
-
-
-
-
 const Algorithms = require('./algorithms.js');
 function convertToNum(text) {
     text = text.replace(/,/g, "");
@@ -56,7 +51,7 @@ async function parseYahooHtml(html) {
     });
     return vals
 }
-// Takes string as input and returns same string with footnote character and whitespace removed
+
 function removeFootnotes(data) {
     let nums = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
     if (nums.includes(data.slice(-1))) {
@@ -105,7 +100,7 @@ async function parseYahooHtml(html) {
     });
     return vals
 }
-// Takes string as input and returns same string with footnote character and whitespace removed
+
 function removeFootnotes(data) {
     let nums = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
     if (nums.includes(data.slice(-1))) {
@@ -134,15 +129,11 @@ async function getClosingHistories(ticker) {
             const result = await yahooFinance2.historical(ticker, queryOptions);
             logger.info(`function  yahooFinance2.historical took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
 
-            return {
-                "closingHistories": result.slice(0, 4).map(q => {
-                    return q.close
-                })
-            }
+           
         }
         catch (error) {
             logger.info(e.toString())
-            if(e.toString() === "HTTPError: Too Many Requests"){
+            if (e.toString() === "HTTPError: Too Many Requests") {
                 let sleepFor = retryCount * 10
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                 await sleep.sleep(sleepFor);
@@ -150,6 +141,11 @@ async function getClosingHistories(ticker) {
             logger.error(error);
             logger.error(e.code)
         }
+    }
+    return {
+        "closingHistories": result.slice(0, 4).map(q => {
+            return q.close
+        })
     }
 
 }
@@ -167,10 +163,10 @@ async function getBalanceSheetHistory(ticker) {
             }
             logger.info(`function yahooFinance2.quoteSummary took ${(performance.now() - ProxiedRequestStart).toFixed(3)}ms`);
 
-            return result.balanceSheetHistory.balanceSheetStatements[0]
+            
         } catch (e) {
             logger.info(e.toString())
-            if(e.toString() === "HTTPError: Too Many Requests"){
+            if (e.toString() === "HTTPError: Too Many Requests") {
                 let sleepFor = retryCount * 10
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                 await sleep.sleep(sleepFor);
@@ -180,6 +176,7 @@ async function getBalanceSheetHistory(ticker) {
         }
 
     }
+    return result.balanceSheetHistory.balanceSheetStatements[0]
 }
 async function quoteSummary(ticker) {
     let results = null
@@ -208,7 +205,7 @@ async function quoteSummary(ticker) {
 
         catch (e) {
             logger.info(e.toString())
-            if(e.toString() === "HTTPError: Too Many Requests"){
+            if (e.toString() === "HTTPError: Too Many Requests") {
                 let sleepFor = retryCount * 10
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                 await sleep.sleep(sleepFor);
@@ -217,14 +214,15 @@ async function quoteSummary(ticker) {
             logger.error(e.code)
 
         }
-        return results
+        
     }
+    return results
 }
 
 async function getAssetsSharesAndLiabilities(ticker) {
     var retryCount = 0;
     let balanceSheetRes = {}
-    while (_.isEmpty( balanceSheetRes )) {
+    while (_.isEmpty(balanceSheetRes)) {
         try {
             let currentTime = `${Date.now()}`
 
@@ -255,7 +253,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
         }
 
         catch (e) {
-            if(e.toString() === "HTTPError: Too Many Requests"){
+            if (e.toString() === "HTTPError: Too Many Requests") {
                 let sleepFor = retryCount * 10
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                 await sleep.sleep(sleepFor);
@@ -265,12 +263,9 @@ async function getAssetsSharesAndLiabilities(ticker) {
             logger.error(e.code)
             logger.info("retrying...")
         }
-        return results
+        
     }
-
-
-    
-
+    return results
 }
 
 async function quoteSummary(ticker) {
@@ -300,7 +295,7 @@ async function quoteSummary(ticker) {
         }
 
         catch (e) {
-            if(e.toString() === "HTTPError: Too Many Requests"){
+            if (e.toString() === "HTTPError: Too Many Requests") {
                 let sleepFor = retryCount * 10
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                 await sleep.sleep(sleepFor);
@@ -310,8 +305,9 @@ async function quoteSummary(ticker) {
             logger.error(e.code)
             logger.info("retrying...")
         }
-        return results
+        
     }
+    return results
 }
 
 async function getData(ticker) {
@@ -346,8 +342,8 @@ async function getData(ticker) {
 
         }
         catch (e) {
-          
-            if(e.toString() === "HTTPError: Too Many Requests"){
+
+            if (e.toString() === "HTTPError: Too Many Requests") {
                 let sleepFor = retryCount * 10
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                 await sleep.sleep(sleepFor);
@@ -357,8 +353,8 @@ async function getData(ticker) {
             logger.error(e.code)
             logger.info("retrying...")
         }
-        return results;
     }
+    return results;
 
 }
 
@@ -449,10 +445,10 @@ class ScrapeService {
                 if (typeof calc != 'undefined') {
                     if (calc.hasOwnProperty('weight')) {
                         if (typeof calc.weight === 'number') {
-                            if(!_.isNull(calc.weight) && !_.isNil(calc.weight) &&  calc.weight != null){
-                                totalWeight += calc.weight  
+                            if (!_.isNull(calc.weight) && !_.isNil(calc.weight) && calc.weight != null) {
+                                totalWeight += calc.weight
                             }
-                            
+
                         }
                     }
                 }
@@ -479,7 +475,7 @@ class ScrapeService {
                 "17.) 10 Year Treasury Rate Increasing or Decreasing Quarterly": tenYearTreasuryRateQuarterlyRes,
                 "18.) Money Supply": m1SeasonallyAdjustedRes,
                 "19.) Average Wage Growth": averageWageGrowthRes,
-                
+
             }
 
             totalResults[r.symbol] = tickerCalculationResults
@@ -487,14 +483,11 @@ class ScrapeService {
                 ticker: r.symbol,
                 weight: totalWeight
             })
-           
+
 
         })
-        // summaryRes.forEach(r => {
-        //     logger.info(JSON.stringify(r))
-        //     logger.info(typeof r.weight)
-        // })
-       
+
+
         let filteredResWeightNan = _.reject(summaryRes, i => isNaN(i.weight) === true);
         let sortedAndFilteredRes = filteredResWeightNan.sort((a, b) => parseFloat(b.weight) - parseFloat(a.weight));
         let topTenResults = sortedAndFilteredRes.slice(0, 10)
