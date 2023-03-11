@@ -163,11 +163,10 @@ refresh_master_commands = [
     "cd /home/ssm-user",
     # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
     "cd stocks-api-docker-compose",
-    "git clean -f",
-    "git pull",
+    "git reset --hard HEAD",
+    "git pull --no-edit origin main",
     "docker-compose down",
     "docker system prune --filter  'until=5h' -f",
-    "git pull --no-edit origin main",
     "DB_HOST={} docker-compose up -d --build mongodb prometheus grafana algorithms-server frontend boto3-flask".format(master_instances[0]["public_ip_address"])
 ]
 
@@ -184,8 +183,8 @@ commands = [
     "sudo su",
     "cd /home/ssm-user/stocks-api-docker-compose",
     # "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
-    "git clean -f",
-    "git pull",
+    "git reset --hard HEAD",
+    "git pull --no-edit origin main",
     "docker-compose down",
     "docker system prune --filter  'until=5h' -f",
     # "docker login --username joja5627 --password-stdin < my_password.txt",  
