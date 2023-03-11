@@ -111,7 +111,7 @@ function removeFootnotes(data) {
 }
 
 
-async function getClosingHistories(ticker) {
+async function  getClosingHistories(ticker) {
     let result = null
     while (result === null) {
         try {
