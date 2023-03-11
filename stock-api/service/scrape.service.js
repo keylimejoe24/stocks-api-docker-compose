@@ -240,7 +240,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
             let quarterlySharesIssued = _.get(_.find(res.body.timeseries.result, "quarterlyShareIssued"), "quarterlyShareIssued", null)
             let quarterlyCurrentLiabilities = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentLiabilities"), "quarterlyCurrentLiabilities", null)
             let quarterlyCurrentAssets = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentAssets"), "quarterlyCurrentAssets", null)
-            
+
             logger.info(quarterlySharesIssued)
             logger.info(quarterlyCurrentLiabilities)
             logger.info(quarterlyCurrentAssets)
@@ -250,7 +250,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
                 let sleepFor = retryCount * 10000
                 retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                sleep(sleepFor)
+                await sleep(sleepFor)
             } else {
                 
 
