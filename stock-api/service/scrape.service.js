@@ -320,8 +320,9 @@ async function quoteSummary(ticker) {
 async function getData(ticker) {
     var retryCount = 0;
     let results = null
-
+    logger.info("quoteSummary")
     let quoteSummaryRes = await quoteSummary(ticker);
+    logger.info("getAssetsSharesAndLiabilities")
     let financialsRes = await getAssetsSharesAndLiabilities(ticker);
     while (results === null) {
         try {
@@ -371,8 +372,11 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
     await PromisePool.for(tickers).withConcurrency(2).process(async ticker => {
 
         const start = performance.now();
+        logger.info("getData")
         let keyStatsRes = await getData(ticker);
+        logger.info("getClosingHistories")
         let closingHistories = await getClosingHistories(ticker);
+        logger.info("getBalanceSheetHistory")
         let balanceSheetStatements = await getBalanceSheetHistory(ticker);
 
         let scrapeResult = {
