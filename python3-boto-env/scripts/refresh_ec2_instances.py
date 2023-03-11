@@ -160,9 +160,10 @@ origin.push()
 print(master_instances)
 refresh_master_commands = [
     "sudo su",
+    "apt install unzip",
     "rm -rf /home/ssm-user/stocks-api-docker-compose",
     "cd /home/ssm-user",
-    "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git"
+    "wget https://github.com/keylimejoe24/stocks-api-docker-compose/archive/refs/heads/main.zip",
     "cd stocks-api-docker-compose"
     "docker-compose down",
     "docker system prune --filter  'until=5h' -f",
@@ -180,9 +181,10 @@ wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health", 
 
 commands = [
     "sudo su",
+    "apt install unzip",
     "rm -rf /home/ssm-user/stocks-api-docker-compose",
     "cd /home/ssm-user",
-    "git clone https://github.com/keylimejoe24/stocks-api-docker-compose.git",
+    "wget https://github.com/keylimejoe24/stocks-api-docker-compose/archive/refs/heads/main.zip",
     "cd stocks-api-docker-compose",
     "docker-compose down",
     "docker system prune --filter  'until=5h' -f",
