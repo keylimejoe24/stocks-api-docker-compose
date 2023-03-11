@@ -116,6 +116,7 @@ function removeFootnotes(data) {
 
 async function getClosingHistories(ticker) {
     let result = null
+    var retryCount = 1;
     while (result === null) {
         try {
             const today = new Date()
@@ -138,6 +139,7 @@ async function getClosingHistories(ticker) {
             logger.info(e.toString())
             if (e.toString() === "HTTPError: Too Many Requests") {
                 let sleepFor = retryCount * 10000
+                retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                 await sleep(sleepFor);
             }
@@ -155,7 +157,7 @@ async function getClosingHistories(ticker) {
 
 async function getBalanceSheetHistory(ticker) {
     let result = null
-    var retryCount = 0;
+    var retryCount = 1;
     while (result === null) {
         try {
             let ProxiedRequestStart = performance.now();
@@ -170,7 +172,8 @@ async function getBalanceSheetHistory(ticker) {
         } catch (e) {
             logger.info(e.toString())
             if (e.toString() === "HTTPError: Too Many Requests") {
-                let sleepFor = retryCount * 10
+                let sleepFor = retryCount * 10000
+                retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                 await sleep.sleep(sleepFor);
             }
@@ -183,7 +186,7 @@ async function getBalanceSheetHistory(ticker) {
 }
 async function quoteSummary(ticker) {
     let results = null
-    var retryCount = 0;
+    var retryCount = 1;
     while (results === null) {
 
 
@@ -209,7 +212,8 @@ async function quoteSummary(ticker) {
         catch (e) {
             logger.info(e.toString())
             if (e.toString() === "HTTPError: Too Many Requests") {
-                let sleepFor = retryCount * 10
+                let sleepFor = retryCount * 10000
+                retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                 await sleep.sleep(sleepFor);
             }
@@ -223,7 +227,7 @@ async function quoteSummary(ticker) {
 }
 
 async function getAssetsSharesAndLiabilities(ticker) {
-    var retryCount = 0;
+    var retryCount = 1;
     let balanceSheetRes = {}
     while (_.isEmpty(balanceSheetRes)) {
         try {
@@ -232,12 +236,13 @@ async function getAssetsSharesAndLiabilities(ticker) {
             let url = `https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?lang=en-US&region=US&symbol=${ticker}&padTimeSeries=true&type=quarterlyCurrentLiabilities%2CquarterlyCurrentAssets%2CquarterlyShareIssued&merge=false&period1=493590046&period2=${currentTime.slice(0, -3)}&corsDomain=finance.yahoo.com`
             logger.info(url)
             let res = await ProxiedRequest.get(url)
-            logger.info("res.ok")
-            logger.info(res.ok)
+            logger.info("res.body.timeseries.result")
+            logger.info(res.body.timeseries.result)
             
-            if (_.isNil(res.ok)) {
-                logger.info("res.ok")
-                let sleepFor = retryCount * 10
+            if (_.isNil(res.body.timeseries.result)) {
+                logger.info("res.body.timeseries.result")
+                let sleepFor = retryCount * 10000
+                retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                 sleep(sleepFor)
             } else {
@@ -281,7 +286,8 @@ async function getAssetsSharesAndLiabilities(ticker) {
 
         catch (e) {
             if (e.toString() === "HTTPError: Too Many Requests") {
-                let sleepFor = retryCount * 10
+                let sleepFor = retryCount * 10000
+                retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                 await sleep.sleep(sleepFor);
             }
@@ -296,7 +302,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
 }
 
 async function quoteSummary(ticker) {
-    var retryCount = 0;
+    var retryCount = 1;
     let results = null
     while (results === null) {
 
@@ -323,7 +329,8 @@ async function quoteSummary(ticker) {
 
         catch (e) {
             if (e.toString() === "HTTPError: Too Many Requests") {
-                let sleepFor = retryCount * 10
+                let sleepFor = retryCount * 10000
+                retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                 await sleep.sleep(sleepFor);
             }
@@ -338,7 +345,7 @@ async function quoteSummary(ticker) {
 }
 
 async function getData(ticker) {
-    var retryCount = 0;
+    var retryCount = 1;
     let results = null
     logger.info("quoteSummary")
     let quoteSummaryRes = await quoteSummary(ticker);
@@ -372,7 +379,8 @@ async function getData(ticker) {
         catch (e) {
 
             if (e.toString() === "HTTPError: Too Many Requests") {
-                let sleepFor = retryCount * 10
+                let sleepFor = retryCount * 10000
+                retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                 await sleep.sleep(sleepFor);
             }
