@@ -161,12 +161,12 @@ print(master_instances)
 refresh_master_commands = [
     "sudo su",
     "apt install unzip",
-    "rm -rf /home/ssm-user/stocks-api-docker-compose",
+    "rm -rf /home/ssm-user/stocks-api-docker-compose-main",
     "cd /home/ssm-user",
     "wget https://github.com/keylimejoe24/stocks-api-docker-compose/archive/refs/heads/main.zip",
     "unzip main.zip",
     "rm -f main.zip",
-    "cd stocks-api-docker-compose"
+    "cd stocks-api-docker-compose-main"
     "docker-compose down",
     "docker system prune --filter  'until=5h' -f",
     "DB_HOST={} docker-compose up -d --build mongodb prometheus grafana algorithms-server frontend boto3-flask".format(master_instances[0]["public_ip_address"])
@@ -184,12 +184,12 @@ wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health", 
 commands = [
     "sudo su",
     "apt install unzip",
-    "rm -rf /home/ssm-user/stocks-api-docker-compose",
+    "rm -rf /home/ssm-user/stocks-api-docker-compose-main",
     "cd /home/ssm-user",
     "wget https://github.com/keylimejoe24/stocks-api-docker-compose/archive/refs/heads/main.zip",
     "unzip main.zip",
     "rm -f main.zip",
-    "cd stocks-api-docker-compose",
+    "cd stocks-api-docker-compose-main",
     "docker-compose down",
     "docker system prune --filter  'until=5h' -f",
     "DB_HOST={} docker-compose up --build -d scraping-server".format(master_instances[0]["public_ip_address"])
