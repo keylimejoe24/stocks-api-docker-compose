@@ -238,21 +238,21 @@ async function getAssetsSharesAndLiabilities(ticker) {
             let quarterlyCurrentAssets = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentAssets"), "quarterlyCurrentAssets", null)
 
             if (quarterlySharesIssued != null) {
-                log.info(JSON.stringify(quarterlySharesIssued))
-                log.info("quarterlySharesIssued")
+                logger.info(JSON.stringify(quarterlySharesIssued))
+                logger.info("quarterlySharesIssued")
                 balanceSheetRes['previouslyIssuedShares'] = 0
                 // balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 2].reportedValue.raw
                 // balanceSheetRes['currentlyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 1].reportedValue.raw
             }
             if (quarterlyCurrentLiabilities != null) {
-                log.info(JSON.stringify(quarterlyCurrentLiabilities))
-                log.info("quarterlyCurrentLiabilities")
+                logger.info(JSON.stringify(quarterlyCurrentLiabilities))
+                logger.info("quarterlyCurrentLiabilities")
                 balanceSheetRes['currentLiabilities'] = 0
                 // balanceSheetRes['currentLiabilities'] = quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1].reportedValue.raw
             }
             if (quarterlyCurrentAssets != null) {
-                log.info(JSON.stringify(quarterlyCurrentAssets))
-                log.info("quarterlyCurrentAssets")
+                logger.info(JSON.stringify(quarterlyCurrentAssets))
+                logger.info("quarterlyCurrentAssets")
 
                 // balanceSheetRes['currentAssets'] = quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1].reportedValue.raw
             }
