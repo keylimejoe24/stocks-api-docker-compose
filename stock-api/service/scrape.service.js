@@ -261,12 +261,8 @@ async function getAssetsSharesAndLiabilities(ticker) {
             let quarterlySharesIssued = _.get(_.find(res.body.timeseries.result, "quarterlyShareIssued"), "quarterlyShareIssued", null)
             let quarterlyCurrentLiabilities = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentLiabilities"), "quarterlyCurrentLiabilities", null)
             let quarterlyCurrentAssets = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentAssets"), "quarterlyCurrentAssets", null)
-            let error = _.get(_.find(res.body, "error"), "error", null)
-
-            logger.info(quarterlySharesIssued)
-            logger.info(quarterlyCurrentLiabilities)
-            logger.info(quarterlyCurrentAssets)
-            logger.info(error)
+            
+            logger.info(JSON.stringify(res.body.timeseries.result))
 
             if(retryCount === 10){
                 balanceSheetRes['previouslyIssuedShares'] = undefined
@@ -275,7 +271,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
                 balanceSheetRes['currentAssets'] = undefined    
             }
 
-            if (!_.isNil(error) ) {
+            if (_.isNil(quarterlySharesIssued) && _.isNil(quarterlyCurrentLiabilities) && _.isNil(quarterlyCurrentAssets)  ) {
                 logger.info(error)
                 let sleepFor = retryCount * 20000
                 retryCount += 1 
