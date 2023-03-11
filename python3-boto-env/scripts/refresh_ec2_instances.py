@@ -164,6 +164,8 @@ refresh_master_commands = [
     "rm -rf /home/ssm-user/stocks-api-docker-compose",
     "cd /home/ssm-user",
     "wget https://github.com/keylimejoe24/stocks-api-docker-compose/archive/refs/heads/main.zip",
+    "unzip main.zip",
+    "rm -f main.zip",
     "cd stocks-api-docker-compose"
     "docker-compose down",
     "docker system prune --filter  'until=5h' -f",
@@ -185,6 +187,8 @@ commands = [
     "rm -rf /home/ssm-user/stocks-api-docker-compose",
     "cd /home/ssm-user",
     "wget https://github.com/keylimejoe24/stocks-api-docker-compose/archive/refs/heads/main.zip",
+    "unzip main.zip",
+    "rm -f main.zip",
     "cd stocks-api-docker-compose",
     "docker-compose down",
     "docker system prune --filter  'until=5h' -f",
