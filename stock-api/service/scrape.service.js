@@ -231,7 +231,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
             let res = await ProxiedRequest.get(url)
             logger.info("res.body")
             logger.info(res.body)
-            if (_.isNil(res.body)) {
+            if (_.isNil(res.body.timeseries.result)) {
                 logger.info("res.body empty")
                 let sleepFor = retryCount * 10
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
