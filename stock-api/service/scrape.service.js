@@ -229,6 +229,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
             let url = `https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?lang=en-US&region=US&symbol=${ticker}&padTimeSeries=true&type=quarterlyCurrentLiabilities%2CquarterlyCurrentAssets%2CquarterlyShareIssued&merge=false&period1=493590046&period2=${currentTime.slice(0, -3)}&corsDomain=finance.yahoo.com`
             logger.info(url)
             let res = await ProxiedRequest.get(url)
+            logger.info("res.body")
             logger.info(res.body)
             if (_.isNil(res.body)) {
                 logger.info("res.body empty")
@@ -239,10 +240,6 @@ async function getAssetsSharesAndLiabilities(ticker) {
                 let quarterlySharesIssued = _.get(_.find(res.body.timeseries.result, "quarterlyShareIssued"), "quarterlyShareIssued", null)
                 let quarterlyCurrentLiabilities = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentLiabilities"), "quarterlyCurrentLiabilities", null)
                 let quarterlyCurrentAssets = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentAssets"), "quarterlyCurrentAssets", null)
-
-                logger.info(JSON.stringify(quarterlySharesIssued))
-                logger.info(JSON.stringify(quarterlyCurrentLiabilities))
-                logger.info(JSON.stringify(quarterlyCurrentAssets))
 
                 if (quarterlySharesIssued != null) {
                     logger.info(JSON.stringify(quarterlySharesIssued))
