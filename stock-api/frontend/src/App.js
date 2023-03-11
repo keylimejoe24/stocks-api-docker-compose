@@ -20,14 +20,14 @@ import { ScrapeProgressContext } from "./ScrapeProgressProvider";
 const sockets = []
 const scrape_urls = []
 
-// socketIOConfig.map(url => {
-//   scrape_urls.push(`http://${url}/api/scrape/run`)
-//   const newSocket = socketIO.connect(url);
+socketIOConfig.map(url => {
+  scrape_urls.push(`http://${url}/api/scrape/run`)
+  // const newSocket = socketIO.connect(url);
 
-//   sockets.push(newSocket)
-// })
+  // sockets.push(newSocket)
+})
 
-const MASTER_IP = "3.238.202.60"
+const MASTER_IP = "52.91.175.194"
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fafafa',
   ...theme.typography.body2,
@@ -60,7 +60,7 @@ export default function App() {
   const [testResults, setTestResults] = useState(null);
   const [tickerFilter, setTickerFilter] = React.useState("");
   
-  const [marketCapFilter, setMarketCapFilter] = React.useState("100000000000");
+  const [marketCapFilter, setMarketCapFilter] = React.useState("500000000");
   const [filteredTickers, setFilteredTickers] = React.useState([]);
   const [scrapeTime, setScrapeTime] = React.useState(0);
   const [averageScrapeTime, setAverageScrapeTime] = React.useState(0);
@@ -234,6 +234,7 @@ export default function App() {
     let filteredTickerSymbols = filteredTickers.map(a => a.symbol);
 
     let filteredTickerSymbolChunks = splitToChunks([...filteredTickerSymbols], scrape_urls.length);
+    
     scrape_urls.map((url, index) => {
       const scrapeRequestOptions = {
         method: 'POST',

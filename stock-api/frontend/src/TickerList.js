@@ -50,10 +50,12 @@ export default function TickerList({ title, results, testResultsClickHandler, ma
 
     
     useEffect(() => {
-        let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) >= parseFloat(marketCapFilter)).map(filteredTicker => {
-            return filteredTicker
-        })
-        // console.log(filteredByMarketCap)
+        
+        let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) >= parseFloat(marketCapFilter))
+        console.log(filteredByMarketCap)
+        let sortedFilteredByMarketCap = filteredByMarketCap.sort((a, b) => a.symbol.localeCompare(b.symbol))
+
+        console.log(sortedFilteredByMarketCap)
         
         setFilteredTickers(filteredByMarketCap);
     }, [results]);
@@ -78,12 +80,13 @@ export default function TickerList({ title, results, testResultsClickHandler, ma
     };
 
     const marketCapFilterChangeHandler = event => {
-
-        let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) >= parseFloat(event.target.value)).map(filteredTicker => {
-            return filteredTicker
-        })
+        console.log(event.target.value)
+        let filteredByMarketCap = results.filter(ticker => parseFloat(ticker.marketCap) >= parseFloat(event.target.value))
+       
+        let sortedFilteredByMarketCap = filteredByMarketCap.sort((a, b) => a.symbol.localeCompare(b.symbol))
+        console.log(filteredByMarketCap)
         setMarketCapFilter(event.target.value);
-        setFilteredTickers(filteredByMarketCap);
+        setFilteredTickers(sortedFilteredByMarketCap);
     };
     return (
         <Box
@@ -120,9 +123,9 @@ export default function TickerList({ title, results, testResultsClickHandler, ma
             >
                 {Row}
             </FixedSizeList>
-            <Stack direction="row">
+            {/* <Stack direction="row">
                 {!_.isEmpty(currentScrapeId) && <ProgressBar averageScrapeTime={averageScrapeTime} currentScrapeId={currentScrapeId} completedTickers={completedTickers} filteredTickers={filteredTickers} />}
-            </Stack>
+            </Stack> */}
         </Box>
     );
 }

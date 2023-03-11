@@ -317,7 +317,7 @@ async function getData(ticker) {
 
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
 
-    await PromisePool.for(tickers).withConcurrency(4).process(async ticker => {
+    await PromisePool.for(tickers).withConcurrency(2).process(async ticker => {
 
         const start = performance.now();
         let keyStatsRes = await getData(ticker);
