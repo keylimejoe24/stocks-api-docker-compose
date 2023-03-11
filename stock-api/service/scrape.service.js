@@ -240,19 +240,27 @@ async function getAssetsSharesAndLiabilities(ticker) {
             if (quarterlySharesIssued != null) {
                 logger.info(JSON.stringify(quarterlySharesIssued))
                 logger.info("quarterlySharesIssued")
-                balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 2].reportedValue.raw
-                balanceSheetRes['currentlyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 1].reportedValue.raw
+                if(quarterlySharesIssued[quarterlySharesIssued.length - 2] != null){
+                    balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 2].reportedValue.raw
+                }
+                if(quarterlySharesIssued[quarterlySharesIssued.length - 1] != null){
+                    balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 1].reportedValue.raw
+                }
             }
             if (quarterlyCurrentLiabilities != null) {
                 logger.info(JSON.stringify(quarterlyCurrentLiabilities))
                 logger.info("quarterlyCurrentLiabilities")
-                balanceSheetRes['currentLiabilities'] = 0
-                balanceSheetRes['currentLiabilities'] = quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1].reportedValue.raw
+               
+                if(quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1] != null){
+                    balanceSheetRes['currentLiabilities'] = quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1].reportedValue.raw
+                }
             }
             if (quarterlyCurrentAssets != null) {
                 logger.info(JSON.stringify(quarterlyCurrentAssets))
                 logger.info("quarterlyCurrentAssets")
-                balanceSheetRes['currentAssets'] = quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1].reportedValue.raw
+                if(quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1] != null){
+                    balanceSheetRes['currentAssets'] = quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1].reportedValue.raw
+                }
             }
 
            
