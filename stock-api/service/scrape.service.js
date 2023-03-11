@@ -229,8 +229,8 @@ async function getAssetsSharesAndLiabilities(ticker) {
             let url = `https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?lang=en-US&region=US&symbol=${ticker}&padTimeSeries=true&type=quarterlyCurrentLiabilities%2CquarterlyCurrentAssets%2CquarterlyShareIssued&merge=false&period1=493590046&period2=${currentTime.slice(0, -3)}&corsDomain=finance.yahoo.com`
             logger.info(url)
             let res = await ProxiedRequest.get(url)
-
-            if (_.isEmpty(res.body)) {
+            logger.info(res.body)
+            if (_.isNil(res.body)) {
                 logger.info("res.body empty")
                 let sleepFor = retryCount * 10
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
