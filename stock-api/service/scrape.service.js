@@ -308,7 +308,7 @@ async function getAssetsSharesAndLiabilities(ticker) {
             }
 
 
-
+            
 
 
 
@@ -382,8 +382,8 @@ async function getData(ticker) {
 
     logger.info("quoteSummary")
     let quoteSummaryRes = await quoteSummary(ticker);
-    logger.info("getAssetsSharesAndLiabilities")
-    let financialsRes = await getAssetsSharesAndLiabilities(ticker);
+    // logger.info("getAssetsSharesAndLiabilities")
+    // let financialsRes = await getAssetsSharesAndLiabilities(ticker);
 
 
     while (results === null) {
@@ -398,7 +398,7 @@ async function getData(ticker) {
 
             results = {
                 symbol: ticker,
-                ...financialsRes,
+                // ...financialsRes,
                 ...quoteSummaryRes,
                 quarterlyRevenueGrowth: parsedTables["Quarterly Revenue Growth (yoy)"],
                 fiftyTwoWeekChange: parsedTables["52-Week Change"],

@@ -737,7 +737,10 @@ const abilityToPayCurrentLiabilities = (ticker) => {
 // Estimated Swing % = ((Share Issued **Column 2) - (Share Issued **Column 1)) / (Share Issued ** Column 2)
 // Estimated Stock Price = (1 + (Estimated Swing %) * Previous Close
 
-
+// previouslyIssuedShares
+//             currentlyIssuedShares
+//             currentLiabilities
+//             currentAssets
 
 const stockBuyBacks = (ticker) => {
 
