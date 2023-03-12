@@ -8,7 +8,7 @@ scrape_configs:
   - job_name: i-09ca014e14358b00b
     static_configs:
       - targets:
-          - 100.25.111.0:3000
+          - 54.146.62.163:3000
   - job_name: i-02b8eb461ec330840
     static_configs:
       - targets:

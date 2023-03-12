@@ -437,8 +437,8 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
         const start = performance.now();
         logger.info("getData")
         let keyStatsRes = await getData(ticker);
-        logger.info("getClosingHistories")
-        let closingHistories = await getClosingHistories(ticker);
+        // logger.info("getClosingHistories")
+        // let closingHistories = await getClosingHistories(ticker);
         logger.info("getQuoteSummary")
         let quoteSummaryRes = await getQuoteSummary(ticker);
         logger.info("getQuote")
@@ -448,7 +448,7 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
             id: uuid,
             ticker: ticker,
             ...keyStatsRes,
-            ...closingHistories,
+            // ...closingHistories,
             ...quoteSummaryRes,
             ...treasuryStatsRes,
             ...quoteRes
