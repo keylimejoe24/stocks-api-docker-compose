@@ -379,7 +379,7 @@ async function getData(ticker,metricsTracker) {
     let quoteSummaryRes = await quoteSummary(ticker,metricsTracker);
     logger.info("getAssetsSharesAndLiabilities")
     let financialsRes = await getAssetsSharesAndLiabilities(ticker,metricsTracker);
-
+    llogger.info(JSON.stringify(financialsRes))
 
     while (results === null) {
         try {
