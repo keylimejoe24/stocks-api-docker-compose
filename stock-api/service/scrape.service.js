@@ -205,8 +205,12 @@ async function getQuoteSummary(ticker) {
             logger.error(error);
             logger.error(e.code)
         }
+        
 
     }
+    logger.info(result)
+    logger.info(JSON.stringify(result))
+   
     return {
         ...result.balanceSheetHistory.balanceSheetStatements[0],
         ...result.financialData,
@@ -458,13 +462,10 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, metricsTracker)
 
         scrapeRepository.create(scrapeResult)
         let scrapeDuration = (performance.now() - start) / 1000
-
         logger.info("batchFinished", { finishedTickers: [ticker], scrapeTime: scrapeDuration })
-        // socketIO.emit("batchFinished", { finishedTickers: [ticker], scrapeTime: scrapeDuration });
 
     })
     logger.info("complete")
-    // socketIO.emit("complete");
 
 }
 
