@@ -376,9 +376,7 @@ async function getData(ticker,metricsTracker) {
     let quoteSummaryRes = await quoteSummary(ticker,metricsTracker);
     logger.info("getAssetsSharesAndLiabilities")
     let financialsRes = await getAssetsSharesAndLiabilities(ticker,metricsTracker);
-    logger.info("+++++++++++++++++")
-    logger.info(JSON.stringify(financialsRes))
-    logger.info("+++++++++++++++++")
+   
 
     while (results === null) {
         try {
@@ -458,7 +456,7 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, metricsTracker)
 
         logger.info("scrapeResult", scrapeResult)
 
-        // scrapeRepository.create(scrapeResult)
+        scrapeRepository.create(scrapeResult)
         let scrapeDuration = (performance.now() - start) / 1000
 
         logger.info("batchFinished", { finishedTickers: [ticker], scrapeTime: scrapeDuration })
