@@ -435,7 +435,7 @@ async function getData(ticker,metricsTracker) {
 
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, metricsTracker) => {
 
-    await PromisePool.for(tickers).withConcurrency(4).process(async ticker => {
+    await PromisePool.for(tickers).withConcurrency(10).process(async ticker => {
 
         const start = performance.now();
         logger.info("getData")
@@ -459,7 +459,7 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, metricsTracker)
 
         logger.info("scrapeResult", scrapeResult)
 
-        scrapeRepository.create(scrapeResult)
+        // scrapeRepository.create(scrapeResult)
         let scrapeDuration = (performance.now() - start) / 1000
 
         logger.info("batchFinished", { finishedTickers: [ticker], scrapeTime: scrapeDuration })
