@@ -331,6 +331,9 @@ async function quoteSummary(ticker,metricsTracker) {
 
             let response = await ProxiedRequest.get(url,body,metricsTracker)
             let res = await response.text()
+            logger.info("=========")
+            logger.info(res)
+            logger.info("=========")
          
             // let res = response.then(r => {
             //     txt = r.text()
