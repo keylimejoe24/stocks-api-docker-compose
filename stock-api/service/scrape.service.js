@@ -10,7 +10,15 @@ var _ = require('lodash');
 const { PromisePool } = require('@supercharge/promise-pool')
 const { performance } = require('perf_hooks');
 const Algorithms = require('./algorithms.js');
+const {
+    DB_USER,
+    DB_PASSWORD,
+    DB_HOST,
+    DB_PORT,
+    DB_NAME,
+  } = process.env;
 
+  
 const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
 
 
@@ -205,64 +213,38 @@ async function getQuoteSummary(ticker) {
         ...result.summaryDetail
     }
 }
-async function quoteSummary(ticker) {
-    let results = null
-    var retryCount = 1;
-    while (results === null) {
 
 
-        try {
-
-
-            let res = await ProxiedRequest.get(`https://finance.yahoo.com/quote/${ticker}`)
-            if (res === null) {
-                logger.info(`retrying https://finance.yahoo.com/quote/${ticker}`);
-            }
-            let parsedTables = await parseYahooHtml(res.body);
-
-            results = {
-                previousClose: parsedTables["Previous Close"],
-                volume: parsedTables["Volume"],
-                beta: parsedTables["Beta (5Y Monthly)"],
-                eps: parsedTables["EPS (TTM)"],
-                forwardAnnualDividend: parsedTables["Forward Dividend & Yield"]
-            }
-
-        }
-
-        catch (e) {
-            logger.info(e.toString())
-            if (e.toString() === "HTTPError: Too Many Requests") {
-                let sleepFor = retryCount * 10000
-                retryCount += 1 
-                logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                 await sleep(sleepFor)
-            }
-            logger.error(error);
-            logger.error(e.code)
-
-        }
-
-    }
-    return results
-}
-
-async function getAssetsSharesAndLiabilities(ticker) {
+async function getAssetsSharesAndLiabilities(ticker,metricsTracker) {
     var retryCount = 1;
     let balanceSheetRes = {}
     while (_.isEmpty(balanceSheetRes)) {
         try {
             let currentTime = `${Date.now()}`
 
-            let url = `https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?lang=en-US&region=US&symbol=${ticker}&padTimeSeries=true&type=quarterlyCurrentLiabilities%2CquarterlyCurrentAssets%2CquarterlyShareIssued&merge=false&period1=493590046&period2=${currentTime.slice(0, -3)}&corsDomain=finance.yahoo.com`
-            logger.info(url)
-            let res = await ProxiedRequest.get(url)
-           
-            let quarterlySharesIssued = _.get(_.find(res.body.timeseries.result, "quarterlyShareIssued"), "quarterlyShareIssued", null)
-            let quarterlyCurrentLiabilities = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentLiabilities"), "quarterlyCurrentLiabilities", null)
-            let quarterlyCurrentAssets = _.get(_.find(res.body.timeseries.result, "quarterlyCurrentAssets"), "quarterlyCurrentAssets", null)
+            let url = `http://${DB_HOST}:5001/api/proxy`
             
-            logger.info(JSON.stringify(res.body.timeseries.result))
+            let body = {
+                'root_url': 'https://query1.finance.yahoo.com',
+                'query_url': `https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}`,
+                'params': {
+                    'lang': 'en-US',
+                    'region': 'US',
+                    'symbol': ticker,
+                    'padTimeSeries': 'true',
+                    'type': 'quarterlyCurrentLiabilities,quarterlyCurrentAssets,quarterlyShareIssued',
+                    'merge': 'false',
+                    'period1': '493590046',
+                    'period2': currentTime.slice(0, -3),
+                    'corsDomain': 'finance.yahoo.com',
+                }
+            }
+            let response = await ProxiedRequest.get(url,body,metricsTracker)
+            let res = await response.json()
+            let quarterlySharesIssued = _.get(_.find(res.timeseries.result, "quarterlyShareIssued"), "quarterlyShareIssued", null)
+            let quarterlyCurrentLiabilities = _.get(_.find(res.timeseries.result, "quarterlyCurrentLiabilities"), "quarterlyCurrentLiabilities", null)
+            let quarterlyCurrentAssets = _.get(_.find(res.timeseries.result, "quarterlyCurrentAssets"), "quarterlyCurrentAssets", null)
+            
 
             if(retryCount === 10){
                 balanceSheetRes['previouslyIssuedShares'] = undefined
@@ -330,22 +312,34 @@ async function getAssetsSharesAndLiabilities(ticker) {
     }
     return balanceSheetRes
 }
-
-async function quoteSummary(ticker) {
-    var retryCount = 1;
+async function quoteSummary(ticker,metricsTracker) {
     let results = null
+    var retryCount = 1;
     while (results === null) {
-
-
-
         try {
-
-
-            let res = await ProxiedRequest.get(`https://finance.yahoo.com/quote/${ticker}`)
-            if (res === null) {
-                logger.info(`retrying https://finance.yahoo.com/quote/${ticker}`);
+            let url = `http://${DB_HOST}:5001/api/proxy`
+            
+            let body = {
+                'root_url': `https://finance.yahoo.com`,
+                'query_url': `https://finance.yahoo.com/quote/${ticker}`,
+                'params': {}
+               
             }
-            let parsedTables = await parseYahooHtml(res.body);
+
+            let response = await ProxiedRequest.get(url,body,metricsTracker)
+            let res = await response.text()
+         
+            // let res = response.then(r => {
+            //     txt = r.text()
+            //     logger.info("=========")
+            //     logger.info(txt)
+            //     logger.info("=========")
+            //     return txt
+            // })
+            
+            
+            
+            let parsedTables = await parseYahooHtml(res);
 
             results = {
                 previousClose: parsedTables["Previous Close"],
@@ -358,47 +352,56 @@ async function quoteSummary(ticker) {
         }
 
         catch (e) {
+            logger.info(e.toString())
             if (e.toString() === "HTTPError: Too Many Requests") {
                 let sleepFor = retryCount * 10000
                 retryCount += 1 
                 logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
                  await sleep(sleepFor)
             }
-
-            logger.error(e)
+            logger.error(error);
             logger.error(e.code)
-            logger.info("retrying...")
+
         }
 
     }
     return results
 }
 
-async function getData(ticker) {
+
+async function getData(ticker,metricsTracker) {
     var retryCount = 1;
     let results = null
 
 
 
     logger.info("quoteSummary")
-    let quoteSummaryRes = await quoteSummary(ticker);
-    // logger.info("getAssetsSharesAndLiabilities")
-    // let financialsRes = await getAssetsSharesAndLiabilities(ticker);
+    let quoteSummaryRes = await quoteSummary(ticker,metricsTracker);
+    logger.info("getAssetsSharesAndLiabilities")
+    let financialsRes = await getAssetsSharesAndLiabilities(ticker,metricsTracker);
 
 
     while (results === null) {
         try {
-            let res = await ProxiedRequest.get(`https://finance.yahoo.com/quote/${ticker}/key-statistics?p=${ticker}`)
-            if (res === null) {
-                logger.info(`retrying https://finance.yahoo.com/quote/${ticker}/key-statistics?p=${ticker}`);
+            let url = `http://${DB_HOST}:5001/api/proxy`
+
+            let body = {
+                'root_url': 'https://finance.yahoo.com',
+                'query_url': `https://finance.yahoo.com/quote/${ticker}/key-statistics`,
+                'params': {
+                    'p': ticker
+                }
             }
-            let parsedTables = await parseYahooHtml(res.body);
+
+            let response = await ProxiedRequest.get(url,body,metricsTracker)
+            let res = await response.text()
+            let parsedTables = await parseYahooHtml(res);
             let shortPercentOfSharesOutStanding = _.pickBy(parsedTables, (value, key) => _.includes(key, "Short % of Shares Outstanding"))
             let shortPercentOfSharesOutStandingVal = Object.values(shortPercentOfSharesOutStanding)[0]
 
             results = {
                 symbol: ticker,
-                // ...financialsRes,
+                ...financialsRes,
                 ...quoteSummaryRes,
                 quarterlyRevenueGrowth: parsedTables["Quarterly Revenue Growth (yoy)"],
                 fiftyTwoWeekChange: parsedTables["52-Week Change"],
@@ -430,25 +433,25 @@ async function getData(ticker) {
 }
 
 
-const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
+const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, metricsTracker) => {
 
     await PromisePool.for(tickers).withConcurrency(4).process(async ticker => {
 
         const start = performance.now();
         logger.info("getData")
-        let keyStatsRes = await getData(ticker);
-        // logger.info("getClosingHistories")
-        // let closingHistories = await getClosingHistories(ticker);
+        let keyStatsRes = await getData(ticker,metricsTracker);
+        logger.info("getClosingHistories")
+        let closingHistories = await getClosingHistories(ticker,metricsTracker);
         logger.info("getQuoteSummary")
-        let quoteSummaryRes = await getQuoteSummary(ticker);
+        let quoteSummaryRes = await getQuoteSummary(ticker,metricsTracker);
         logger.info("getQuote")
-        let quoteRes = await getQuote(ticker);
+        let quoteRes = await getQuote(ticker,metricsTracker);
 
         let scrapeResult = {
             id: uuid,
             ticker: ticker,
             ...keyStatsRes,
-            // ...closingHistories,
+            ...closingHistories,
             ...quoteSummaryRes,
             ...treasuryStatsRes,
             ...quoteRes
@@ -460,11 +463,11 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, socketIO) => {
         let scrapeDuration = (performance.now() - start) / 1000
 
         logger.info("batchFinished", { finishedTickers: [ticker], scrapeTime: scrapeDuration })
-        socketIO.emit("batchFinished", { finishedTickers: [ticker], scrapeTime: scrapeDuration });
+        // socketIO.emit("batchFinished", { finishedTickers: [ticker], scrapeTime: scrapeDuration });
 
     })
-
-    socketIO.emit("complete");
+    logger.info("complete")
+    // socketIO.emit("complete");
 
 }
 
@@ -576,14 +579,14 @@ class ScrapeService {
             bottomTen: bottomTenResults
         }
     }
-    async run(tickers, scrapeID, socketIO) {
+    async run(tickers, scrapeID, metricsTracker) {
         let treasuryStatsRes
         try {
             treasuryStatsRes = await treasuryStats.getData();
         } catch (e) {
             logger.error(e)
         }
-        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, socketIO)
+        batchStoreScrape(tickers, scrapeID, treasuryStatsRes, metricsTracker)
     }
 
 

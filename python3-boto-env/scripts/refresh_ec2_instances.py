@@ -160,7 +160,7 @@ origin.push()
 print(master_instances)
 refresh_master_commands = [
     "sudo su",
-    "apt install unzip",
+    "apt install unzip ccrypt",
     "rm -rf /home/ssm-user/stocks-api-docker-compose-main",
     "cd /home/ssm-user",
     "wget https://github.com/keylimejoe24/stocks-api-docker-compose/archive/refs/heads/main.zip",
@@ -169,7 +169,7 @@ refresh_master_commands = [
     "cd stocks-api-docker-compose-main"
     "docker-compose down",
     "docker system prune --filter  'until=5h' -f",
-    "DB_HOST={} docker-compose up -d --build mongodb prometheus grafana algorithms-server frontend boto3-flask".format(master_instances[0]["public_ip_address"])
+    "DB_HOST={} docker-compose up -d --build mongodb prometheus grafana algorithms-server frontend boto3-flask rotating-proxy".format(master_instances[0]["public_ip_address"])
 ]
 
 
@@ -183,7 +183,7 @@ wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health", 
 
 commands = [
     "sudo su",
-    "apt install unzip",
+    "apt install unzip ccrypt",
     "rm -rf /home/ssm-user/stocks-api-docker-compose-main",
     "cd /home/ssm-user",
     "wget https://github.com/keylimejoe24/stocks-api-docker-compose/archive/refs/heads/main.zip",

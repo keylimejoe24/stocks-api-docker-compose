@@ -7,6 +7,9 @@ const client = require('prom-client');
 const _ = require('lodash');
 const logger = require('./logger/api.logger');
 const cors = require('cors');
+const constants = require('./constants.js');
+
+const { MetricsTracker } = require('nodejs-metrics');
 
 let amexFullTickersRaw = fs.readFileSync('US-Stock-Symbols/amex/amex_full_tickers.json');
 let nasdaqFullTickersRaw = fs.readFileSync('US-Stock-Symbols/nasdaq/nasdaq_full_tickers.json');
@@ -18,14 +21,26 @@ let nyseFullTickersJSON = JSON.parse(nyseFullTickersRaw)
 
 
 
-const { collectDefaultMetrics } = require('./http-client-with-prom-metrics-tracking');
+let metricsTracker = null;
 
 const register = new client.Registry()
 
 register.setDefaultLabels({
     app: 'stock-api'
 })
-collectDefaultMetrics(client);
+
+
+const externalHttpRequestDurationLabels = [constants.Metrics.Labels.Target, constants.Metrics.Labels.Method, constants.Metrics.Labels.StatusCode, constants.Metrics.Labels.Error];
+metricsTracker = new MetricsTracker({
+    metrics: {
+        [constants.Metrics.ExternalHttpRequestDurationSeconds]: new client.Histogram({
+            name: constants.Metrics.ExternalHttpRequestDurationSeconds,
+            help: `duration histogram of http responses labeled with: ${externalHttpRequestDurationLabels.join(', ')}`,
+            labelNames: externalHttpRequestDurationLabels,
+            buckets: constants.Metrics.HistogramValues.Buckets
+        })
+    }
+});
 
 const tickers = [
     ...amexFullTickersJSON,
@@ -70,7 +85,8 @@ app.use(function(req, res, next) {
 router.post('/api/scrape/run', (req, res, next) => {
     let tickers = req.body.tickers
     let id = req.body.scrapeID
-    scrapeController.run(tickers,id,socketIO);
+    // scrapeController.run(tickers,id,socketIO);  metricsTracker
+    scrapeController.run(tickers,id,metricsTracker); 
     return res.status(200).send({ok:"ok"});
 })
 

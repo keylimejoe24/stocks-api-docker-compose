@@ -47,6 +47,11 @@ services:
       - ./python3-boto-env/app/:/app
     ports:
       - '5000:5000'
+
+  rotating-proxy:
+    build: ./rotating-proxy
+    ports:
+      - "5001:5001"
     
   mongodb:
     # image: mongo:4.4.6
@@ -83,6 +88,8 @@ services:
 
   scraping-server:
       image: joja5627/node-server:latest
+      links:
+        - rotating-proxy
       ports:
         - 3000:3000
       build: ./stock-api
@@ -102,8 +109,9 @@ volumes:
   grafana_data: 
 
 # docker-compose logs -f -t
-# DB_HOST=54.202.122.11 docker build -t joja5627/node-server:latest  --build-arg MASTER_IP=54.202.122.11 
+# DB_HOST=3.83.232.168 docker build -t joja5627/node-server:latest  --build-arg MASTER_IP=3.83.232.168 
 # DB_HOST=52.91.175.194 docker build -t joja5627/node-server:latest  --build-arg MASTER_IP=52.91.175.194 
+# "DB_HOST=3.83.232.168 docker-compose up --build -d scraping-server".format(master_instances[0]["public_ip_address"])
 
 # external_http_request_duration_seconds_bucket{status_code="200"}
 # sum(increase([1m]))
