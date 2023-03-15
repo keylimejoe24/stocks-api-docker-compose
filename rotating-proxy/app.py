@@ -36,6 +36,10 @@ def start_gateway():
         status=200,
     )
 
+@app.route('/api/v1/health', methods = ['GET'])
+def health_check():
+    return json.dumps({'ok':True}), 200, {'ContentType':'application/json'}  
+
 @app.route('/api/proxy', methods=['POST','GET'])
 def proxy_request():
    

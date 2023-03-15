@@ -179,7 +179,7 @@ time.sleep(10)
 
 print("wait_for_services_to_start....")
 wait_for_services_to_start([master_instances[0]], ["http://{}:3002/api/health", "http://{}:9090/graph",
-                           "http://{}:3001/api/health", "http://{}:27017", "http://{}:3003", "http://{}:5000/api/v1/health"])
+                           "http://{}:3001/api/health", "http://{}:27017", "http://{}:3003", "http://{}:5000/api/v1/health","http://{}:5001/api/v1/health"])
 
 commands = [
     "sudo su",
