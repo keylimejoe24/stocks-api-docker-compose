@@ -352,15 +352,12 @@ async function quoteSummary(ticker,metricsTracker) {
         }
 
         catch (e) {
+            logger.info("quoteSummary")
             logger.info(e.toString())
-            if (e.toString() === "HTTPError: Too Many Requests") {
-                let sleepFor = retryCount * 10000
-                retryCount += 1 
-                logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                 await sleep(sleepFor)
-            }
-            logger.error(error);
-            logger.error(e.code)
+            let sleepFor = retryCount * 10000
+            retryCount += 1 
+            logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
+            await sleep(sleepFor)
 
         }
 
@@ -416,16 +413,12 @@ async function getData(ticker,metricsTracker) {
         }
         catch (e) {
 
-            if (e.toString() === "HTTPError: Too Many Requests") {
-                let sleepFor = retryCount * 10000
-                retryCount += 1 
-                logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                 await sleep(sleepFor)
-            }
-
-            logger.error(error.message)
-            logger.error(e.code)
-            logger.info("retrying...")
+            logger.info("getData")
+            logger.info(e.toString())
+            let sleepFor = retryCount * 10000
+            retryCount += 1 
+            logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
+            await sleep(sleepFor)
         }
     }
     return results;
@@ -435,7 +428,7 @@ async function getData(ticker,metricsTracker) {
 
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, metricsTracker) => {
 
-    await PromisePool.for(tickers).withConcurrency(4).process(async ticker => {
+    await PromisePool.for(tickers).withConcurrency(2).process(async ticker => {
 
         const start = performance.now();
         logger.info("getData")
