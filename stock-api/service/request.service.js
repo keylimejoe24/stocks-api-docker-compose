@@ -37,7 +37,9 @@ class ProxiedRequest {
               }).then(function (resp) {
                 return resp
             }).catch(function (error) {
+                logger.error("==========")
                 logger.error(error)
+                logger.error("==========")
             })
             response = await metricsTracker.trackHistogramDuration({
                 metricName: constants.Metrics.ExternalHttpRequestDurationSeconds,

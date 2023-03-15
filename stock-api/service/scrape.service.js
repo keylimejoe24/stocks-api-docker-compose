@@ -208,10 +208,7 @@ async function getQuoteSummary(ticker) {
         
 
     }
-    logger.info("===========")
-    logger.info(result)
-    logger.info(JSON.stringify(result))
-    logger.info("===========")
+  
    
     return {
         ...result.balanceSheetHistory.balanceSheetStatements[0],
