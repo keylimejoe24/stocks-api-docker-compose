@@ -331,20 +331,15 @@ async function quoteSummary(ticker,metricsTracker) {
 
             let response = await ProxiedRequest.get(url,body,metricsTracker)
             let res = await response.text()
-            logger.info("=========")
-            logger.info(res)
-            logger.info("=========")
-         
-            // let res = response.then(r => {
-            //     txt = r.text()
-            //     logger.info("=========")
-            //     logger.info(txt)
-            //     logger.info("=========")
-            //     return txt
-            // })
-            
-            
-            
+            if(_.isNil(res)){
+                logger.info(response)
+                logger.info(JSON.stringify(response))
+                let sleepFor = retryCount * 10000
+                retryCount += 1 
+                logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
+                await sleep(sleepFor)
+                
+            }else{
             let parsedTables = await parseYahooHtml(res);
 
             results = {
@@ -354,6 +349,8 @@ async function quoteSummary(ticker,metricsTracker) {
                 eps: parsedTables["EPS (TTM)"],
                 forwardAnnualDividend: parsedTables["Forward Dividend & Yield"]
             }
+            }
+            
 
         }
 
