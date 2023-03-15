@@ -297,16 +297,12 @@ async function getAssetsSharesAndLiabilities(ticker,metricsTracker) {
         }
 
         catch (e) {
-            if (e.toString() === "HTTPError: Too Many Requests") {
-                let sleepFor = retryCount * 10000
-                retryCount += 1 
-                logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                 await sleep(sleepFor)
-            }
-
-            logger.error(e)
-            logger.error(e.code)
-            logger.info("retrying...")
+            logger.info("getAssetsSharesAndLiabilities")
+            logger.info(e.toString())
+            let sleepFor = retryCount * 10000
+            retryCount += 1 
+            logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
+            await sleep(sleepFor)
         }
 
     }
@@ -374,6 +370,7 @@ async function getData(ticker,metricsTracker) {
 
     logger.info("quoteSummary")
     let quoteSummaryRes = await quoteSummary(ticker,metricsTracker);
+
     logger.info("getAssetsSharesAndLiabilities")
     let financialsRes = await getAssetsSharesAndLiabilities(ticker,metricsTracker);
    
