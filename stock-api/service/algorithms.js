@@ -673,6 +673,7 @@ const trailingPEvsForward = (ticker) => {
         return {
             "Trailing P/E": currentTrailingPE,
             "Forward P/E": currentForwardPE,
+            "expectedStockPriceMove": expectedStockPriceMove,
             currentMarketValue: ticker.previousClose,
             description: "Expected Stock Price Move > 0",
             estimatedStockPrice: expectedStockPriceMove + parseFloat(ticker.previousClose),
@@ -682,6 +683,7 @@ const trailingPEvsForward = (ticker) => {
         return {
             "Trailing P/E": currentTrailingPE,
             "Forward P/E": currentForwardPE,
+            "expectedStockPriceMove": expectedStockPriceMove,
             currentMarketValue: ticker.previousClose,
             description: "Expected Stock Price Move < 0",
             estimatedStockPrice: expectedStockPriceMove + parseFloat(ticker.previousClose),
