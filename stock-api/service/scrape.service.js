@@ -144,15 +144,14 @@ async function getClosingHistories(ticker) {
 
         }
         catch (error) {
-            logger.info(e.toString())
-            if (e.toString() === "HTTPError: Too Many Requests") {
-                let sleepFor = retryCount * 10000
-                retryCount += 1 
-                logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                await sleep(sleepFor);
-            }
-            logger.error(error);
-            logger.error(e.code)
+            logger.info("getClosingHistories -  error")
+            logger.info(error.toString())
+            // logger.info(JSON.stringify(response))
+            logger.info(response.status)
+            let sleepFor = retryCount * 10000
+            retryCount += 1 
+            logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
+            await sleep(sleepFor)
         }
     }
     return {
@@ -171,15 +170,14 @@ async function getQuote(ticker) {
             result = await yahooFinance2.quote(ticker);    
           
         } catch (e) {
+            logger.info("getQuote -  error")
             logger.info(e.toString())
-            if (e.toString() === "HTTPError: Too Many Requests") {
-                let sleepFor = retryCount * 10000
-                retryCount += 1 
-                logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                 await sleep(sleepFor)
-            }
-            logger.error(error);
-            logger.error(e.code)
+            // logger.info(JSON.stringify(response))
+            logger.info(response.status)
+            let sleepFor = retryCount * 10000
+            retryCount += 1 
+            logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
+            await sleep(sleepFor)
         }
 
     }
@@ -195,15 +193,14 @@ async function getQuoteSummary(ticker) {
             result = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory","financialData","summaryDetail"] });
            
         } catch (e) {
+            logger.info("getQuoteSummary -  error")
             logger.info(e.toString())
-            if (e.toString() === "HTTPError: Too Many Requests") {
-                let sleepFor = retryCount * 10000
-                retryCount += 1 
-                logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
-                 await sleep(sleepFor)
-            }
-            logger.error(error);
-            logger.error(e.code)
+            // logger.info(JSON.stringify(response))
+            logger.info(response.status)
+            let sleepFor = retryCount * 10000
+            retryCount += 1 
+            logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
+            await sleep(sleepFor)
         }
         
 
@@ -351,7 +348,7 @@ async function quoteSummary(ticker,metricsTracker) {
         }
 
         catch (e) {
-            logger.info("quoteSummary")
+            logger.info("quoteSummary - error")
             logger.info(e.toString())
             let sleepFor = retryCount * 10000
             retryCount += 1 
@@ -368,15 +365,6 @@ async function quoteSummary(ticker,metricsTracker) {
 async function getData(ticker,metricsTracker) {
     var retryCount = 1;
     let results = null
-
-
-
-    logger.info("quoteSummary")
-    let quoteSummaryRes = await quoteSummary(ticker,metricsTracker);
-
-    logger.info("getAssetsSharesAndLiabilities")
-    let financialsRes = await getAssetsSharesAndLiabilities(ticker,metricsTracker);
-   
 
     while (results === null) {
         try {
@@ -398,8 +386,7 @@ async function getData(ticker,metricsTracker) {
 
             results = {
                 symbol: ticker,
-                ...financialsRes,
-                ...quoteSummaryRes,
+               
                 quarterlyRevenueGrowth: parsedTables["Quarterly Revenue Growth (yoy)"],
                 fiftyTwoWeekChange: parsedTables["52-Week Change"],
                 sAndPFiveHundredFiftyTwoWeekChange: parsedTables["S&P500 52-Week Change"],
@@ -413,7 +400,7 @@ async function getData(ticker,metricsTracker) {
         }
         catch (e) {
 
-            logger.info("getData")
+            logger.info("getData - error")
             logger.info(e.toString())
             let sleepFor = retryCount * 10000
             retryCount += 1 
@@ -434,9 +421,15 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, metricsTracker)
         logger.info("getData")
         let keyStatsRes = await getData(ticker,metricsTracker);
         logger.info("getClosingHistories")
+        logger.info("quoteSummary")
+        let quoteSummaryRes = await quoteSummary(ticker,metricsTracker);
+    
+        logger.info("getAssetsSharesAndLiabilities")
+        let financialsRes = await getAssetsSharesAndLiabilities(ticker,metricsTracker);
+
         let closingHistories = await getClosingHistories(ticker,metricsTracker);
         logger.info("getQuoteSummary")
-        let quoteSummaryRes = await getQuoteSummary(ticker,metricsTracker);
+        let getQuoteSummaryRes = await getQuoteSummary(ticker,metricsTracker);
         logger.info("getQuote")
         let quoteRes = await getQuote(ticker,metricsTracker);
 
@@ -447,7 +440,10 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, metricsTracker)
             ...closingHistories,
             ...quoteSummaryRes,
             ...treasuryStatsRes,
-            ...quoteRes
+            ...quoteRes,
+            ...financialsRes,
+            ...quoteSummaryRes,
+            ...getQuoteSummaryRes
         }
 
         logger.info("scrapeResult", scrapeResult)
