@@ -208,8 +208,10 @@ async function getQuoteSummary(ticker) {
         
 
     }
+    logger.info("===========")
     logger.info(result)
     logger.info(JSON.stringify(result))
+    logger.info("===========")
    
     return {
         ...result.balanceSheetHistory.balanceSheetStatements[0],
@@ -436,7 +438,7 @@ async function getData(ticker,metricsTracker) {
 
 const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, metricsTracker) => {
 
-    await PromisePool.for(tickers).withConcurrency(10).process(async ticker => {
+    await PromisePool.for(tickers).withConcurrency(4).process(async ticker => {
 
         const start = performance.now();
         logger.info("getData")
