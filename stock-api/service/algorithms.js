@@ -666,7 +666,8 @@ const trailingPEvsForward = (ticker) => {
     let currentForwardPE = parseFloat(ticker.forwardPE)
 
 
-    let expectedStockPriceMove = ((currentForwardPE - currentTrailingPE) * parseFloat(ticker.dilutedEPS))
+
+    let expectedStockPriceMove = ((currentForwardPE - currentTrailingPE) * (1/parseFloat(ticker.dilutedEPS)))
 
     if (expectedStockPriceMove > 0) {
         return {

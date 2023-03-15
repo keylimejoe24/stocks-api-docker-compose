@@ -144,8 +144,14 @@ async function getClosingHistories(ticker) {
 
         }
         catch (error) {
+            
             logger.info("getClosingHistories -  error")
-            logger.info(error.toString())
+            logger.info(e.toString())
+            if(error.toString().includes("HTTPError: Not Found")){
+                return {
+                    "closingHistories": "HTTPError: Not Found"
+                }
+            }
             // logger.info(JSON.stringify(response))
             logger.info(response.status)
             let sleepFor = retryCount * 10000
@@ -172,7 +178,6 @@ async function getQuote(ticker) {
         } catch (e) {
             logger.info("getQuote -  error")
             logger.info(e.toString())
-            // logger.info(JSON.stringify(response))
             logger.info(response.status)
             let sleepFor = retryCount * 10000
             retryCount += 1 
@@ -191,7 +196,7 @@ async function getQuoteSummary(ticker) {
         try {
         
             result = await yahooFinance2.quoteSummary(ticker, { modules: ["balanceSheetHistory","financialData","summaryDetail"] });
-           
+            
         } catch (e) {
             logger.info("getQuoteSummary -  error")
             logger.info(e.toString())
@@ -205,7 +210,10 @@ async function getQuoteSummary(ticker) {
         
 
     }
-  
+    
+    if(result){
+                
+    }
    
     return {
         ...result.balanceSheetHistory.balanceSheetStatements[0],
@@ -420,13 +428,11 @@ const batchStoreScrape = async (tickers, uuid, treasuryStatsRes, metricsTracker)
         const start = performance.now();
         logger.info("getData")
         let keyStatsRes = await getData(ticker,metricsTracker);
-        logger.info("getClosingHistories")
         logger.info("quoteSummary")
         let quoteSummaryRes = await quoteSummary(ticker,metricsTracker);
-    
         logger.info("getAssetsSharesAndLiabilities")
         let financialsRes = await getAssetsSharesAndLiabilities(ticker,metricsTracker);
-
+        logger.info("getClosingHistories")
         let closingHistories = await getClosingHistories(ticker,metricsTracker);
         logger.info("getQuoteSummary")
         let getQuoteSummaryRes = await getQuoteSummary(ticker,metricsTracker);
