@@ -243,6 +243,7 @@ async function getAssetsSharesAndLiabilities(ticker,metricsTracker) {
                 }
             }
             let response = await ProxiedRequest.get(url,body,metricsTracker)
+
             let res = await response.json()
             let quarterlySharesIssued = _.get(_.find(res.timeseries.result, "quarterlyShareIssued"), "quarterlyShareIssued", null)
             let quarterlyCurrentLiabilities = _.get(_.find(res.timeseries.result, "quarterlyCurrentLiabilities"), "quarterlyCurrentLiabilities", null)
@@ -297,8 +298,10 @@ async function getAssetsSharesAndLiabilities(ticker,metricsTracker) {
         }
 
         catch (e) {
-            logger.info("getAssetsSharesAndLiabilities")
+            logger.info("getAssetsSharesAndLiabilities -  error")
             logger.info(e.toString())
+            // logger.info(JSON.stringify(response))
+            logger.info(response.status)
             let sleepFor = retryCount * 10000
             retryCount += 1 
             logger.info(`Retry Count: ${retryCount}, Sleeping for ${sleepFor}`)
