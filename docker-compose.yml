@@ -88,8 +88,8 @@ services:
 
   scraping-server:
       image: joja5627/node-server:latest
-      links:
-        - rotating-proxy
+      # links:
+      #   - rotating-proxy
       ports:
         - 3000:3000
       build: ./stock-api

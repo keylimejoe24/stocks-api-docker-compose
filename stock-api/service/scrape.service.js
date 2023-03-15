@@ -263,8 +263,7 @@ async function getAssetsSharesAndLiabilities(ticker,metricsTracker) {
                 
 
                 if (quarterlySharesIssued != null) {
-                    logger.info(JSON.stringify(quarterlySharesIssued))
-                    logger.info("quarterlySharesIssued")
+            
                     if (quarterlySharesIssued[quarterlySharesIssued.length - 2] != null) {
                         balanceSheetRes['previouslyIssuedShares'] = quarterlySharesIssued[quarterlySharesIssued.length - 2].reportedValue.raw
                     }
@@ -273,16 +272,14 @@ async function getAssetsSharesAndLiabilities(ticker,metricsTracker) {
                     }
                 }
                 if (quarterlyCurrentLiabilities != null) {
-                    logger.info(JSON.stringify(quarterlyCurrentLiabilities))
-                    logger.info("quarterlyCurrentLiabilities")
+             
 
                     if (quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1] != null) {
                         balanceSheetRes['currentLiabilities'] = quarterlyCurrentLiabilities[quarterlyCurrentLiabilities.length - 1].reportedValue.raw
                     }
                 }
                 if (quarterlyCurrentAssets != null) {
-                    logger.info(JSON.stringify(quarterlyCurrentAssets))
-                    logger.info("quarterlyCurrentAssets")
+               
                     if (quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1] != null) {
                         balanceSheetRes['currentAssets'] = quarterlyCurrentAssets[quarterlyCurrentAssets.length - 1].reportedValue.raw
                     }
@@ -379,7 +376,9 @@ async function getData(ticker,metricsTracker) {
     let quoteSummaryRes = await quoteSummary(ticker,metricsTracker);
     logger.info("getAssetsSharesAndLiabilities")
     let financialsRes = await getAssetsSharesAndLiabilities(ticker,metricsTracker);
-    llogger.info(JSON.stringify(financialsRes))
+    logger.info("+++++++++++++++++")
+    logger.info(JSON.stringify(financialsRes))
+    logger.info("+++++++++++++++++")
 
     while (results === null) {
         try {
