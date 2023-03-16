@@ -657,6 +657,7 @@ const earningsGrowth = (ticker) => {
 
 
 const trailingPEvsForward = (ticker) => {
+    logger.info(JSON.stringify(ticker))
     let missingFieldsResObj = checkForNullOrUndefinedFields(ticker, ["trailingPE","forwardPE","dilutedEPS","previousClose"])
     if (_.has(missingFieldsResObj, "description")) {
         return missingFieldsResObj
