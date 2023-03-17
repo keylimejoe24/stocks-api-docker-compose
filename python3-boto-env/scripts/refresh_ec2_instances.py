@@ -169,7 +169,7 @@ refresh_master_commands = [
     "cd stocks-api-docker-compose-main"
     "docker-compose down",
     "docker system prune --filter  'until=5h' -f",
-    "DB_HOST={} docker-compose up -d --build mongodb prometheus grafana algorithms-server frontend boto3-flask rotating-proxy alpaca-trading-bot".format(master_instances[0]["public_ip_address"])
+    "DB_HOST={} docker-compose up -d --build mongodb prometheus grafana algorithms-server frontend boto3-flask alpaca-trading-bot rotating-proxy".format(master_instances[0]["public_ip_address"])
 ]
 
 
