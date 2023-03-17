@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "alpaca-trading-bot"
+version = "0.1.0"
+description = ""
+authors = ["Joe Jackson <joseph.jackson@inturn.co>"]
+readme = "README.md"
+packages = [{include = "alpaca_trading_bot"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiohttp = "3.8.2"
+yarl = "1.8.1"
+frozenlist = "1.3.1"
+pandas = "^1.5.3"
+alpaca-py = "^0.7.2"
+boto3 = "^1.26.93"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
