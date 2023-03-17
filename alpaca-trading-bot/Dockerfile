@@ -49,7 +49,7 @@ COPY decrypt_secrets.sh .
 RUN sh decrypt_secrets.sh
 
 # # Run Application
-# EXPOSE 5001
+EXPOSE 5002
 # # "flask", "run", "--host=0.0.0.0","-p 5001"
 CMD [ "poetry", "run", "python3","-u", "main.py"  ]
 # CMD ["python3","main.py" ]

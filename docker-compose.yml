@@ -55,6 +55,8 @@ services:
   
   alpaca-trading-bot:
     build: ./alpaca-trading-bot
+    ports:
+      - "5002:5002"
     
   mongodb:
     # image: mongo:4.4.6
