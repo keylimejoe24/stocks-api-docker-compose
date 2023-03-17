@@ -52,6 +52,9 @@ services:
     build: ./rotating-proxy
     ports:
       - "5001:5001"
+  
+  alpaca-trading-bot:
+    build: ./alpaca-trading-bot
     
   mongodb:
     # image: mongo:4.4.6
